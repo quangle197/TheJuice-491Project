@@ -19,7 +19,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Items near you"
+        android:text="Items near you!"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold"
