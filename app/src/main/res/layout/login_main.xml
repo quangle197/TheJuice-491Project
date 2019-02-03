@@ -14,40 +14,70 @@
         android:layout_marginTop="120dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/wesellLogo" />
+        app:srcCompat="@drawable/rounded_button" />
 
     <EditText
         android:id="@+id/login_emailEditText"
-        android:layout_width="213dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="98dp"
-        android:layout_marginLeft="98dp"
-        android:layout_marginTop="109dp"
+        android:layout_width="211dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/rounded_edittext"
         android:ems="10"
+        android:hint=" Email"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
 
     <EditText
         android:id="@+id/login_passwordEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="98dp"
-        android:layout_marginLeft="98dp"
-        android:layout_marginTop="62dp"
+        android:layout_width="211dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext"
         android:ems="10"
+        android:hint=" Password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_emailEditText" />
 
-    <ImageButton
-        android:id="@+id/login_loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="72dp"
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="276dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/rounded_button"
+        android:text="Login"
+        android:textColor="@color/AliceBlue"
+        android:typeface="normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText"
-        app:srcCompat="@drawable/loginLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
+
+    <ImageButton
+        android:id="@+id/loginGoogleButton"
+        android:layout_width="276dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton"
+        app:srcCompat="@drawable/google" />
+
+    <ImageButton
+        android:id="@+id/loginFaceBookButton"
+        android:layout_width="276dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginGoogleButton"
+        app:srcCompat="@drawable/facebook" />
+
 </android.support.constraint.ConstraintLayout>
