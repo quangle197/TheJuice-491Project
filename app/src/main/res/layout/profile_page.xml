@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="USERNAME"
                 android:textAlignment="center"
-                android:textSize="24" />
+                android:textSize="24sp" />
 
         </LinearLayout>
 
