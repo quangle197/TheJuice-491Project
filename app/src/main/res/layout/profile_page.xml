@@ -3,39 +3,223 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:context="com.example.quangle.myapplication.MainActivity">
+    
     <LinearLayout
+        android:background="@drawable/background"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:layout_height="90dp"
+        android:stateListAnimator="@null"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/profile_page_user_picture"
-                android:layout_width="match_parent"
-                android:layout_height="84dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                tools:src="@drawable/ic_account_circle_white" />
-
-            <TextView
-                android:id="@+id/profile_page_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="USERNAME"
-                android:textAlignment="center"
-                android:textSize="24" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/profile_page_profile_picture"
+            android:layout_marginTop="10dp"
+            android:layout_width="70dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_account_circle_white" />
+        <TextView
+            android:id="@+id/profile_page_username"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="USERNAME"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            />
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/profile_page_messenger_button"
+        android:layout_alignParentRight="true"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_chat"/>
+    <ImageView
+        android:id="@+id/profile_page_menu_button"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/menu"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="5dp"
+        android:text="Items For Sale" />
+    <TextView
+        android:id="@+id/profile_page_see_all_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:text="See All Items"
+        android:textColor="@color/WeSellGreen"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="125dp"
+        android:background="@android:color/darker_gray"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="250dp"
+        android:background="@android:color/darker_gray"/>
+
+    <ImageView
+        android:id="@+id/profile_page_item1_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="45dp"
+        android:src="@drawable/ic_item_placeholder"/>
+    <View
+        android:layout_width="0.5sp"
+        android:layout_height="125dp"
+        android:layout_toRightOf="@+id/profile_page_item1_image"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="125dp"
+        android:background="@android:color/darker_gray" />
+    <ImageView
+        android:id="@+id/profile_page_item2_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="185dp"
+        android:src="@drawable/ic_item_placeholder"/>
+    <View
+        android:layout_width="0.5sp"
+        android:layout_height="125dp"
+        android:layout_toRightOf="@+id/profile_page_item2_image"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="125dp"
+        android:background="@android:color/darker_gray" />
+    <ImageView
+        android:id="@+id/profile_page_item3_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="325dp"
+        android:src="@drawable/ic_item_placeholder"/>
+    <TextView
+        android:id="@+id/profile_page_item1_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:text="Item Name"
+        android:layout_marginLeft="5dp"/>
+    <TextView
+        android:id="@+id/profile_page_item1_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="215dp"
+        android:text="Price"
+        android:layout_marginLeft="5dp"/>
+    <TextView
+        android:id="@+id/profile_page_item2_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:text="Item Name"
+        android:layout_marginLeft="145dp"/>
+    <TextView
+        android:id="@+id/profile_page_item2_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="215dp"
+        android:text="Price"
+        android:layout_marginLeft="145dp"/>
+    <TextView
+        android:id="@+id/profile_page_item3_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:text="Item Name"
+        android:layout_marginLeft="285dp"/>
+    <TextView
+        android:id="@+id/profile_page_item3_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="215dp"
+        android:text="Price"
+        android:layout_marginLeft="285dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="5dp"
+        android:text="User Feedback" />
+    <TextView
+        android:id="@+id/profile_page_see_all_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:text="See All Feedback"
+        android:textColor="@color/WeSellGreen"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="325dp"
+        android:background="@android:color/darker_gray"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="450dp"
+        android:background="@android:color/darker_gray"/>
+    <ImageView
+        android:id="@+id/profile_page_user_feedback_image"
+        android:layout_width="70dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="325dp"
+        android:src="@drawable/ic_account_circle_black"/>
+    <TextView
+        android:id="@+id/profile_page_user_text_review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="380dp"
+        android:layout_marginLeft="5dp"
+        android:text="A user generated review will be placed here. " />
+    <ImageView
+        android:id="@+id/profile_page_star1"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="60dp"
+        android:src="@drawable/ic_star"/>
+    <ImageView
+        android:id="@+id/profile_page_star2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="80dp"
+        android:src="@drawable/ic_star"/>
+    <ImageView
+        android:id="@+id/profile_page_star3"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="100dp"
+        android:src="@drawable/ic_star"/>
+    <ImageView
+        android:id="@+id/profile_page_star4"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="120dp"
+        android:src="@drawable/ic_star"/>
+    <ImageView
+        android:id="@+id/profile_page_star5"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="140dp"
+        android:src="@drawable/ic_star"/>
 
 </RelativeLayout>
