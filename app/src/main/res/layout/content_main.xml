@@ -15,12 +15,12 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="108dp" />
+            android:layout_height="130dp" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
-            android:layout_width="381dp"
-            android:layout_height="362dp"
+            android:layout_width="387dp"
+            android:layout_height="298dp"
             android:layout_gravity="center"
             tools:layout_editor_absoluteX="14dp"
             tools:layout_editor_absoluteY="16dp" />
@@ -36,21 +36,21 @@
 
         <View
             android:layout_width="375sp"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="1dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="8dp"
 
             android:background="@android:color/darker_gray" />
 
         <View
-            android:layout_width="0.5sp"
-            android:layout_height="200dp"
+            android:layout_width="1sp"
+            android:layout_height="180dp"
             android:layout_gravity="center"
             android:background="@android:color/darker_gray" />
 
         <View
             android:layout_width="375sp"
-            android:layout_height="0.5dp"
+            android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:background="@android:color/darker_gray" />
 
