@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="159dp"
+        android:layout_height="113dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginLeft="124dp"
+        android:layout_marginTop="120dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rounded_button" />
+
+    <EditText
+        android:id="@+id/login_emailEditText"
+        android:layout_width="211dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:hint=" Email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
+
+    <EditText
+        android:id="@+id/login_passwordEditText"
+        android:layout_width="211dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:hint=" Password"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_emailEditText" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="276dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/rounded_button"
+        android:text="Login"
+        android:textColor="@color/AliceBlue"
+        android:typeface="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
+
+    <ImageButton
+        android:id="@+id/loginGoogleButton"
+        android:layout_width="276dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton"
+        app:srcCompat="@drawable/google" />
+
+    <ImageButton
+        android:id="@+id/loginFaceBookButton"
+        android:layout_width="276dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginGoogleButton"
+        app:srcCompat="@drawable/facebook" />
+
+</android.support.constraint.ConstraintLayout>
