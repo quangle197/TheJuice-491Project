@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/seller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Seller: John Doe" />
+
+    <ImageView
+        android:id="@+id/itemImg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:adjustViewBounds="true"
+        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/seller"
+        tools:srcCompat="@tools:sample/avatars[0]" />
+
+    <TextView
+        android:id="@+id/itemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="21dp"
+        android:layout_toRightOf="@+id/itemImg"
+        android:layout_below="@+id/seller"
+        android:layout_alignTop="@+id/itemImg"
+        android:text="Item Title" />
+
+    <TextView
+        android:id="@+id/itemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/itemTitle"
+        android:layout_alignStart="@+id/itemTitle"
+        android:layout_toRightOf="@+id/itemImg"
+        android:text="Item Price"
+        android:layout_alignLeft="@+id/itemTitle" />
+
+    <TextView
+        android:id="@+id/itemQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/itemPrice"
+        android:layout_alignStart="@+id/itemTitle"
+        android:layout_toRightOf="@+id/itemImg"
+        android:text="Quantity"
+        android:layout_alignLeft="@+id/itemTitle" />
+
+</RelativeLayout>
