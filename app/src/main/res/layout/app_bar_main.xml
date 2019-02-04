@@ -49,10 +49,11 @@
                 android:background="@null"
                 android:drawableLeft="@drawable/search"
                 android:ems="10"
-                android:gravity="center"
+                android:gravity="left|center"
                 android:hint="Search for an item"
                 android:singleLine="false"
-                android:textColor="@android:color/black"></EditText>
+                android:textColor="@android:color/black"
+                android:textCursorDrawable="@null"></EditText>
 
         </LinearLayout>
 
