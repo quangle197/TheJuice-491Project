@@ -35,7 +35,6 @@
             android:layout_marginTop="-33sp"
             android:src="@drawable/ic_action_name" />
 
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="641dp"
