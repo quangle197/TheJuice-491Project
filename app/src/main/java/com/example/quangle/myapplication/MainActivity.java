@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             startActivity(new Intent(this,Payment.class));
         } else if (id == R.id.nav_message) {
-
+            startActivity(new Intent(this,Login.class));
         } else if (id == R.id.nav_order) {
 
         } else if (id == R.id.nav_selling) {
