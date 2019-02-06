@@ -19,6 +19,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <ImageView
+            android:id="@+id/cart"
             android:layout_width="46dp"
             android:layout_height="34dp"
             android:layout_marginLeft="360sp"
