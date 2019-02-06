@@ -189,10 +189,16 @@
         android:layout_height="0.5dp"
         android:layout_below="@+id/profile_page_see_all_feedback"
         android:background="@android:color/darker_gray"/>
+    <View
+        android:id="@+id/profile_page_itembarbottom2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/profile_page_user_text_review"
+        android:background="@android:color/darker_gray"/>
 
     <ImageView
         android:id="@+id/profile_page_user_feedback_image"
-        android:layout_width="70dp"
+        android:layout_width="50dp"
         android:layout_height="54dp"
         android:layout_below="@id/profile_page_itembartop2"
         android:src="@drawable/ic_account_circle_black"/>
@@ -209,7 +215,8 @@
         android:layout_height="25dp"
         android:layout_toRightOf="@+id/profile_page_user_feedback_image"
         android:layout_below="@id/profile_page_itembartop2"
-        android:src="@drawable/ic_star"/>
+        android:src="@drawable/ic_star"
+        android:layout_marginTop="15dp"/>
     <ImageView
         android:id="@+id/profile_page_star2"
         android:layout_width="25dp"
@@ -217,7 +224,8 @@
         android:layout_marginLeft="-5dp"
         android:layout_toRightOf="@+id/profile_page_star1"
         android:layout_below="@id/profile_page_itembartop2"
-        android:src="@drawable/ic_star"/>
+        android:src="@drawable/ic_star"
+        android:layout_marginTop="15dp"/>
     <ImageView
         android:id="@+id/profile_page_star3"
         android:layout_width="25dp"
@@ -225,7 +233,8 @@
         android:layout_marginLeft="-5dp"
         android:layout_toRightOf="@+id/profile_page_star2"
         android:layout_below="@id/profile_page_itembartop2"
-        android:src="@drawable/ic_star"/>
+        android:src="@drawable/ic_star"
+        android:layout_marginTop="15dp"/>
     <ImageView
         android:id="@+id/profile_page_star4"
         android:layout_width="25dp"
@@ -233,7 +242,8 @@
         android:layout_marginLeft="-5dp"
         android:layout_toRightOf="@+id/profile_page_star3"
         android:layout_below="@id/profile_page_itembartop2"
-        android:src="@drawable/ic_star"/>
+        android:src="@drawable/ic_star"
+        android:layout_marginTop="15dp"/>
     <ImageView
         android:id="@+id/profile_page_star5"
         android:layout_width="25dp"
@@ -241,6 +251,9 @@
         android:layout_marginLeft="-5dp"
         android:layout_toRightOf="@+id/profile_page_star4"
         android:layout_below="@id/profile_page_itembartop2"
-        android:src="@drawable/ic_star"/>
+        android:src="@drawable/ic_star"
+        android:layout_marginTop="15dp"/>
+
+
 
 </RelativeLayout>
