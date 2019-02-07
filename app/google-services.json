@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "710500332506",
+    "firebase_url": "https://we-sell-491.firebaseio.com",
+    "project_id": "we-sell-491",
+    "storage_bucket": "we-sell-491.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710500332506:android:8c1258b86ee35616",
+        "android_client_info": {
+          "package_name": "com.example.quangle.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710500332506-bvhr65gbh1uc03jqs1jbm7c9brh2h8ko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quangle.myapplication",
+            "certificate_hash": "01b7a78cd978271bf2b7d27c7f9755c82e6f8fe3"
+          }
+        },
+        {
+          "client_id": "710500332506-ormc07k7m71j9sfi630im3ca0cjnmqs0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710500332506-ormc07k7m71j9sfi630im3ca0cjnmqs0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

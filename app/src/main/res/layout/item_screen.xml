@@ -155,8 +155,9 @@
         <Button
             android:id="@+id/addToCartButton"
             android:layout_width="70dp"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
+            android:layout_margin="15dp"
             android:background="@drawable/rounded_button"
             android:text="Add to Cart"
             android:textColor="@color/AliceBlue" />
@@ -164,8 +165,9 @@
         <Button
             android:id="@+id/offerUpButton"
             android:layout_width="70dp"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
+            android:layout_margin="15dp"
             android:background="@drawable/rounded_button"
             android:text="Offer"
             android:textColor="@color/AliceBlue" />
