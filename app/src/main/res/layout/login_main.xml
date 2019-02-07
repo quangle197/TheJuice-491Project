@@ -26,6 +26,7 @@
             android:layout_height="47dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="72dp"
+            android:padding="10dp"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint=" Email"
@@ -39,6 +40,7 @@
             android:layout_marginStart="64dp"
             android:layout_marginLeft="64dp"
             android:layout_marginTop="20dp"
+            android:padding="10dp"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint=" Password"
@@ -51,7 +53,6 @@
             android:layout_height="wrap_content"
             android:text="Create an account"
             android:layout_below="@id/login_passwordEditText"
-            android:textSize="12dp"
             android:layout_alignLeft="@+id/login_passwordEditText" />
 
         <TextView
