@@ -22,6 +22,7 @@
         <activity android:name=".Payment"/>
         <activity android:name=".Login"/>
         <activity android:name=".ForgotPassword"/>
+        <activity android:name=".StartUp"/>
     </application>
 
 </manifest>
