@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.quangle.myapplication.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_width="424dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary" />
+
+
+    </android.support.design.widget.AppBarLayout>
+    <ImageView
+        android:id="@+id/profile_page_user_photo"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_account_circle_white"/>
+    <TextView
+        android:id="@+id/profile_page_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="USERNAME"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        android:layout_marginTop="-5dp"
+        android:layout_below="@+id/profile_page_user_photo"/>
+    <ImageView
+        android:id="@+id/profile_page_messenger_button"
+        android:layout_alignParentRight="true"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_chat"/>
+    <ImageView
+        android:id="@+id/profile_page_menu_button"
+        android:layout_alignParentLeft="true"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/menu"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="99dp"/>
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.quangle.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -71,9 +72,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
+            startActivity(new Intent(this,Payment.class));
         } else if (id == R.id.nav_message) {
-
+            startActivity(new Intent(this,Login.class));
         } else if (id == R.id.nav_order) {
 
         } else if (id == R.id.nav_selling) {
@@ -82,8 +83,9 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_setting) {
 
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 }

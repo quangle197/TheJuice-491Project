@@ -4,80 +4,95 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    tools:context="com.example.quangle.myapplication.Login"
 
-    <ImageView
-        android:id="@+id/logoImageView"
-        android:layout_width="159dp"
-        android:layout_height="113dp"
-        android:layout_marginStart="124dp"
-        android:layout_marginLeft="124dp"
-        android:layout_marginTop="120dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/rounded_button" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/login_emailEditText"
-        android:layout_width="276dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="72dp"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint=" Email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="159dp"
+            android:layout_height="113dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/rounded_button" />
 
-    <EditText
-        android:id="@+id/login_passwordEditText"
-        android:layout_width="276dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint=" Password"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_emailEditText" />
+        <EditText
+            android:id="@+id/login_emailEditText"
+            android:layout_width="276dp"
+            android:layout_height="47dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="72dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint=" Email"
+            android:inputType="textEmailAddress"
+            android:layout_below="@+id/logoImageView" />
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="276dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/rounded_button"
-        android:text="Login"
-        android:textColor="@color/AliceBlue"
-        android:typeface="normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
+        <EditText
+            android:id="@+id/login_passwordEditText"
+            android:layout_width="276dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint=" Password"
+            android:inputType="textPassword"
+            android:layout_below="@+id/login_emailEditText" />
 
-    <ImageButton
-        android:id="@+id/loginGoogleButton"
-        android:layout_width="276dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton"
-        app:srcCompat="@drawable/google" />
+        <TextView
+            android:id="@+id/createAcc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create an account"
+            android:layout_below="@id/login_passwordEditText"
+            android:layout_alignLeft="@+id/login_passwordEditText" />
 
-    <ImageButton
-        android:id="@+id/loginFaceBookButton"
-        android:layout_width="276dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginGoogleButton"
-        app:srcCompat="@drawable/facebook" />
+        <TextView
+            android:id="@+id/forgotPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forgot password"
+            android:layout_alignRight="@+id/login_passwordEditText"
+            android:layout_below="@+id/login_passwordEditText"/>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="276dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/rounded_button"
+            android:text="Login"
+            android:textColor="@color/AliceBlue"
+            android:typeface="normal"
+            android:layout_below="@+id/createAcc"
+            android:layout_alignLeft="@+id/login_passwordEditText"/>
+
+        <ImageButton
+            android:id="@+id/loginFaceBookButton"
+            android:layout_width="276dp"
+            android:layout_height="62dp"
+            android:layout_marginTop="15dp"
+            android:layout_alignLeft="@id/loginButton"
+            android:layout_below="@+id/loginButton"
+            app:srcCompat="@drawable/facebook" />
+
+        <ImageButton
+            android:id="@+id/loginGoogleButton"
+            android:layout_width="276dp"
+            android:layout_height="62dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/loginFaceBookButton"
+            android:layout_alignLeft="@+id/loginFaceBookButton"
+            app:srcCompat="@drawable/google" />
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
