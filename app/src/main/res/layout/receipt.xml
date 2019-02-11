@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    tools:context="com.example.quangle.myapplication.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <TextView
+            android:id="@+id/textView0"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:layout_marginLeft="155sp"
+            android:layout_marginTop="25sp"
+            android:gravity="center"
+            android:text="Receipt"
+            android:textColor="@android:color/white"
+            android:textSize="32sp" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_width="424dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="94dp"
+            android:layout_height="74dp"
+            android:layout_marginLeft="160sp"
+            android:layout_marginTop="140sp"
+            android:src="@drawable/check_circle" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:layout_marginLeft="63sp"
+            android:gravity="center"
+            android:text="Thank you for the purchase!"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="145sp"
+            android:layout_marginTop="15sp"
+            android:text="Status:"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-19sp"
+            android:layout_marginLeft="195sp"
+            android:text="Confirmed"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="145sp"
+            android:text="Total Paid:"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-19sp"
+            android:layout_marginLeft="220sp"
+            android:text="$"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="145sp"
+            android:text="Date:"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-19sp"
+            android:layout_marginLeft="185sp"
+            android:text="2/6/19 11:11 P.M."
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="145sp"
+            android:text="Seller:"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-19sp"
+            android:layout_marginLeft="190sp"
+            android:text="Seller Name"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/rateThisTransactionButton"
+            android:layout_width="276dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginTop="145dp"
+            android:background="@drawable/rounded_button"
+            android:text="Rate this transaction"
+            android:textColor="@color/AliceBlue"
+            android:typeface="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
+
+        <Button
+            android:id="@+id/continueShoppingButton"
+            android:layout_width="276dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_button"
+            android:text="Continue shopping"
+            android:textColor="@color/AliceBlue"
+            android:typeface="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
+
+    </LinearLayout>
+
+</RelativeLayout>
