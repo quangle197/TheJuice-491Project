@@ -1,28 +1,27 @@
 package com.example.quangle.myapplication;
-
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class Login extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_main);
+        setContentView(R.layout.signup);
 
-        Button login = (Button) findViewById(R.id.loginButton);
-        login.setOnClickListener(new View.OnClickListener() {
+        Button signUp = (Button) findViewById(R.id.signUpButton);
+        signUp.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v)
             {
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
+                Intent intent = new Intent(v.getContext(),Login.class);
                 startActivity(intent);
                 finish();
             }
-
         });
     }
 
@@ -31,14 +30,10 @@ public class Login extends AppCompatActivity {
         startActivity(new Intent(this, StartUp.class));
         finish();
     }
-
-    public void forgot(View v)
+    public void login(View v)
     {
-        startActivity(new Intent(this, ForgotPassword.class));
+        startActivity(new Intent(this, Login.class) );
     }
 
-    public void create(View v)
-    {
-        startActivity(new Intent(this, SignUpActivity.class));
-    }
+
 }

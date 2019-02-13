@@ -18,7 +18,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/rounded_button" />
+            app:srcCompat="@drawable/wesell" />
 
         <EditText
             android:id="@+id/login_emailEditText"
@@ -52,6 +52,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create an account"
+            android:clickable="true"
+            android:onClick="create"
             android:layout_below="@id/login_passwordEditText"
             android:layout_alignLeft="@+id/login_passwordEditText" />
 
@@ -60,6 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Forgot password"
+            android:clickable="true"
+            android:onClick="forgot"
             android:layout_alignRight="@+id/login_passwordEditText"
             android:layout_below="@+id/login_passwordEditText"/>
 

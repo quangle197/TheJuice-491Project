@@ -18,12 +18,13 @@
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/cart"
             android:layout_width="46dp"
             android:layout_height="34dp"
             android:layout_marginLeft="360sp"
             android:layout_marginTop="-46sp"
+            android:background="@null"
             android:src="@drawable/ic_action_name" />
         <LinearLayout
             android:layout_width="match_parent"

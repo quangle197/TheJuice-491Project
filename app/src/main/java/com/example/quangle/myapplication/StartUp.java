@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+
 
 public class StartUp extends AppCompatActivity {
    @Override
@@ -27,5 +26,18 @@ public class StartUp extends AppCompatActivity {
 
        });
 
+       Button signUp = (Button) findViewById(R.id.signUp);
+       signUp.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View v)
+           {
+               Intent intent = new Intent(v.getContext(), SignUpActivity.class);
+               startActivity(intent);
+               finish();
+           }
+
+       });
+
    }
+
+
 }

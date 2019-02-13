@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="0dp"
-        android:text="Checkout" />
+        android:text="Confirm" />
 
 
 </RelativeLayout>
