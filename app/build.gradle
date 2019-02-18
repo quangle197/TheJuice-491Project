@@ -29,6 +29,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-firestore:18.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

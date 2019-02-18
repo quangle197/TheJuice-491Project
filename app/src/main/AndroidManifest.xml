@@ -23,6 +23,7 @@
         <activity android:name=".Payment"/>
         <activity android:name=".Login"/>
         <activity android:name=".ForgotPassword"/>
+        <activity android:name=".SignUp"/>
     </application>
 
 </manifest>
