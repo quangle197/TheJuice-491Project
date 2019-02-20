@@ -91,10 +91,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
         } else if (id == R.id.nav_selling) {
-            startActivity(new Intent(this, User.class));
+            startActivity(new Intent(this, ProfilePageActivity.class));
         }
-        else if (id == R.id.nav_setting) {
-
+        else if (id == R.id.nav_contact) {
+            startActivity(new Intent(this, ContactPageActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
