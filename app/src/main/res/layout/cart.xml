@@ -26,7 +26,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/itemPic1"
             android:layout_width="60dp"
             android:layout_height="64dp"
             android:layout_marginLeft="5sp"
@@ -34,7 +34,7 @@
             app:srcCompat="@drawable/ic_menu_gallery" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/productName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -49,7 +49,7 @@
             android:src="@drawable/add_circle" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/quantity1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="345sp"
@@ -64,7 +64,7 @@
             android:src="@drawable/subtract_circle" />
 
         <TextView
-            android:id="@+id/textView16"
+            android:id="@+id/sellerName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -72,7 +72,7 @@
             android:text="Seller name" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/productDesc1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -86,7 +86,7 @@
             android:src="@drawable/remove_item" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/price1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -101,7 +101,7 @@
             android:background="@android:color/darker_gray" />
 
         <ImageView
-            android:id="@+id/imageView18"
+            android:id="@+id/itemPic2"
             android:layout_width="60dp"
             android:layout_height="64dp"
             android:layout_marginLeft="5sp"
@@ -109,7 +109,7 @@
             app:srcCompat="@drawable/ic_menu_gallery" />
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/productName2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -124,7 +124,7 @@
             android:src="@drawable/add_circle" />
 
         <TextView
-            android:id="@+id/textView20"
+            android:id="@+id/quantity2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="345sp"
@@ -139,7 +139,7 @@
             android:src="@drawable/subtract_circle" />
 
         <TextView
-            android:id="@+id/textView21"
+            android:id="@+id/sellerName2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -147,7 +147,7 @@
             android:text="Seller name" />
 
         <TextView
-            android:id="@+id/textView22"
+            android:id="@+id/productDesc2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -161,7 +161,7 @@
             android:src="@drawable/remove_item" />
 
         <TextView
-            android:id="@+id/textView23"
+            android:id="@+id/price2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="68sp"
@@ -176,7 +176,7 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/textView24"
+            android:id="@+id/totalNumOfItems"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginLeft="10sp"
@@ -184,7 +184,7 @@
             android:text="Items: #" />
 
         <TextView
-            android:id="@+id/textView25"
+            android:id="@+id/totalPrice"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginLeft="350sp"
