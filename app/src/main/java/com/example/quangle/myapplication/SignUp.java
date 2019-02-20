@@ -43,6 +43,7 @@ public class SignUp extends AppCompatActivity {
                 fields[2] = password_confirm_editText.getText().toString();// email
                 Map<String, Object> user = new HashMap<>();
                 boolean filled = true;
+
                 for(String field : fields) {
                     if (field.equals("")) {
                         filled = false;
