@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "710500332506-d38391umfsds0j982gknbkgplh9eoovk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quangle.myapplication",
+            "certificate_hash": "fa16a5a4839c190c1d686ff1cd8745e2e93a466f"
+          }
+        },
+        {
           "client_id": "710500332506-ormc07k7m71j9sfi630im3ca0cjnmqs0.apps.googleusercontent.com",
           "client_type": 3
         }

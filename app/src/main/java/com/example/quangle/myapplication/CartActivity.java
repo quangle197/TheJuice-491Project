@@ -16,4 +16,6 @@ public class CartActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Cart");
     }
+
+
 }
