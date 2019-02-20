@@ -23,7 +23,10 @@
         <activity android:name=".Payment"/>
         <activity android:name=".Login"/>
         <activity android:name=".ForgotPassword"/>
-        <activity android:name=".SignUp"/>
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".MessageActivity"/>
+        <activity android:name=".CartActivity"
+            android:label="Cart"/>
     </application>
 
 </manifest>

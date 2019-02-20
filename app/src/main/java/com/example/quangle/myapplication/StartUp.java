@@ -28,7 +28,7 @@ public class StartUp extends AppCompatActivity {
        signup.setOnClickListener(new View.OnClickListener() {
            public void onClick(View v)
            {
-               Intent intent = new Intent(v.getContext(), SignUp.class);
+               Intent intent = new Intent(v.getContext(), SignUpActivity.class);
                startActivity(intent);
                finish();
            }

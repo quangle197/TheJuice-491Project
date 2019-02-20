@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:context="com.example.quangle.myapplication.SignUpActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -92,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:onClick="signup"
             android:text="Sign Up"
             android:textColor="@color/white" />
 
@@ -156,11 +155,13 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/createAcc"
+            android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Already have an account? Login"
             android:gravity="center"
+            android:clickable="true"
+            android:onClick="login"
             android:textColor="@color/DarkGray"
             android:layout_marginTop="10dp"/>
 

@@ -25,4 +25,20 @@ public class Login extends AppCompatActivity {
 
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, StartUp.class));
+        finish();
+    }
+
+    public void forgot(View v)
+    {
+        startActivity(new Intent(this, ForgotPassword.class));
+    }
+
+    public void create(View v)
+    {
+        startActivity(new Intent(this, SignUpActivity.class));
+    }
 }
