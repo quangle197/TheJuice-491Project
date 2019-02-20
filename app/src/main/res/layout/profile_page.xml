@@ -1,259 +1,309 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.quangle.myapplication.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="99dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
             android:layout_width="424dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
     </android.support.design.widget.AppBarLayout>
+
     <ImageView
         android:id="@+id/profile_page_user_photo"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_account_circle_white"/>
+        android:src="@drawable/ic_account_circle_white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/profile_page_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-5dp"
         android:gravity="center_horizontal"
         android:text="USERNAME"
         android:textColor="@color/white"
         android:textSize="24dp"
-        android:layout_marginTop="-5dp"
-        android:layout_below="@+id/profile_page_user_photo"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_user_photo" />
+
     <ImageView
         android:id="@+id/profile_page_messenger_button"
-        android:layout_alignParentRight="true"
         android:layout_width="34dp"
         android:layout_height="34dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_chat"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_chat"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/profile_page_menu_button"
-        android:layout_alignParentLeft="true"
         android:layout_width="34dp"
         android:layout_height="34dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/menu"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/menu"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+        android:id="@+id/textView26"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_page_username"
-        android:layout_alignLeft="@+id/profile_page_username"
         android:layout_marginLeft="5dp"
-        android:text="Items For Sale" />
+        android:text="Items For Sale"
+        app:layout_constraintLeft_toLeftOf="@+id/profile_page_username"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_username" />
+
     <TextView
         android:id="@+id/profile_page_see_all_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
-        android:layout_below="@+id/profile_page_username"
-        android:layout_alignRight="@+id/profile_page_username"
         android:text="See All Items"
-        android:textColor="@color/WeSellGreen"/>
+        android:textColor="@color/WeSellGreen"
+        app:layout_constraintRight_toRightOf="@+id/profile_page_username"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_username" />
 
     <View
         android:id="@+id/profile_page_itembartop"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/profile_page_see_all_items"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_see_all_items" />
 
     <View
         android:id="@+id/profile_page_itembarbottom"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/item1_price"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item1_price" />
 
     <ImageView
         android:id="@+id/profile_page_item1"
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_item_placeholder"
-        android:layout_below="@+id/profile_page_itembartop" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_itembartop" />
+
     <ImageView
         android:id="@+id/profile_page_item2"
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_item_placeholder"
-        android:layout_below="@+id/profile_page_itembartop"
-        android:layout_toRightOf="@id/profile_page_item1" />
+        app:layout_constraintLeft_toRightOf="@id/profile_page_item1"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_itembartop" />
+
     <ImageView
         android:id="@+id/profile_page_item3"
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_item_placeholder"
-        android:layout_below="@+id/profile_page_itembartop"
-        android:layout_toRightOf="@id/profile_page_item2" />
+        app:layout_constraintLeft_toRightOf="@id/profile_page_item2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_itembartop" />
+
     <TextView
         android:id="@+id/item1_name"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:layout_below="@id/profile_page_item1"
         android:gravity="center"
-        />
+        android:text="Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_item1" />
+
     <TextView
         android:id="@+id/item2_name"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:layout_below="@id/profile_page_item1"
-        android:layout_toRightOf="@+id/profile_page_item1"
         android:gravity="center"
-        />
+        android:text="Name"
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_item1"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_item1" />
+
     <TextView
         android:id="@+id/item3_name"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="Name"
-        android:layout_below="@id/profile_page_item1"
-        android:layout_toRightOf="@+id/profile_page_item2"
-        android:gravity="center"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_item2"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_item1" />
+
     <TextView
         android:id="@+id/item1_price"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:text="Price"
-        android:layout_below="@id/item1_name"
         android:gravity="center"
-        />
+        android:text="Price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item1_name" />
+
     <TextView
         android:id="@+id/item2_price"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:text="Price"
-        android:layout_below="@id/item2_name"
-        android:layout_toRightOf="@+id/profile_page_item1"
         android:gravity="center"
-        />
+        android:text="Price"
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_item1"
+        app:layout_constraintTop_toBottomOf="@id/item2_name" />
+
     <TextView
         android:id="@+id/item3_price"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="Price"
-        android:layout_below="@id/item3_name"
-        android:layout_toRightOf="@+id/profile_page_item2"
-        android:gravity="center"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_item2"
+        app:layout_constraintTop_toBottomOf="@id/item3_name" />
+
     <View
+        android:id="@+id/view"
         android:layout_width="0.5dp"
         android:layout_height="93dp"
-        android:layout_toRightOf="@id/profile_page_item1"
-        android:layout_below="@+id/profile_page_itembartop"
         android:background="@android:color/darker_gray"
-        />
+        app:layout_constraintLeft_toRightOf="@id/profile_page_item1"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_itembartop" />
+
     <View
+        android:id="@+id/view2"
         android:layout_width="0.5dp"
         android:layout_height="93dp"
-        android:layout_toRightOf="@id/profile_page_item2"
-        android:layout_below="@+id/profile_page_itembartop"
         android:background="@android:color/darker_gray"
-        />
+        app:layout_constraintLeft_toRightOf="@id/profile_page_item2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_itembartop" />
+
     <Space
         android:id="@+id/profile_page_space1"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_below="@id/profile_page_itembarbottom"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembarbottom" />
+
     <TextView
         android:id="@+id/profile_page_see_all_feedback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_page_space1"
         android:layout_marginRight="5dp"
-        android:layout_alignParentRight="true"
         android:text="See All Feedback"
-        android:textColor="@color/WeSellGreen"/>
+        android:textColor="@color/WeSellGreen"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_space1" />
+
     <View
         android:id="@+id/profile_page_itembartop2"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_below="@+id/profile_page_see_all_feedback"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_see_all_feedback" />
+
     <View
         android:id="@+id/profile_page_itembarbottom2"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_below="@+id/profile_page_user_text_review"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_user_text_review" />
 
     <ImageView
         android:id="@+id/profile_page_user_feedback_image"
         android:layout_width="50dp"
         android:layout_height="54dp"
-        android:layout_below="@id/profile_page_itembartop2"
-        android:src="@drawable/ic_account_circle_black"/>
+        android:src="@drawable/ic_account_circle_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
+
     <TextView
         android:id="@+id/profile_page_user_text_review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_page_user_feedback_image"
         android:layout_marginLeft="5dp"
-        android:text="A user generated review will be placed here. " />
+        android:text="A user generated review will be placed here. "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_page_user_feedback_image" />
+
     <ImageView
         android:id="@+id/profile_page_star1"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_toRightOf="@+id/profile_page_user_feedback_image"
-        android:layout_below="@id/profile_page_itembartop2"
+        android:layout_marginTop="15dp"
         android:src="@drawable/ic_star"
-        android:layout_marginTop="15dp"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_user_feedback_image"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
+
     <ImageView
         android:id="@+id/profile_page_star2"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="-5dp"
-        android:layout_toRightOf="@+id/profile_page_star1"
-        android:layout_below="@id/profile_page_itembartop2"
+        android:layout_marginTop="15dp"
         android:src="@drawable/ic_star"
-        android:layout_marginTop="15dp"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_star1"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
+
     <ImageView
         android:id="@+id/profile_page_star3"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="-5dp"
-        android:layout_toRightOf="@+id/profile_page_star2"
-        android:layout_below="@id/profile_page_itembartop2"
+        android:layout_marginTop="15dp"
         android:src="@drawable/ic_star"
-        android:layout_marginTop="15dp"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_star2"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
+
     <ImageView
         android:id="@+id/profile_page_star4"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="-5dp"
-        android:layout_toRightOf="@+id/profile_page_star3"
-        android:layout_below="@id/profile_page_itembartop2"
+        android:layout_marginTop="15dp"
         android:src="@drawable/ic_star"
-        android:layout_marginTop="15dp"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_star3"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
+
     <ImageView
         android:id="@+id/profile_page_star5"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="-5dp"
-        android:layout_toRightOf="@+id/profile_page_star4"
-        android:layout_below="@id/profile_page_itembartop2"
+        android:layout_marginTop="15dp"
         android:src="@drawable/ic_star"
-        android:layout_marginTop="15dp"/>
+        app:layout_constraintLeft_toRightOf="@+id/profile_page_star4"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
 
 
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
