@@ -53,12 +53,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create an account"
-<<<<<<< HEAD
             android:layout_centerHorizontal="true"
-=======
             android:clickable="true"
             android:onClick="create"
->>>>>>> 9e230c3bc22b8153661802bcdfcfb5cbd3328d94
             android:layout_below="@id/login_passwordEditText"
             android:layout_alignLeft="@+id/login_passwordEditText" />
 
