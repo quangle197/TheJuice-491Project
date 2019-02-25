@@ -86,16 +86,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            startActivity(new Intent(this,Payment.class));
+            startActivity(new Intent(this,MainActivity.class));
         } else if (id == R.id.nav_message) {
             startActivity(new Intent(this,MessageActivity.class));
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
         } else if (id == R.id.nav_selling) {
-
+            startActivity(new Intent(this, ProfilePageActivity.class));
         }
-        else if (id == R.id.nav_setting) {
-
+        else if (id == R.id.nav_contact) {
+            startActivity(new Intent(this, ContactPageActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

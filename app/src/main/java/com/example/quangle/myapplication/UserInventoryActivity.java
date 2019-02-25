@@ -3,11 +3,10 @@ package com.example.quangle.myapplication;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-public class ItemScreenActivity extends AppCompatActivity {
+public class UserInventoryActivity extends AppCompatActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_screen);
+        setContentView(R.layout.signup);
     }
 }

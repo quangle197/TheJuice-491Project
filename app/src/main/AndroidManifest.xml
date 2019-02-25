@@ -27,6 +27,14 @@
         <activity android:name=".MessageActivity"/>
         <activity android:name=".CartActivity"
             android:label="Cart"/>
+        <activity android:name=".UserInventoryActivity"/>
+        <activity android:name=".ContactPageActivity"/>
+        <activity android:name=".ItemScreenActivity"/>
+        <activity android:name=".ListItemActivity"/>
+        <activity android:name=".ProfilePageActivity"/>
+        <activity android:name=".ReceiptActivity"/>
+        <activity android:name=".ReviewActivity"/>
+
     </application>
 
 </manifest>
