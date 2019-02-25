@@ -41,7 +41,7 @@
                 android:layout_marginBottom="20dp"/>
 
             <Button
-                android:id="@+id/signUp"
+                android:id="@+id/signUpButton_startUpPage"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Sign Up"

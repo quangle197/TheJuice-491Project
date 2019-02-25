@@ -38,7 +38,7 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/input_username"
+                android:id="@+id/input_username_signUpPage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Name"
@@ -52,7 +52,7 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/input_email"
+                android:id="@+id/input_email_signUpPage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
@@ -66,7 +66,7 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/input_password"
+                android:id="@+id/input_password_signUpPage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
@@ -80,7 +80,7 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/input_confirmPassword"
+                android:id="@+id/input_confirmPassword_signUpPage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirm Password"
@@ -88,7 +88,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/signUpButton"
+            android:id="@+id/signup_button_signUpPage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -138,7 +138,7 @@
             android:layout_centerVertical="true">
 
             <ImageButton
-                android:id="@+id/googleButton"
+                android:id="@+id/googleButton_signUpPage"
                 android:layout_width="170dp"
                 android:layout_height="50dp"
                 android:scaleType="center"
@@ -146,7 +146,7 @@
                 android:layout_alignParentLeft="true"/>
 
             <ImageButton
-                android:id="@+id/facebookButton"
+                android:id="@+id/facebookButton_signUpPage"
                 android:layout_width="170dp"
                 android:layout_height="50dp"
                 android:scaleType="center"
