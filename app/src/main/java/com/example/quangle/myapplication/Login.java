@@ -5,47 +5,63 @@ import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.content.ContentValues.TAG;
+import java.util.regex.Pattern;
 
 public class Login extends AppCompatActivity {
-    private FirebaseAuth mAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+        final EditText text_password = (EditText) findViewById(R.id.login_passwordEditText);
+        final EditText text_email = (EditText) findViewById(R.id.login_emailEditText);
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final Intent intent = new Intent(getApplicationContext(), MainActivity.class);;
+        final String[] fields = new String[2];
 
-        //initialize mAuth
-        mAuth = FirebaseAuth.getInstance();
+        // check if email and password matches users
+        // check if user has pressed email verification link
+        // log them in
         Button login = (Button) findViewById(R.id.loginButton);
         login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            public void onClick(View v) {
+                fields[1] = text_password.getText().toString();
+                fields[0] = text_email.getText().toString();
+                if (!verified(fields)) return;
+                else {
+                    mAuth.signInWithEmailAndPassword(fields[0], fields[1])
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        if (!mAuth.getCurrentUser().isEmailVerified()) {
+                                            display("Please verify email.");
+                                            return;
+                                        } else {
+                                            display("Sign in successful");
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    } else {
+                                        display("Sign in failed");
+                                    }
+                                }
+                            });
 
+                }
+            }
         });
     }
 
@@ -65,55 +81,34 @@ public class Login extends AppCompatActivity {
         startActivity(new Intent(this, SignUpActivity.class));
     }
 
-    public void listItem(View v)
-    {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", "Hat");
-        user.put("price", 420);
-        user.put("distance", 5);
-        user.put("sold", "John");
-        user.put("condition", "new");
-        user.put("quantity", "1");
-        user.put("description", "This black fedora will impress your queen. M'lady");
-
-        db.collection("item")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Added item");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding item",e);
-                    }
-                });
+    public void display(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void login(String email, String pass)
-    {
-        mAuth.createUserWithEmailAndPassword(email, pass)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+    public boolean verified(String[] fields){
+        for(String field : fields) {
+            if (field.equals("")) {
+                display("Not all fields have been entered");
+                return false;
+            }
+        }
+        if(!emailIsValid(fields[0])){
+            display("Email entered is not valid format");
+            return false;
+        }
+        else
+            return true;
+    }
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+    public boolean emailIsValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
 
-                        }
-
-                        // ...
-                    }
-                });
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 }
