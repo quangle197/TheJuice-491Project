@@ -73,13 +73,13 @@
             android:id="@+id/loginButton"
             android:layout_width="276dp"
             android:layout_height="51dp"
+            android:layout_below="@+id/createAcc"
+            android:layout_alignLeft="@+id/login_passwordEditText"
             android:layout_marginTop="48dp"
             android:background="@drawable/rounded_button"
             android:text="Login"
             android:textColor="@color/AliceBlue"
-            android:typeface="normal"
-            android:layout_below="@+id/createAcc"
-            android:layout_alignLeft="@+id/login_passwordEditText"/>
+            android:typeface="normal" />
 
         <ImageButton
             android:id="@+id/loginFaceBookButton"
