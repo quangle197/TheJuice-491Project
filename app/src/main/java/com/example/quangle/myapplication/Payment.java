@@ -1,10 +1,12 @@
 package com.example.quangle.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +21,16 @@ public class Payment extends AppCompatActivity{
         ListView listView=(ListView)findViewById(R.id.listView);
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
+
+        Button checkOut = (Button) findViewById(R.id.checkout);
+        checkOut.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(v.getContext(),ReceiptActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     class CustomAdapter extends BaseAdapter
