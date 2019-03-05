@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.quangle.myapplication.ListItemActivity">
 
     <EditText
         android:id="@+id/title"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:ems="10"
-        android:text="Name:"
+        android:hint="Name:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +23,7 @@
         android:layout_margin="10dp"
         android:layout_marginBottom="4dp"
         android:ems="10"
-        android:text="Description:"
+        android:hint="Description:"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <EditText
@@ -32,7 +33,7 @@
         android:layout_margin="10dp"
         android:layout_marginBottom="4dp"
         android:ems="10"
-        android:text="Price:"
+        android:hint="Price:"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <EditText
@@ -42,7 +43,7 @@
         android:layout_margin="10dp"
         android:layout_marginBottom="4dp"
         android:ems="10"
-        android:text="Condition:"
+        android:hint="Condition:"
         app:layout_constraintTop_toBottomOf="@+id/price" />
 
     <EditText
@@ -52,6 +53,38 @@
         android:layout_margin="10dp"
         android:layout_marginBottom="4dp"
         android:ems="10"
-        android:text="Category:"
+        android:hint="Distance:"
         app:layout_constraintTop_toBottomOf="@+id/condition" />
+
+    <EditText
+        android:id="@+id/sellby"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="4dp"
+        android:ems="10"
+        android:hint="Sell by:"
+        app:layout_constraintTop_toBottomOf="@+id/category" />
+
+    <EditText
+        android:id="@+id/quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="4dp"
+        android:ems="10"
+        android:hint="Quantity:"
+        app:layout_constraintTop_toBottomOf="@+id/sellby" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List item"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 </android.support.constraint.ConstraintLayout>

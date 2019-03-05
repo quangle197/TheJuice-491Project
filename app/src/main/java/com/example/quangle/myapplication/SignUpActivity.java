@@ -156,4 +156,9 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         return pat.matcher(email).matches();
     }
+
+    public void login(View v)
+    {
+        startActivity(new Intent(this, Login.class));
+    }
 }

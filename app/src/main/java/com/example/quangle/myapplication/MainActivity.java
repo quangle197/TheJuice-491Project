@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
         } else if (id == R.id.nav_selling) {
-            startActivity(new Intent(this, UserInventoryActivity.class));
+            startActivity(new Intent(this, ListItemActivity.class));
         }
         else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));

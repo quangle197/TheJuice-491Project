@@ -12,8 +12,8 @@ public class UserInventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_inventory);
 
-        Button signUp = (Button) findViewById(R.id.signUpButton);
-        signUp.setOnClickListener(new View.OnClickListener(){
+        Button addItem = (Button) findViewById(R.id.addItemButton);
+        addItem.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v)
             {
                 Intent intent = new Intent(v.getContext(),Login.class);
