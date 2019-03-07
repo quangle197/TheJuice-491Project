@@ -28,6 +28,9 @@
             android:id="@+id/nav_contact"
             android:icon="@drawable/ic_menu_manage"
             android:title="Support" />
+        <item
+            android:id="@+id/nav_signout"
+            android:title="Signout" />
     </group>
 
 

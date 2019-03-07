@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -96,6 +98,11 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
+        }
+        else if (id == R.id.nav_signout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, Login.class));
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
