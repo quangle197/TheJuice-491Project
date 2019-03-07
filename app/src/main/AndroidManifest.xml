@@ -30,7 +30,9 @@
         <activity android:name=".UserInventoryActivity"/>
         <activity android:name=".ContactPageActivity"/>
         <activity android:name=".ItemScreenActivity"/>
-        <activity android:name=".ListItemActivity"/>
+        <activity android:name=".ListItemActivity"
+            android:label="List an Item"/>
+
         <activity android:name=".ProfilePageActivity"/>
         <activity android:name=".ReceiptActivity"/>
         <activity android:name=".ReviewActivity"/>
