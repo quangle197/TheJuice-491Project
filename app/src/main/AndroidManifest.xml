@@ -36,7 +36,9 @@
         <activity android:name=".ProfilePageActivity"/>
         <activity android:name=".ReceiptActivity"/>
         <activity android:name=".ReviewActivity"/>
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>
     </application>
 
 </manifest>
