@@ -13,14 +13,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="387dp"
             android:layout_height="298dp"
             android:layout_marginTop="135sp"
             android:layout_gravity="center"
             tools:layout_editor_absoluteX="14dp"
-            tools:layout_editor_absoluteY="16dp" />
+            tools:layout_editor_absoluteY="16dp"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
 
         <TextView
             android:id="@+id/itemsNearYou"
