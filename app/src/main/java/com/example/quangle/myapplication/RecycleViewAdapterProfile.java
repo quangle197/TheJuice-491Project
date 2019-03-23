@@ -29,14 +29,14 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
     }
 
     @Override
-    public RecycleViewAdapterProfile.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: called.");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_listitem,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecycleViewAdapterProfile.ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
         Glide.with(mContext)
