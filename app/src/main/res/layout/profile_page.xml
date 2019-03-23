@@ -5,7 +5,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.quangle.myapplication.MainActivity">
+    tools:context="com.example.quangle.myapplication.ProfilePageActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -26,6 +26,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleHView"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/textView26"
+        tools:layout_editor_absoluteX="10dp">
+
+    </android.support.v7.widget.RecyclerView>
     <ImageView
         android:id="@+id/profile_page_user_photo"
         android:layout_width="75dp"
@@ -73,7 +82,7 @@
         android:layout_marginBottom="10dp"
         android:src="@drawable/menu"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/textView26"
@@ -94,7 +103,7 @@
         app:layout_constraintRight_toRightOf="@+id/profile_page_username"
         app:layout_constraintTop_toBottomOf="@+id/profile_page_username" />
 
-    <View
+    <!--<View
         android:id="@+id/profile_page_itembartop"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -303,7 +312,9 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/ic_star"
         app:layout_constraintLeft_toRightOf="@+id/profile_page_star4"
-        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />
+        app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />-->
+
+
 
 
 </android.support.constraint.ConstraintLayout>

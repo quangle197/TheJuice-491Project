@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_selling) {
             startActivity(new Intent(this, ListItemActivity.class));
         } else if (id == R.id.nav_contact) {
-            startActivity(new Intent(this, ContactPageActivity.class));
+            startActivity(new Intent(this, ProfilePageActivity.class));
         } else if (id == R.id.nav_signout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, Login.class));
