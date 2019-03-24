@@ -147,20 +147,20 @@
 
             <ImageButton
                 android:id="@+id/googleButton_signUpPage"
-                android:layout_width="170dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
                 android:scaleType="center"
-                app:srcCompat="@drawable/google"
-                android:layout_alignParentLeft="true"/>
+                app:srcCompat="@drawable/google" />
 
             <ImageButton
                 android:id="@+id/facebookButton_signUpPage"
                 android:layout_width="170dp"
                 android:layout_height="50dp"
-                android:scaleType="center"
+                android:layout_alignParentRight="true"
 
-                app:srcCompat="@drawable/facebook"
-                android:layout_alignParentRight="true"/>
+                android:scaleType="center"
+                app:srcCompat="@drawable/facebook" />
         </RelativeLayout>
 
         <TextView
