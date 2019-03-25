@@ -20,12 +20,14 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
 
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
+    private ArrayList<Double> prices = new ArrayList<>();
     private Context mContext;
 
-    public RecycleViewAdapterProfile(Context mContext,ArrayList<String> names, ArrayList<String> urls) {
+    public RecycleViewAdapterProfile(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices) {
         this.names = names;
         this.urls = urls;
         this.mContext = mContext;
+        this.prices = prices;
     }
 
     @Override
@@ -43,8 +45,10 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
                 .asBitmap()
                 .load(urls.get(position))
                 .into(holder.itemImg);
-        holder.itemTitle.setText(names.get(position));
 
+        //set the contents on the list
+        holder.itemTitle.setText(names.get(position));
+        holder.itemPrice.setText(String.format("$%.2f" , prices.get(position)));
         holder.itemImg.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -66,13 +70,13 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
     {
         TextView itemTitle;
         ImageView itemImg;
-
+        TextView itemPrice;
         public ViewHolder(View itemView)
         {
             super(itemView);
             itemImg= itemView.findViewById(R.id.pItemImage);
             itemTitle=itemView.findViewById(R.id.pItemName);
-
+            itemPrice = itemView.findViewById(R.id.pItemPrice);
         }
     }
 }

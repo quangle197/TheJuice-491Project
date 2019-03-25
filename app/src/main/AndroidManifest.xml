@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -22,7 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Payment"/>
         <activity android:name=".Login"/>
         <activity android:name=".ForgotPassword"/>
@@ -36,7 +39,8 @@
         <activity android:name=".ListItemActivity"
             android:label="List an Item"/>
 
-        <activity android:name=".ProfilePageActivity"/>
+        <activity android:name=".ProfilePageActivity"
+            android:label="Profile"/>
         <activity android:name=".ReceiptActivity"/>
         <activity android:name=".ReviewActivity"/>
         <meta-data

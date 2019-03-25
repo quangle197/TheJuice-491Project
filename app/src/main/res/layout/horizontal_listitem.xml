@@ -6,8 +6,8 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/profileItemView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_centerInParent="true">
 
         <RelativeLayout
@@ -25,17 +25,40 @@
 
             <TextView
                 android:id="@+id/pItemName"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_weight="1"
+
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                android:lines="2"
+                android:singleLine="false"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/pItemImage"
-                android:gravity="center"
+                android:gravity="left"
                 android:layout_centerHorizontal="true"
                 android:text="itemName"
                 android:textColor="#000"
                 android:layout_marginBottom="5dp"
                 android:autoSizeTextType="uniform"
+                android:textSize="15sp"
+                android:autoSizeMaxTextSize="15sp"/>
+                <!--
                 android:autoSizeMinTextSize="8sp"
-                android:autoSizeMaxTextSize="15sp"
+                android:autoSizeMaxTextSize="15sp"-->
+
+
+            <TextView
+                android:id="@+id/pItemPrice"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pItemName"
+                android:gravity="center|left"
+                android:layout_centerHorizontal="true"
+                android:text="itemName"
+                android:textColor="#000"
+                android:layout_marginBottom="5dp"
+                android:autoSizeTextType="uniform"
+                android:textSize="17sp"
                 />
 
         </RelativeLayout>

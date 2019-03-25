@@ -34,7 +34,16 @@
             android:text="Items near you"
             android:textColor="@android:color/black" />
 
-        <View
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleHView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/itemsNearYou"
+            tools:layout_editor_absoluteX="10dp">
+
+        </android.support.v7.widget.RecyclerView>
+        <!--<View
             android:layout_width="375sp"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
@@ -130,7 +139,7 @@
             android:layout_width="375sp"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/darker_gray" />-->
 
     </LinearLayout>
 

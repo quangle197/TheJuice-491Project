@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,7 +27,10 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.location.Location;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -33,7 +39,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.location.places.PlaceLikelihood;
@@ -42,9 +51,33 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+
+    //arrays for items
+    private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> urls = new ArrayList<>();
+    private ArrayList<Double> prices = new ArrayList<>();
+
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -68,6 +101,14 @@ public class MainActivity extends AppCompatActivity
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private StorageTask uploadTask;
+    private Uri imageURL;
+    private static int IMAGE_REQUEST=1;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,10 +148,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), CartActivity.class);
                 startActivity(intent);
-                finish();
+               // finish();
             }
         });
         showCurrentPlace();
+        getImage();
+        getUserProfile();
     }
 
     @Override
@@ -161,6 +204,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, ListItemActivity.class));
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ProfilePageActivity.class));
+            //openImg();
         } else if (id == R.id.nav_signout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, Login.class));
@@ -345,5 +389,181 @@ public class MainActivity extends AppCompatActivity
             // Prompt the user for permission.
             getLocationPermission();
         }
+    }
+
+    private void getImage()
+    {
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+        names.add("Reigning champ");
+        prices.add(10.00);
+
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+        names.add("New Reigning champ midweight tshirt  ");
+        prices.add(15.00);
+
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3206_M_Black_Hoodie_Front_copy_1024x1024.jpg?v=1549562065");
+        names.add("Reigning champ");
+        prices.add(15.00);
+
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+        names.add("Reigning champ tshirt");
+        prices.add(15.00);
+
+        initRecyclerView();
+    }
+
+    private void initRecyclerView()
+    {
+        Log.d(TAG, "initRecyclerView: init recyclerview");
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = findViewById(R.id.recycleHView  );
+        recyclerView.setLayoutManager(layoutManager);
+        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices);
+        recyclerView.setAdapter(adapter);
+    }
+    //get image file
+    private void openImg()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,IMAGE_REQUEST);
+    }
+    public void updateUserProfile()
+    {
+        //initialize storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+
+        if(imageURL!=null)
+        {
+            final StorageReference imagesRef = storageRef.child("userImages").child(uid);
+            //url = https://cdn.frankerfacez.com/emoticon/145947/4;
+            uploadTask = imagesRef.putFile(imageURL);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful())
+                    {
+                        throw task.getException();
+                    }
+                    return imagesRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task)
+                {
+                    if(task.isSuccessful())
+                    {
+                        Uri downloadUrl =task.getResult();
+                        path = downloadUrl.toString();
+
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName("Quang Le")
+                                .setPhotoUri(Uri.parse(path))
+                                .build();
+
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User profile updated.");
+                                        }
+                                    }
+                                });
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Failed",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"No image selected", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == IMAGE_REQUEST && resultCode== RESULT_OK && data !=null && data.getData() != null)
+        {
+            imageURL=data.getData();
+            if(uploadTask != null && uploadTask.isInProgress())
+            {
+                Toast.makeText(getApplicationContext(),"Upload in progress", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                updateUserProfile();
+            }
+        }
+    }
+
+
+
+    public void getUserProfile()
+    {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        String uid = user.getUid();
+        StorageReference storageReference = storageRef.child("userImages").child(uid);
+        NavigationView navMain = (NavigationView) findViewById(R.id.nav_view);
+        View header = (View) navMain.getHeaderView(0);
+        TextView userName = (TextView) header.findViewById(R.id.drawerUser);
+        TextView userEmail = (TextView) header.findViewById(R.id.drawerEmail);
+        ImageView userPic = (ImageView) header.findViewById(R.id.imageView);
+
+        if (user != null)
+        {
+            final Uri[] pathImg = new Uri[1];
+
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Uri f = uri;
+                    pathImg[0] = uri;
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+                userName.setText(user.getDisplayName());
+                userEmail.setText(user.getEmail());
+                Glide.with(this)
+                        .load(user.getPhotoUrl())
+                        .into(userPic);
+        }
+
+        userPic.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v)
+            {
+                startActivity(new Intent(v.getContext(), ProfilePageActivity.class));
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
     }
 }
