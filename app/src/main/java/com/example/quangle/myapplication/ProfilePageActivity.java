@@ -1,14 +1,23 @@
 package com.example.quangle.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,7 +36,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
-public class ProfilePageActivity extends AppCompatActivity{
+public class ProfilePageActivity extends DefaultActionbar
+        implements NavigationView.OnNavigationItemSelectedListener{
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
     private StorageTask uploadTask;
@@ -40,10 +50,16 @@ public class ProfilePageActivity extends AppCompatActivity{
     private ArrayList<Double> prices = new ArrayList<>();
     private static final String TAG = "ProfilePageActivity";
         @Override
-        protected void onCreate(Bundle savedInstanceState)
+        public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.profile_page);
+            //setContentView(R.layout.profile_page);
+
+            LayoutInflater inflater = (LayoutInflater) this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View contentView = inflater.inflate(R.layout.profile_page, null, false);
+            drawer.addView(contentView, 0);
+
             getImage();
 
             Button addPicture = (Button) findViewById(R.id.addButton);
@@ -56,10 +72,6 @@ public class ProfilePageActivity extends AppCompatActivity{
         }
 
 
-        /*public void upload(View v)
-        {
-            openImg();
-        }*/
 
     //get image file
     public void openImg()

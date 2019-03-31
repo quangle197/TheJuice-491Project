@@ -87,11 +87,11 @@ public class SignUpActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         display("Registration success! Please check email and verify.");
                                                         //get the user name (haven't test)
-                                                        /*UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                                 .setDisplayName(fields[0])
                                                                 .build();
                                                         firebaseAuth.getCurrentUser().updateProfile(profileUpdates);
-                                                        clearFields();*/
+                                                        clearFields();
                                                     } else {
                                                         display(task.getException().getMessage());
                                                     }

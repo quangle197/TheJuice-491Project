@@ -43,6 +43,7 @@
             android:label="Profile"/>
         <activity android:name=".ReceiptActivity"/>
         <activity android:name=".ReviewActivity"/>
+        <activity android:name=".DefaultActionbar"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>

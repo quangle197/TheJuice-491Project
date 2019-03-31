@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.quangle.myapplication.ProfilePageActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <!--<android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="99dp"
@@ -24,22 +24,22 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
-    </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.AppBarLayout>-->
+    <include
+        android:id="@+id/include2"
+        layout="@layout/app_bar_default" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleHView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/textView26"
-        tools:layout_editor_absoluteX="10dp">
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    </android.support.v7.widget.RecyclerView>
-    <ImageView
+    <!--<ImageView
         android:id="@+id/profile_page_user_photo"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:onClick="upload"
         android:src="@drawable/ic_account_circle_white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -83,20 +83,20 @@
         android:layout_marginBottom="10dp"
         android:src="@drawable/menu"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" /><![CDATA[-->
-
-    ]]>
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <Button
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Add profile picture"
-        android:padding="5dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@+id/profile_page_username"
-        app:layout_constraintLeft_toLeftOf="@+id/profile_page_username"/>
+        android:padding="5dp"
+        android:text="Add profile picture"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space" />
+    <!--app:layout_constraintTop_toTopOf="parent"-->
+
 
     <TextView
         android:id="@+id/textView26"
@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:text="Items For Sale"
-        app:layout_constraintLeft_toLeftOf="@+id/profile_page_username"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addButton" />
 
     <TextView
@@ -114,8 +114,18 @@
         android:layout_marginRight="5dp"
         android:text="See All Items"
         android:textColor="@color/WeSellGreen"
-        app:layout_constraintRight_toRightOf="@+id/profile_page_username"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addButton" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleHView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/textView26"
+        tools:layout_editor_absoluteX="10dp">
+
+    </android.support.v7.widget.RecyclerView>
 
     <!--<View
         android:id="@+id/profile_page_itembartop"
@@ -327,8 +337,6 @@
         android:src="@drawable/ic_star"
         app:layout_constraintLeft_toRightOf="@+id/profile_page_star4"
         app:layout_constraintTop_toBottomOf="@id/profile_page_itembartop2" />-->
-
-
 
 
 </android.support.constraint.ConstraintLayout>
