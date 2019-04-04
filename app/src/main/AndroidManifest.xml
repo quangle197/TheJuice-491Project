@@ -25,7 +25,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan">
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity"/>
+        </activity>
         <activity android:name=".Payment"/>
         <activity android:name=".Login"/>
         <activity android:name=".ForgotPassword"/>
@@ -44,6 +47,14 @@
         <activity android:name=".ReceiptActivity"/>
         <activity android:name=".ReviewActivity"/>
         <activity android:name=".DefaultActionbar"/>
+        <activity android:name=".SearchableActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"
+                android:value=".SearchableActivity"/>
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>

@@ -1,6 +1,8 @@
 package com.example.quangle.myapplication;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +30,7 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.location.Location;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,6 +141,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -146,15 +151,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //set up cart button
-        ImageButton cart = (ImageButton) findViewById(R.id.cart);
+
+        /*ImageButton cart = (ImageButton) findViewById(R.id.cart);
         cart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), CartActivity.class);
                 startActivity(intent);
                // finish();
             }
-        });
+        });*/
         showCurrentPlace();
         getImage();
         getUserProfile();
@@ -172,8 +177,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.cart, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) findViewById(R.id.menu_search);
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        //set up cart button
         return true;
     }
 
@@ -182,24 +193,25 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.cart:
+                startActivity(new Intent(this, CartActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         } else if (id == R.id.nav_message) {
             startActivity(new Intent(this, MessageActivity.class));
         } else if (id == R.id.nav_order) {
@@ -207,7 +219,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_selling) {
             startActivity(new Intent(this, ListItemActivity.class));
         } else if (id == R.id.nav_contact) {
-            startActivity(new Intent(this, ProfilePageActivity.class));
+            startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();
         } else if (id == R.id.nav_signout) {
             FirebaseAuth.getInstance().signOut();
@@ -461,14 +473,7 @@ public class MainActivity extends AppCompatActivity
         RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices);
         recyclerView.setAdapter(adapter);
     }
-    //get image file
-    private void openImg()
-    {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,IMAGE_REQUEST);
-    }
+
     public void updateUserProfile()
     {
         //initialize storage

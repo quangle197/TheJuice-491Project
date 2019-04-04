@@ -1,5 +1,7 @@
 package com.example.quangle.myapplication;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,13 +9,17 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
+//import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,8 +34,7 @@ public class DefaultActionbar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     protected DrawerLayout drawer;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    //@Override
-    //public void onCreateDrawer(Bundle savedInstanceState)
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -37,7 +42,7 @@ public class DefaultActionbar extends AppCompatActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
+        //ActionBar actionbar = getSupportActionBar();
 
 
         this.drawer = (DrawerLayout) findViewById(R.id.drawer_layout_default);
@@ -58,6 +63,31 @@ public class DefaultActionbar extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.defaultmenu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.cart:
+                startActivity(new Intent(this, MessageActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
     @Override
@@ -130,7 +160,6 @@ public class DefaultActionbar extends AppCompatActivity
             public void onClick(View v)
             {
                 startActivity(new Intent(v.getContext(), ProfilePageActivity.class));
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
         });

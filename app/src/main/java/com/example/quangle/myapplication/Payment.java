@@ -60,7 +60,7 @@ public class Payment extends AppCompatActivity{
             ImageView imageView = (ImageView)view.findViewById(R.id.itemImg);
             TextView textView_name = (TextView)view.findViewById(R.id.itemTitle);
             TextView textView_price = (TextView)view.findViewById(R.id.itemPrice);
-            TextView textView_quantity = (TextView)view.findViewById(R.id.itemQuantity);
+            TextView textView_quantity = (TextView)view.findViewById(R.id.itemCondition);
 
             imageView.setImageResource(R.drawable.wesell);
             textView_name.setText("test");
