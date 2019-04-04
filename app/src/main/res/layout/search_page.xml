@@ -3,67 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".SearchableActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/toolbarItemScreen"
+    <include
+        android:id="@+id/include2"
+        layout="@layout/app_bar_default" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@+id/recycleVView"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleVView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_below="@+id/space"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="641dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        <ImageView
-            android:id="@+id/shoppingCartItemScreen"
-            android:layout_width="46dp"
-            android:layout_height="34dp"
-            android:layout_marginLeft="360sp"
-            android:layout_marginTop="-40sp"
-            android:src="@drawable/ic_action_name" />
-
-        <ImageView
-            android:id="@+id/menuItemScreen"
-            android:layout_width="46dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="-46sp"
-            android:src="@drawable/menu" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center|right"></LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/searchBarItemScreen"
-            android:layout_width="378dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15sp"
-            android:layout_marginTop="10sp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center|right">
-
-            <EditText
-                android:id="@+id/editMobileNo"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:drawableLeft="@drawable/search"
-                android:ems="10"
-                android:gravity="left|center"
-                android:hint="Search for an item"
-                android:singleLine="false"
-                android:textColor="@android:color/black"
-                android:textCursorDrawable="@null"></EditText>
-
-        </LinearLayout>
-
-    </android.support.design.widget.AppBarLayout>
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

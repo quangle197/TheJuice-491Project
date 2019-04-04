@@ -22,7 +22,8 @@ import static android.content.ContentValues.TAG;
 public class ListItemActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String name, sold, condition, description;
-    private int price, distance, quantity;
+    private int distance, quantity;
+    private double price;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -45,7 +46,7 @@ public class ListItemActivity extends AppCompatActivity {
                 sold = sellbyInput.getText().toString();
                 condition = conditionInput.getText().toString();
                 description = descInput.getText().toString();
-                price = Integer.parseInt(priceInput.getText().toString());
+                price =  Double.parseDouble(priceInput.getText().toString());
                 distance = Integer.parseInt(distanceInput.getText().toString());
                 quantity = Integer.parseInt(quantityInput.getText().toString());
 
@@ -54,7 +55,7 @@ public class ListItemActivity extends AppCompatActivity {
         });
     }
 
-    public void listItem(String name, String sold, String condition, String description, int price, int distance, int quantity)
+    public void listItem(String name, String sold, String condition, String description, double price, int distance, int quantity)
     {
 
         Map<String, Object> user = new HashMap<>();
