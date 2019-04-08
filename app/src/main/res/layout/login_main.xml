@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     tools:context="com.example.quangle.myapplication.Login">
 
     <RelativeLayout
@@ -20,28 +21,33 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/wesell" />
 
+        <Space
+            android:id="@+id/logoSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_below="@id/logoImageView"/>
+
         <EditText
             android:id="@+id/login_emailEditText"
             android:layout_width="276dp"
             android:layout_height="47dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="72dp"
+            android:layout_marginBottom="3dp"
             android:padding="10dp"
+            android:alpha=".5"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint=" Email"
             android:inputType="textEmailAddress"
-            android:layout_below="@+id/logoImageView" />
+            android:layout_below="@+id/logoSpace" />
 
         <EditText
             android:id="@+id/login_passwordEditText"
             android:layout_width="276dp"
             android:layout_height="47dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="64dp"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="20dp"
             android:padding="10dp"
+            android:alpha=".5"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint=" Password"
@@ -56,7 +62,8 @@
             android:layout_centerHorizontal="true"
             android:clickable="true"
             android:onClick="create"
-            android:layout_below="@id/login_passwordEditText"
+            android:textColor="@color/white"
+            android:layout_below="@id/loginButton"
             android:layout_alignLeft="@+id/login_passwordEditText" />
 
         <TextView
@@ -66,39 +73,60 @@
             android:text="Forgot password"
             android:clickable="true"
             android:onClick="forgot"
+            android:textColor="@color/white"
             android:layout_alignRight="@+id/login_passwordEditText"
-            android:layout_below="@+id/login_passwordEditText"/>
+            android:layout_below="@+id/loginButton"/>
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="276dp"
             android:layout_height="51dp"
-            android:layout_below="@+id/createAcc"
+            android:layout_below="@+id/login_passwordEditText"
             android:layout_alignLeft="@+id/login_passwordEditText"
-            android:layout_marginTop="48dp"
-            android:background="@drawable/rounded_button"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_button2"
             android:text="Login"
-            android:textColor="@color/AliceBlue"
+            android:textColor="@color/WeSellGreen"
             android:typeface="normal" />
 
-        <ImageButton
-            android:id="@+id/loginFaceBookButton"
-            android:layout_width="276dp"
-            android:layout_height="62dp"
-            android:layout_marginTop="15dp"
-            android:layout_alignLeft="@id/loginButton"
+        <TextView
+            android:id="@+id/loginOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="Or login with"
+            android:paddingTop="100dp"
+            android:paddingBottom="10dp"
             android:layout_below="@+id/loginButton"
-            app:srcCompat="@drawable/facebook" />
+            />
+        <Space
+            android:id="@+id/signup_Space"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loginOption"
+            android:layout_centerInParent="true" />
 
         <ImageButton
-            android:id="@+id/loginGoogleButton"
-            android:layout_width="276dp"
-            android:layout_height="62dp"
-            android:layout_marginTop="15dp"
-            android:layout_below="@+id/loginFaceBookButton"
-            android:layout_alignLeft="@+id/loginFaceBookButton"
-            app:srcCompat="@drawable/google" />
+            android:id="@+id/googleButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/loginOption"
+            android:layout_toLeftOf="@+id/signup_Space"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_google_logo" />
 
+        <ImageButton
+            android:id="@+id/facebookButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/loginOption"
+            android:layout_toRightOf="@+id/signup_Space"
+            android:background="@null"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_facebook_logo" />
     </RelativeLayout>
+
 
 </android.support.constraint.ConstraintLayout>
