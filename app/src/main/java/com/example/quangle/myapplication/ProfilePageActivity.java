@@ -15,8 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +46,7 @@ public class ProfilePageActivity extends DefaultActionbar
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
     private static final String TAG = "ProfilePageActivity";
+
         @Override
         public void onCreate(Bundle savedInstanceState)
         {
@@ -64,6 +67,11 @@ public class ProfilePageActivity extends DefaultActionbar
                     openImg();
                 }
             });
+
+            ImageView userPic = (ImageView)findViewById(R.id.imageView);
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .into(userPic);
         }
 
     @Override
@@ -172,6 +180,7 @@ public class ProfilePageActivity extends DefaultActionbar
             else
             {
                 updateUserProfile();
+                Toast.makeText(getApplicationContext(),"Your profile picture is uploaded", Toast.LENGTH_SHORT).show();
             }
         }
     }

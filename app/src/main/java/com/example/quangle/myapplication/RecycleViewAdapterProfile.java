@@ -63,7 +63,7 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
 
     @Override
     public int getItemCount() {
-        return urls.size();
+        return names.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
@@ -35,7 +39,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -60,9 +69,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -73,12 +84,14 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.content.ContentValues.TAG;
 import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
     //arrays for items
     private ArrayList<String> names = new ArrayList<>();
@@ -98,6 +111,8 @@ public class MainActivity extends AppCompatActivity
 
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
+    private FusedLocationProviderClient fusedLocationClient;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -116,7 +131,9 @@ public class MainActivity extends AppCompatActivity
     private Uri imageURL;
     private static int IMAGE_REQUEST=1;
     private String path;
-
+    private DocumentReference docRef ;
+    private Map<String, Object> coordinates = new HashMap<>();
+    private boolean sharing=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,18 +168,24 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        /*ImageButton cart = (ImageButton) findViewById(R.id.cart);
-        cart.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), CartActivity.class);
-                startActivity(intent);
-               // finish();
-            }
-        });*/
         showCurrentPlace();
         getImage();
         getUserProfile();
+
+        /*Timer t = new Timer();
+        //Set the schedule function and rate
+        t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //Called each time when 1000 milliseconds (1 second) (the period parameter)
+                getDeviceLocation();
+            }
+
+            },
+        //Set how long before to start calling the TimerTask (in milliseconds)
+                0,
+        //Set the amount of time between each execution (in milliseconds)
+                5000);*/
     }
 
     @Override
@@ -221,10 +244,21 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();
-        } else if (id == R.id.nav_signout) {
+        } else if (id == R.id.nav_location) {
+            locationSharing(item);
+        } else if(id == R.id.nav_venmo){
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.venmo");
+            if (launchIntent != null) {
+                startActivity(launchIntent);//null pointer check in case package name was not found
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(),"You need to install Venmo",Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (id == R.id.nav_signout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, Login.class));
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -244,7 +278,7 @@ public class MainActivity extends AppCompatActivity
         */
 
         getLocationPermission();
-
+        mMap.setOnMyLocationButtonClickListener(this);
         getSellers();
         updateLocationUI();
         getDeviceLocation();
@@ -258,6 +292,7 @@ public class MainActivity extends AppCompatActivity
                 Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
         {
             mLocationPermissionGranted = true;
+
         }
         else
         {
@@ -331,12 +366,25 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //get device currect location
+
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "Location updated", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        getDeviceLocation();
+        return false;
+    }
+    //get device current location
     private void getDeviceLocation() {
         /*
           Get the best and most recent location of the device, which may be null in rare
           cases when a location is not available.
          */
+        //get the user data
+
+
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -349,6 +397,12 @@ public class MainActivity extends AppCompatActivity
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            coordinates.put("Lat",mLastKnownLocation.getLatitude());
+                            coordinates.put("Lon",mLastKnownLocation.getLongitude());
+
+                            db.collection("users").document(user.getUid())
+                                    .set(coordinates,SetOptions.merge());
+
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -605,5 +659,29 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void locationSharing(MenuItem item)
+    {
+        Map<String, Object> permission = new HashMap<>();
+        SpannableString s = new SpannableString(item.getTitle());
+        if(!sharing)
+        {
+            sharing = true;
+            permission.put("Permission",true);
+            db.collection("users").document(user.getUid())
+                    .set(permission,SetOptions.merge());
+            s.setSpan(new ForegroundColorSpan(Color.BLUE), 0, s.length(), 0);
+            item.setTitle(s);
+        }
+        else
+        {
+            sharing = false;
+            permission.put("Permission",false);
+            db.collection("users").document(user.getUid())
+                    .set(permission,SetOptions.merge());
+            s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
+            item.setTitle(s);
+        }
     }
 }
