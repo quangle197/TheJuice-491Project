@@ -90,9 +90,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/rounded_button"
         android:padding="5dp"
         android:text="Add profile picture"
+        android:textColor="@color/white"
+        android:layout_marginLeft="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/space" />
     <!--app:layout_constraintTop_toTopOf="parent"-->
