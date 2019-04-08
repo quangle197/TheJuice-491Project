@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class StartUp extends AppCompatActivity {
-   private FirebaseAuth.AuthStateListener mAuthListener;
+   //private FirebaseAuth.AuthStateListener mAuthListener;
+   private FirebaseUser mAuthListener = FirebaseAuth.getInstance().getCurrentUser();
    private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -18,15 +20,10 @@ public class StartUp extends AppCompatActivity {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.start_up);
 
-       // If user is currently loged in, send to main activity
-       mAuthListener = new FirebaseAuth.AuthStateListener() {
-           @Override
-           public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-               if(firebaseAuth.getCurrentUser() != null){
-                   intent = new Intent(StartUp.this, MainActivity.class);
-               }
-           }
-       };
+       if(mAuthListener!=null)
+       {
+           startActivity(new Intent(this, MainActivity.class));
+       }
 
        Button login = (Button) findViewById(R.id.login);
        Button signup = (Button) findViewById(R.id.signUpButton_startUpPage);

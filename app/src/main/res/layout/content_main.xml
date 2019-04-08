@@ -5,9 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.quangle.myapplication.MainActivity"
+    tools:context="MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +21,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="387dp"
             android:layout_height="298dp"
-            android:layout_marginTop="135sp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center"
             tools:layout_editor_absoluteX="14dp"
             tools:layout_editor_absoluteY="16dp"
@@ -34,103 +38,16 @@
             android:text="Items near you"
             android:textColor="@android:color/black" />
 
-        <View
-            android:layout_width="375sp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="8dp"
-
-            android:background="@android:color/darker_gray" />
-
-        <ImageView
-            android:id="@+id/item1Pic"
-            android:layout_width="103dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="15sp"
-            android:layout_marginLeft="50sp"
-            app:srcCompat="@drawable/ic_menu_gallery" />
-
-        <ImageView
-            android:id="@+id/item2Pic"
-            android:layout_width="103dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="-65sp"
-            android:layout_marginLeft="250sp"
-            app:srcCompat="@drawable/ic_menu_gallery" />
-
-        <TextView
-            android:id="@+id/nameOfSeller1"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleHView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60sp"
-            android:text="Name of seller" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/itemsNearYou"
+            tools:layout_editor_absoluteX="10dp">
 
-        <TextView
-            android:id="@+id/nameOfSeller2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="260sp"
-            android:layout_marginTop="-20sp"
-            android:text="Name of seller" />
+        </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/nameOfItem1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60sp"
-            android:text="Name of item" />
-
-        <TextView
-            android:id="@+id/nameOfItem2"
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_marginLeft="260sp"
-            android:layout_marginTop="-20sp"
-            android:text="Name of item" />
-
-        <TextView
-            android:id="@+id/priceOfItem1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60sp"
-            android:text="Price" />
-
-        <TextView
-            android:id="@+id/priceOfItem2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="260sp"
-            android:layout_marginTop="-20sp"
-            android:text="Price" />
-
-        <TextView
-            android:id="@+id/distanceFromUser1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60sp"
-            android:layout_marginTop="-5sp"
-            android:text="Distance from user" />
-
-        <TextView
-            android:id="@+id/distanceFromUser2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="260sp"
-            android:layout_marginTop="-20sp"
-            android:text="Distance from user" />
-
-        <View
-            android:layout_width="1sp"
-            android:layout_height="180dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="-146sp"
-            android:background="@android:color/darker_gray" />
-
-        <View
-            android:layout_width="375sp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="15dp"
-            android:background="@android:color/darker_gray" />
 
     </LinearLayout>
 
