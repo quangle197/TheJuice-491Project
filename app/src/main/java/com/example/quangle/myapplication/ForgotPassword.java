@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,7 +24,7 @@ public class ForgotPassword extends AppCompatActivity{
         setContentView(R.layout.forgot_password);
 
         final EditText email = (EditText) findViewById(R.id.email);
-        final ImageView enter = (ImageView) findViewById(R.id.enter);
+        final Button enter = (Button) findViewById(R.id.enter);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
 

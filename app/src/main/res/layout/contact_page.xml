@@ -2,7 +2,8 @@
 <android.support.constraint.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/WeSellGreen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
             android:layout_gravity="center_horizontal"
             android:textStyle="bold"
             android:text="Contact Us"
+            android:textColor="@color/white"
             android:textSize="20dp"/>
         <TextView
             android:id="@+id/contactInfo"
@@ -36,7 +38,7 @@
             android:layout_marginTop="15dp"
             android:layout_gravity="center_horizontal"
             android:text="Email: WeSell@gmail.com"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="16dp"/>
     </LinearLayout>
 
