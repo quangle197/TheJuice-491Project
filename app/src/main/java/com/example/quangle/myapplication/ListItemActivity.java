@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -24,6 +26,7 @@ public class ListItemActivity extends AppCompatActivity {
     private String name, sold, condition, description;
     private int distance, quantity;
     private double price;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -43,7 +46,7 @@ public class ListItemActivity extends AppCompatActivity {
         addItem.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 name = nameInput.getText().toString();
-                sold = sellbyInput.getText().toString();
+                sold = user.getUid();
                 condition = conditionInput.getText().toString();
                 description = descInput.getText().toString();
                 price =  Double.parseDouble(priceInput.getText().toString());
@@ -66,6 +69,7 @@ public class ListItemActivity extends AppCompatActivity {
         user.put("condition", condition);
         user.put("quantity", quantity);
         user.put("description", description);
+        user.put("lowercasename",name.toLowerCase());
 
         db.collection("item")
                 .add(user)

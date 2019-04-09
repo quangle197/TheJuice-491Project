@@ -74,18 +74,21 @@ public class SearchableActivity extends DefaultActionbar implements NavigationVi
     private void getResults(final String search)
     {
         db.collection("item")
-                .whereEqualTo("name", search)
+                //.whereGreaterThanOrEqualTo("name", search)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                names.add(document.getString("name"));
-                                conditions.add(document.getString("condition"));
-                                prices.add( document.getDouble("price"));
-                                urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+                                if(document.getString("name").contains(search))
+                                {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    names.add(document.getString("name"));
+                                    conditions.add(document.getString("condition"));
+                                    prices.add(document.getDouble("price"));
+                                    urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+                                }
                             }
                             firebaseUserSearch();
                         } else {
