@@ -56,15 +56,6 @@
         android:hint="Distance:"
         app:layout_constraintTop_toBottomOf="@+id/condition" />
 
-    <EditText
-        android:id="@+id/sellby"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginBottom="4dp"
-        android:ems="10"
-        android:hint="Sell by:"
-        app:layout_constraintTop_toBottomOf="@+id/category" />
 
     <EditText
         android:id="@+id/quantity"
@@ -74,8 +65,19 @@
         android:layout_marginBottom="4dp"
         android:ems="10"
         android:hint="Quantity:"
-        app:layout_constraintTop_toBottomOf="@+id/sellby" />
+        app:layout_constraintTop_toBottomOf="@+id/category" />
 
+    <Button
+        android:id="@+id/addPicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add pictures"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quantity"/>
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
