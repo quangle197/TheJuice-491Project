@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity
     private DocumentReference docRef ;
     private Map<String, Object> coordinates = new HashMap<>();
     private boolean sharing=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -503,7 +504,14 @@ public class MainActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+                                if(document.getString("image1") != null)
+                                {
+                                    urls.add(document.getString("image1"));
+                                }
+                                else
+                                    {
+                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                }
                                 String name = document.getString("name");
                                 Double price = document.getDouble("price");
                                 names.add(name);
