@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,16 +23,28 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static android.content.ContentValues.TAG;
 
 public class ProfilePageActivity extends DefaultActionbar
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -41,10 +54,12 @@ public class ProfilePageActivity extends DefaultActionbar
     private Uri imageURL;
     private static int IMAGE_REQUEST=1;
     private String path;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
     private static final String TAG = "ProfilePageActivity";
 
         @Override
@@ -68,10 +83,9 @@ public class ProfilePageActivity extends DefaultActionbar
                 }
             });
 
-            ImageView userPic = (ImageView)findViewById(R.id.imageView);
-            Glide.with(this)
-                    .load(user.getPhotoUrl())
-                    .into(userPic);
+            changePicture();
+
+
         }
 
     @Override
@@ -135,6 +149,7 @@ public class ProfilePageActivity extends DefaultActionbar
                         Uri downloadUrl =task.getResult();
                         path = downloadUrl.toString();
 
+                        uploadProfilePicture(path);
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(Uri.parse(path))
                                 .build();
@@ -148,6 +163,8 @@ public class ProfilePageActivity extends DefaultActionbar
                                         }
                                     }
                                 });
+
+                        updateProfilePicture();
                     }
                     else
                     {
@@ -188,35 +205,35 @@ public class ProfilePageActivity extends DefaultActionbar
         private void getImage()
         {
             Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-            urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
-            names.add("Reigning champ");
-            prices.add(10.00);
-
-            Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-            urls.add("https://www.sneakersnstuff.com/images/219550/large.jpg");
-            names.add("New Reigning champ midweight tshirt  ");
-            prices.add(15.00);
-
-            Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-            urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3206_M_Black_Hoodie_Front_copy_1024x1024.jpg?v=1549562065");
-            names.add("Reigning champ");
-            prices.add(15.00);
-
-            Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-            urls.add("https://www.sneakersnstuff.com/images/219550/large.jpg");
-            names.add("Reigning champ tshirt");
-            prices.add(15.00);
-
-            Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-            urls.add("https://www.sneakersnstuff.com/images/184924/large.jpg");
-            names.add("Reigning champ");
-            prices.add(15.00);
-
-            urls.add("https://www.sneakersnstuff.com/images/219550/large.jpg");
-            names.add("Reigning champ tshirt");
-            prices.add(15.00);
-
-            initRecyclerView();
+            db.collection("item")
+                    .whereEqualTo("sold", uid)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getString("name"));
+                                    if(document.getString("image1") != null)
+                                    {
+                                        urls.add(document.getString("image1"));
+                                    }
+                                    else
+                                    {
+                                        urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                    }
+                                    String name = document.getString("name");
+                                    Double price = document.getDouble("price");
+                                    names.add(name);
+                                    prices.add(price);
+                                    id.add(document.getId());
+                                }
+                                initRecyclerView();
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
         }
 
     private void initRecyclerView()
@@ -226,7 +243,46 @@ public class ProfilePageActivity extends DefaultActionbar
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleHView  );
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices);
+        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices,id);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void uploadProfilePicture(String u)
+    {
+        HashMap<String, Object> url = new HashMap<>();
+        url.put("profilePicture",u );
+        db.collection("users").document(user.getUid())
+                .set(url, SetOptions.merge());
+    }
+    private void changePicture()
+    {
+        ImageView userPic = (ImageView)findViewById(R.id.imageView);
+        Glide.with(this)
+                .load(user.getPhotoUrl())
+                .into(userPic);
+    }
+    private void updateProfilePicture()
+    {
+        final DocumentReference docRef = db.collection("users").document(uid);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    Intent refresh = new Intent(getApplicationContext(),ProfilePageActivity.class);
+                    startActivity(refresh);
+                    finish();
+                    Toast.makeText(getApplicationContext(),"Updated Profile", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
     }
 }

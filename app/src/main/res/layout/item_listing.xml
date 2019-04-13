@@ -13,6 +13,7 @@
         android:layout_margin="10dp"
         android:ems="10"
         android:hint="Name:"
+        android:maxLength="20"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
 
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
@@ -516,6 +517,7 @@ public class MainActivity extends AppCompatActivity
                                 Double price = document.getDouble("price");
                                 names.add(name);
                                 prices.add(price);
+                                id.add(document.getId());
                             }
                             initRecyclerView();
                         } else {
@@ -532,7 +534,7 @@ public class MainActivity extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleHView  );
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices);
+        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices,id);
         recyclerView.setAdapter(adapter);
     }
 

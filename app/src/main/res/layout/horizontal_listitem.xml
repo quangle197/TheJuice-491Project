@@ -54,7 +54,7 @@
                 android:layout_below="@+id/pItemName"
                 android:gravity="center|left"
                 android:layout_centerHorizontal="true"
-                android:text="itemName"
+                android:text="price"
                 android:textColor="#000"
                 android:layout_marginBottom="5dp"
                 android:autoSizeTextType="uniform"

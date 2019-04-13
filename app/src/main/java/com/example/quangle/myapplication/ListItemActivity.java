@@ -183,7 +183,6 @@ public class ListItemActivity extends AppCompatActivity {
                         imageLink.put(n,path);
                         db.collection("item").document(id)
                                 .set(imageLink, SetOptions.merge());
-
                     }
                     else
                     {

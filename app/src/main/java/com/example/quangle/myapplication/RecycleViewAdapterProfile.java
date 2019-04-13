@@ -1,6 +1,7 @@
 package com.example.quangle.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,13 +22,17 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
     private Context mContext;
 
-    public RecycleViewAdapterProfile(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices) {
+    public RecycleViewAdapterProfile(Context mContext,ArrayList<String> names, ArrayList<String> urls,
+                                     ArrayList<Double> prices,ArrayList<String> id)
+    {
         this.names = names;
         this.urls = urls;
         this.mContext = mContext;
         this.prices = prices;
+        this.id = id;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
             {
                 Log.d(TAG, "onClick: clicked on an image" + names.get(position));
                 Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
+                openIntent(id.get(position));
             }
         });
 
@@ -78,5 +84,13 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
             itemTitle=itemView.findViewById(R.id.pItemName);
             itemPrice = itemView.findViewById(R.id.pItemPrice);
         }
+    }
+
+    public void openIntent(String s)
+    {
+        Intent intent = new Intent(mContext, ItemScreenActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        mContext.startActivity(intent);
+
     }
 }

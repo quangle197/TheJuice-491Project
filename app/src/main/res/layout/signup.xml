@@ -44,7 +44,7 @@
             android:padding="10dp"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
-            android:hint=" Username"
+            android:hint=" Your Name"
             android:inputType="textPersonName" />
 
         <EditText
