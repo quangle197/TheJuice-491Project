@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -70,7 +71,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity
     private DocumentReference docRef ;
     private Map<String, Object> coordinates = new HashMap<>();
     private boolean sharing=false;
-
+    private double minLat, maxLat, minLong, maxLong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         showCurrentPlace();
         getImage();
         getUserProfile();
+        //getDeviceLocation();
 
         /*Timer t = new Timer();
         //Set the schedule function and rate
@@ -190,6 +195,25 @@ public class MainActivity extends AppCompatActivity
                 5000);*/
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        db.collection("users")
+                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        getSellers();
+                        Log.d(TAG, "Updated sellers ");
+                    }
+                });
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -281,7 +305,6 @@ public class MainActivity extends AppCompatActivity
 
         getLocationPermission();
         mMap.setOnMyLocationButtonClickListener(this);
-        getSellers();
         updateLocationUI();
         getDeviceLocation();
 
@@ -321,29 +344,38 @@ public class MainActivity extends AppCompatActivity
 
     private void getSellers()
     {
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                if((document.getBoolean("locationPerm")!=null) &&
-                                        document.getBoolean("locationPerm"))
-                                {
-                                    LatLng anotherPerson = new LatLng(document.getDouble("Lat"),
-                                            document.getDouble("Lon"));
+        mMap.clear();
+        //getDeviceLocation();
+        if(mLastKnownLocation !=null) {
+            calculateMinMax(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+            GeoPoint minLoc = new GeoPoint(minLat, minLong);
+            GeoPoint maxLoc = new GeoPoint(maxLat, maxLong);
+            Log.i(TAG, "Location: " + minLoc);
+            db.collection("users")
+                    .whereEqualTo("locationPerm", true)
+                    .whereGreaterThanOrEqualTo("location", minLoc)
+                    .whereLessThanOrEqualTo("location", maxLoc)
+                    .limit(10)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    GeoPoint seller = document.getGeoPoint("location");
+                                    LatLng anotherPerson = new LatLng(seller.getLatitude(),
+                                            seller.getLongitude());
+                                    Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
                                     mMap.addMarker(new MarkerOptions().position(anotherPerson)
-                                            //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
                                 }
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
                             }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-                    }
-                });
+                    });
+        }
     }
     private void updateLocationUI() {
 
@@ -405,6 +437,7 @@ public class MainActivity extends AppCompatActivity
                             db.collection("users").document(user.getUid())
                                     .set(coordinates,SetOptions.merge());
 
+                            getSellers();
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -693,5 +726,17 @@ public class MainActivity extends AppCompatActivity
             s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
             item.setTitle(s);
         }
+    }
+
+    public void calculateMinMax(double latCenter, double longCenter)
+    {
+        //latCenter = latCenter;
+        //longCenter = longCenter;
+        //about 1 mile radius
+        double d = 0.0090;
+        minLat = latCenter - d;
+        maxLat = latCenter + d;
+        minLong = longCenter - (d / Math.cos(latCenter*Math.PI/180));
+        maxLong = longCenter + (d / Math.cos(latCenter*Math.PI/180));
     }
 }

@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -72,7 +74,6 @@ public class ProfilePageActivity extends DefaultActionbar
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View contentView = inflater.inflate(R.layout.profile_page, null, false);
             drawer.addView(contentView, 0);
-
             getImage();
 
             Button addPicture = (Button) findViewById(R.id.addButton);
@@ -84,9 +85,8 @@ public class ProfilePageActivity extends DefaultActionbar
             });
 
             changePicture();
-
-
         }
+
 
     @Override
     public void onBackPressed() {
@@ -149,7 +149,7 @@ public class ProfilePageActivity extends DefaultActionbar
                         Uri downloadUrl =task.getResult();
                         path = downloadUrl.toString();
 
-                        uploadProfilePicture(path);
+
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(Uri.parse(path))
                                 .build();
@@ -160,11 +160,16 @@ public class ProfilePageActivity extends DefaultActionbar
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Log.d(TAG, "User profile updated.");
+                                            uploadProfilePicture(path);
+                                            changePicture();
+                                            finish();
+                                            startActivity(getIntent());
                                         }
                                     }
                                 });
 
-                        updateProfilePicture();
+
+                        //updateProfilePicture();
                     }
                     else
                     {
@@ -256,33 +261,13 @@ public class ProfilePageActivity extends DefaultActionbar
     }
     private void changePicture()
     {
+        user = FirebaseAuth.getInstance().getCurrentUser();
         ImageView userPic = (ImageView)findViewById(R.id.imageView);
         Glide.with(this)
+                .asBitmap()
                 .load(user.getPhotoUrl())
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
                 .into(userPic);
     }
-    private void updateProfilePicture()
-    {
-        final DocumentReference docRef = db.collection("users").document(uid);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
 
-                if (snapshot != null && snapshot.exists()) {
-                    Log.d(TAG, "Current data: " + snapshot.getData());
-                    Intent refresh = new Intent(getApplicationContext(),ProfilePageActivity.class);
-                    startActivity(refresh);
-                    finish();
-                    Toast.makeText(getApplicationContext(),"Updated Profile", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG, "Current data: null");
-                }
-            }
-        });
-    }
 }
