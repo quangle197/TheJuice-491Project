@@ -2,10 +2,13 @@ package com.example.quangle.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +16,31 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ItemScreenActivity extends DefaultActionbar {
 
     String sessionId;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference mCartDatabase;
     ArrayList<String> images = new ArrayList<>();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
     String itemName;
     Double itemPrice;
     Double itemDistance;
@@ -49,18 +66,71 @@ public class ItemScreenActivity extends DefaultActionbar {
         if (extras != null) {
             sessionId = extras.getString("EXTRA_SESSION_ID");
             //The key argument here must match that used in the other activity
+            getImages();
         }
-        //sessionId= getIntent().getStringExtra("EXTRA_SESSION_ID");
 
-        getImages();
+
+
     }
 
+    public void addToCart(View v)
+    {
+        String cartRef = "cart/" + uid +"/"+sessionId;
+        mCartDatabase= database.getReference(cartRef);
+        mCartDatabase.setValue(itemName);
+
+        //final DatabaseReference myRef = database.getReference(itemCountRef);
+        //mCartDatabase = database.getReference(cartRef);
+
+        /*myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                int counter = 1;
+                if(dataSnapshot.exists())
+                {
+                    int value = dataSnapshot.getValue(Integer.class);
+                    counter = value;
+                   myRef.setValue(value + 1);
+                   String itemCount = "item" + Integer.toString(value+1);
+                   mCartDatabase.child(itemCount).setValue(sessionId);
+                }
+                else
+                {
+                    myRef.setValue(1);
+                    mCartDatabase.child("item1").setValue(sessionId);
+                }
+                Log.d(TAG, "Value is: " + counter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });*/
+
+    }
+
+    public void offerPrice(View v)
+    {
+        String cartRef = "cart/" + uid +"/" + sessionId;
+        mCartDatabase= database.getReference(cartRef);
+        mCartDatabase.removeValue();
+    }
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
+    public void goToSeller(View v)
+    {
+        Intent intent = new Intent(this, OtherProfileActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", itemSellerID);
+        startActivity(intent);
+    }
     public void getImages()
     {
         DocumentReference docRef = db.collection("item").document(sessionId);
@@ -138,12 +208,17 @@ public class ItemScreenActivity extends DefaultActionbar {
         TextView itemDesc = findViewById(R.id.descriptionEditText);
         TextView itemSeller = findViewById(R.id.itemSellerEditText);
 
+        Spannable spannable = new SpannableString(sellerName);
+        spannable.setSpan(new ForegroundColorSpan(Color.BLUE),0,sellerName.length(), 0);
+
         itemName.setText(this.itemName);
         itemPrice.setText(Double.toString(this.itemPrice));
         itemDistance.append(Double.toString(this.itemDistance));
         itemCondition.append(this.itemCondition);
         itemQuantity.append(Integer.toString(this.itemQuantity));
         itemDesc.append(this.itemDesc);
-        itemSeller.append(this.sellerName);
+        itemSeller.append(spannable);
     }
+
+
 }

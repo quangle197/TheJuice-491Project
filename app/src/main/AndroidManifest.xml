@@ -55,6 +55,7 @@
                 android:resource="@xml/searchable"
                 android:value=".SearchableActivity"/>
         </activity>
+        <activity android:name=".OtherProfileActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>

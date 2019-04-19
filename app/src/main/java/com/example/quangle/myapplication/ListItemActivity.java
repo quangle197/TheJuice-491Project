@@ -142,6 +142,10 @@ public class ListItemActivity extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(),Integer.toString(totalPictures),Toast.LENGTH_SHORT).show();
                 }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Please select less than 5 images",Toast.LENGTH_SHORT).show();
+                }
             }
         }
         else

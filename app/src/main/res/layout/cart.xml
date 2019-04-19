@@ -7,12 +7,34 @@
     tools:context=".CartActivity">
 
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
+        <include
+            android:id="@+id/include2"
+            layout="@layout/app_bar_default" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintBottom_toTopOf="@+id/recycleVView"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleVView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/space"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/space">
+
+        </android.support.v7.widget.RecyclerView>
+        <!--<ImageView
             android:id="@+id/itemPic1"
             android:layout_width="60dp"
             android:layout_height="64dp"
@@ -160,9 +182,9 @@
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15sp"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/darker_gray" />-->
 
-        <TextView
+        <!--<TextView
             android:id="@+id/totalNumOfItems"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
@@ -191,7 +213,7 @@
             android:typeface="normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
-
-    </LinearLayout>
+-->
+    </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

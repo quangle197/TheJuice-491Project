@@ -80,6 +80,8 @@
                 android:text="Seller: "
                 android:textSize="20dp"
                 style="@style/ItemText"
+                android:onClick="goToSeller"
+                android:clickable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/itemDistanceEditText"/>
 
@@ -92,7 +94,7 @@
                 android:background="@drawable/rounded_button"
                 android:textColor="@color/white"
                 android:inputType="textPersonName"
-                android:text="Contact Seller"
+                android:text="CONTACT SELLER"
                 app:layout_constraintTop_toBottomOf="@+id/itemSellerEditText"/>
 
             <Button
@@ -101,8 +103,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
-                android:text="Add to Cart"
+                android:text="ADD TO CART"
                 android:textColor="@color/white"
+                android:onClick="addToCart"
                 app:layout_constraintTop_toBottomOf="@+id/contactSellerButton"/>
 
             <Button
@@ -112,6 +115,7 @@
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
                 android:text="Offer"
+                android:onClick="offerPrice"
                 android:textColor="@color/AliceBlue"
                 app:layout_constraintTop_toBottomOf="@+id/addToCartButton"/>
 
