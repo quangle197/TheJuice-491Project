@@ -16,6 +16,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true">
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -25,9 +26,9 @@
                 android:id="@+id/space"
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/itemPictureItemScreen"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/itemPictureItemScreen"
@@ -35,55 +36,55 @@
                 android:layout_height="250dp"
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp"
-                app:srcCompat="@drawable/ic_menu_gallery"
+                app:layout_constraintBottom_toTopOf="@+id/itemNameEditText"
                 app:layout_constraintTop_toBottomOf="@+id/space"
-                app:layout_constraintBottom_toTopOf="@+id/itemNameEditText"/>
+                app:srcCompat="@drawable/ic_menu_gallery" />
 
 
             <TextView
                 android:id="@+id/itemNameEditText"
+                style="@style/ItemText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:text="Item Name"
-                style="@style/ItemText"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemPictureItemScreen"/>
+                app:layout_constraintTop_toBottomOf="@+id/itemPictureItemScreen" />
 
             <TextView
                 android:id="@+id/itemPriceEditText"
+                style="@style/ItemText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:inputType="textPersonName"
                 android:text="Price"
-                style="@style/ItemText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/itemNameEditText" />
 
             <TextView
                 android:id="@+id/itemDistanceEditText"
+                style="@style/ItemText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:text="Distance: "
                 android:textSize="20dp"
-                style="@style/ItemText"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemPriceEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/itemPriceEditText" />
 
             <TextView
                 android:id="@+id/itemSellerEditText"
+                style="@style/ItemText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:inputType="textPersonName"
+                android:onClick="goToSeller"
                 android:text="Seller: "
                 android:textSize="20dp"
-                style="@style/ItemText"
-                android:onClick="goToSeller"
-                android:clickable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDistanceEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/itemDistanceEditText" />
 
 
             <Button
@@ -92,10 +93,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
-                android:textColor="@color/white"
                 android:inputType="textPersonName"
                 android:text="CONTACT SELLER"
-                app:layout_constraintTop_toBottomOf="@+id/itemSellerEditText"/>
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@+id/itemSellerEditText" />
 
             <Button
                 android:id="@+id/addToCartButton"
@@ -103,10 +104,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
+                android:onClick="addToCart"
                 android:text="ADD TO CART"
                 android:textColor="@color/white"
-                android:onClick="addToCart"
-                app:layout_constraintTop_toBottomOf="@+id/contactSellerButton"/>
+                app:layout_constraintTop_toBottomOf="@+id/contactSellerButton" />
 
             <Button
                 android:id="@+id/offerUpButton"
@@ -114,38 +115,69 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
-                android:text="Offer"
                 android:onClick="offerPrice"
+                android:text="Offer"
                 android:textColor="@color/AliceBlue"
-                app:layout_constraintTop_toBottomOf="@+id/addToCartButton"/>
+                app:layout_constraintTop_toBottomOf="@+id/addToCartButton" />
 
             <TextView
                 android:id="@+id/conditionEditText"
+                style="@style/ItemText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Condition: "
                 android:textSize="20dp"
-                style="@style/ItemText"
-                app:layout_constraintTop_toBottomOf="@+id/offerUpButton"/>
+                app:layout_constraintTop_toBottomOf="@+id/offerUpButton" />
 
             <TextView
                 android:id="@+id/quantityEditText"
+                style="@style/ItemText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/conditionEditText"
                 android:text="Quantity: "
                 android:textSize="20dp"
-                style="@style/ItemText"
-                app:layout_constraintTop_toBottomOf="@+id/conditionEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/conditionEditText" />
 
             <TextView
                 android:id="@+id/descriptionEditText"
+                style="@style/ItemText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/conditionEditText"
                 android:text="Description: "
-                style="@style/ItemText"
-                app:layout_constraintTop_toBottomOf="@+id/quantityEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/quantityEditText" />
+
+            <Button
+                android:id="@+id/deleteItem"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="REMOVE THIS ITEM"
+                android:background="@drawable/rounded_button_deleteitem"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:onClick="deleteItem"
+                app:layout_constraintEnd_toStartOf="@+id/markSold"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/descriptionEditText" />
+
+            <Button
+                android:id="@+id/markSold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="MARK AS SOLD"
+                android:background="@drawable/rounded_button_marksold"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:onClick="markSold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/deleteItem"
+                app:layout_constraintTop_toBottomOf="@id/descriptionEditText" />
+
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

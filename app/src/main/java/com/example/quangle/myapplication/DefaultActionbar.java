@@ -66,6 +66,8 @@ public class DefaultActionbar extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -84,7 +86,7 @@ public class DefaultActionbar extends AppCompatActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.cart:
-                startActivity(new Intent(this, MessageActivity.class));
+                startActivity(new Intent(this, CartActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

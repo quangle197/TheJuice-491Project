@@ -38,7 +38,10 @@
             android:label="Cart"/>
         <activity android:name=".UserInventoryActivity"/>
         <activity android:name=".ContactPageActivity"/>
-        <activity android:name=".ItemScreenActivity" />
+        <activity android:name=".ItemScreenActivity">
+        <meta-data android:name="android.app.default_searchable"
+            android:value=".SearchableActivity"/>
+        </activity>
         <activity android:name=".ListItemActivity"
             android:label="List an Item"/>
 
@@ -52,10 +55,10 @@
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"
-                android:value=".SearchableActivity"/>
+                android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".OtherProfileActivity"/>
+        <activity android:name=".PendingItemActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>

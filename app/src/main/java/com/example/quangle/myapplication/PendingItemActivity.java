@@ -2,20 +2,16 @@ package com.example.quangle.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,43 +25,31 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class CartActivity extends DefaultActionbar {
+public class PendingItemActivity extends DefaultActionbar {
 
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> id = new ArrayList<>();
     private ArrayList<String> conditions = new ArrayList<>();
-    private static final String TAG = "RecycleViewAdapter";
+    private static final String TAG = "PendingItemActivity";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
     private DatabaseReference mCartDatabase;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private int total = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.cart, null, false);
         drawer.addView(contentView, 0);
 
-        getIDs();
-    }
-
-    @Override
-    public void onBackPressed() {
-        //startActivity(new Intent(this, MainActivity.class));
-        finish();
     }
 
     @Override
@@ -89,7 +73,7 @@ public class CartActivity extends DefaultActionbar {
 
     public void getIDs()
     {
-        final String cartRef = "cart/" + uid;
+        final String cartRef = "pending";
         mCartDatabase= database.getReference(cartRef);
         mCartDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -103,8 +87,11 @@ public class CartActivity extends DefaultActionbar {
                 id.clear();
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    String id = ds.getKey();
-                    getResults(id);
+                    PendingItemClass item = ds.getValue(PendingItemClass.class);
+                    if(item.getbuyerID() == uid)
+                    {
+                        getResults(item.getItemID());
+                    }
                 }
 
                 Log.d(TAG, "Value is: " + cartRef);
@@ -153,13 +140,6 @@ public class CartActivity extends DefaultActionbar {
 
     }
 
-    public void removeItemAt(String id)
-    {
-        final String cartRef = "cart/" + uid + "/" + id;
-        mCartDatabase= database.getReference(cartRef);
-        mCartDatabase.removeValue();
-    }
-
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
@@ -172,12 +152,14 @@ public class CartActivity extends DefaultActionbar {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
-                removeItemAt(id.get(position));
+
             }
         });
 
         recyclerView.setAdapter(adapter);
 
     }
+
+
 
 }

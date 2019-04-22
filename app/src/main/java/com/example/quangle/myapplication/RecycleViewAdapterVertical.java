@@ -25,6 +25,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
     private ArrayList<String> conditions = new ArrayList<>();
     private Context mContext;
     private boolean mode;
+    public AdapterListener onClickListener;
 
     public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions) {
         this.names = names;
@@ -33,13 +34,14 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         this.prices = prices;
         this.conditions=conditions;
     }
-    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, boolean visible) {
+    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, boolean visible,AdapterListener listener ) {
         this.names = names;
         this.urls = urls;
         this.mContext = mContext;
         this.prices = prices;
         this.conditions=conditions;
         this.mode = visible;
+        this.onClickListener = listener;
     }
 
     @Override
@@ -104,16 +106,28 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
             removeItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    onClickListener.removeButtonOnClick(view, getAdapterPosition());
+                    removeItem(getAdapterPosition());
                 }
             });
 
-        }
-
-        public interface ClickListener
-        {
 
         }
-
     }
+    public interface AdapterListener
+    {
+        void removeButtonOnClick( View v, int position);
+    }
+
+    public void removeItem(int position)
+    {
+        names.remove(position);
+        urls.remove(position);
+        prices.remove(position);
+        conditions.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(0,names.size());
+    }
+
+
 }

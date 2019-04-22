@@ -12,9 +12,12 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,13 +34,16 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ItemScreenActivity extends DefaultActionbar {
 
     String sessionId;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference mCartQuery = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference mCartDatabase;
+    private DatabaseReference mPendingDatabase;
     ArrayList<String> images = new ArrayList<>();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
@@ -49,6 +55,7 @@ public class ItemScreenActivity extends DefaultActionbar {
     String itemDesc;
     String itemSellerID;
     String sellerName;
+    String cartRef;
 
     private static final String TAG = ItemScreenActivity.class.getSimpleName();
     private String []names = {"image1", "image2", "image3", "image4", "image5"};
@@ -66,6 +73,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         if (extras != null) {
             sessionId = extras.getString("EXTRA_SESSION_ID");
             //The key argument here must match that used in the other activity
+
             getImages();
         }
 
@@ -73,9 +81,56 @@ public class ItemScreenActivity extends DefaultActionbar {
 
     }
 
+    public void setVisibility(String id)
+    {
+        if(uid.equals(id))
+        {
+            Button deleteButton = (Button) findViewById(R.id.deleteItem);
+            Button soldButton = (Button) findViewById(R.id.markSold);
+
+            deleteButton.setVisibility(View.VISIBLE);
+            soldButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void deleteItem(View v)
+    {
+        //mCartQuery = database.getReference("cart");
+        mCartQuery.child("cart").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    ds.child(sessionId).getRef().removeValue();
+                }
+
+                Log.d(TAG, "Value is: " + sessionId);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        finish();
+    }
+
+    public void markSold(View v)
+    {
+
+        Map<String, Object> sold = new HashMap<>();
+        sold.put("soldStatus", true);
+        db.collection("item").document(sessionId)
+                .set(sold,SetOptions.merge());
+        deleteItem(v);
+    }
+
     public void addToCart(View v)
     {
-        String cartRef = "cart/" + uid +"/"+sessionId;
+        cartRef = "cart/" + uid +"/"+sessionId;
         mCartDatabase= database.getReference(cartRef);
         mCartDatabase.setValue(itemName);
 
@@ -115,9 +170,14 @@ public class ItemScreenActivity extends DefaultActionbar {
 
     public void offerPrice(View v)
     {
-        String cartRef = "cart/" + uid +"/" + sessionId;
-        mCartDatabase= database.getReference(cartRef);
-        mCartDatabase.removeValue();
+
+        String pendingRef = "pending";
+        mPendingDatabase= database.getReference(pendingRef);
+        //generate random key
+        String key = mPendingDatabase.push().getKey();
+        PendingItemClass item = new PendingItemClass(itemName, uid,itemSellerID);
+        //make pending list which has buyer id, item id, and seller id
+        mPendingDatabase.child(key).child(uid).child(sessionId).setValue(item);
     }
     @Override
     public void onBackPressed() {
@@ -156,6 +216,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                         itemQuantity=document.getLong("quantity").intValue();
                         itemDesc=document.getString("description");
                         itemSellerID=document.getString("sold");
+                        setVisibility(itemSellerID);
                         getSellerInfo(itemSellerID);
 
                     } else {
