@@ -27,18 +27,18 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/rounded_button2"
                 android:text="Login"
-                android:textColor="@color/text_background" />
+                android:textColor="@color/WeSellGreen" />
 
             <Button
                 android:id="@+id/signUpButton_startUpPage"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/rounded_button2"
                 android:text="Sign Up"
-                android:textColor="@color/text_background" />
+                android:textColor="@color/WeSellGreen" />
         </LinearLayout>
 
 
