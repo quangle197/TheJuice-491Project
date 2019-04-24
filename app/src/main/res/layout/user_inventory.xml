@@ -5,82 +5,30 @@
     android:id="@+id/relativeLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.quangle.myapplication.MainActivity">
+    tools:context=".UserInventoryActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="99dp"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <include
+        android:id="@+id/include2"
+        layout="@layout/app_bar_default" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="424dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@+id/recycleVView"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-
-    </android.support.design.widget.AppBarLayout>
-
-    <ImageView
-        android:id="@+id/profile_page_user_photo"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/ic_account_circle_white"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/profile_page_username"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleVView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-5dp"
-        android:gravity="center_horizontal"
-        android:text="USERNAME"
-        android:textColor="@color/white"
-        android:textSize="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_page_user_photo" />
-
-    <ImageView
-        android:id="@+id/profile_page_messenger_button"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_below="@+id/space"
+        android:orientation="vertical"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_chat"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/profile_page_menu_button"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/menu"
+        app:layout_constrainedHeight="true"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/space">
+    </android.support.v7.widget.RecyclerView>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="99dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/addItemButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="List an item"
-        android:background="@drawable/rounded_button"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

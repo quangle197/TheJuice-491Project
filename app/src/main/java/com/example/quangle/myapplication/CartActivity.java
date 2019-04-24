@@ -48,7 +48,7 @@ public class CartActivity extends DefaultActionbar {
     private String uid = user.getUid();
     private DatabaseReference mCartDatabase;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private int total = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -168,11 +168,17 @@ public class CartActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, true, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 0, new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
                 removeItemAt(id.get(position));
+            }
+
+            @Override
+            public void soldButtonOnClick(View v, int position)
+            {
+
             }
         });
 

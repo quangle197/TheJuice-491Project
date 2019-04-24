@@ -5,6 +5,7 @@ public class PendingItemClass {
     String buyerID;
     String sellerID;
 
+    public PendingItemClass(){}
 
     public PendingItemClass(String item, String buyer, String seller)
     {

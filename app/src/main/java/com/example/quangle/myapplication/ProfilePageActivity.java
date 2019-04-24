@@ -35,9 +35,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -63,31 +66,49 @@ public class ProfilePageActivity extends DefaultActionbar
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> id = new ArrayList<>();
     private static final String TAG = "ProfilePageActivity";
+    private ListenerRegistration listenToDB;
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.profile_page);
 
-        @Override
-        public void onCreate(Bundle savedInstanceState)
-        {
-            super.onCreate(savedInstanceState);
-            //setContentView(R.layout.profile_page);
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.profile_page, null, false);
+        drawer.addView(contentView, 0);
+        getImageTest();
 
-            LayoutInflater inflater = (LayoutInflater) this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View contentView = inflater.inflate(R.layout.profile_page, null, false);
-            drawer.addView(contentView, 0);
-            getImage();
+        Button addPicture = (Button) findViewById(R.id.addButton);
 
-            Button addPicture = (Button) findViewById(R.id.addButton);
+        addPicture.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openImg();
+            }
+        });
 
-            addPicture.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    openImg();
-                }
-            });
+        changePicture();
+    }
 
-            changePicture();
-        }
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        getImageTest();
+    }
 
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        listenToDB.remove();
+    }
 
+    public void showAllItems(View v)
+    {
+        startActivity(new Intent(this, UserInventoryActivity.class));
+        finish();
+    }
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
@@ -207,39 +228,79 @@ public class ProfilePageActivity extends DefaultActionbar
         }
     }
 
-        private void getImage()
-        {
-            Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-            db.collection("item")
-                    .whereEqualTo("sold", uid)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                    if(document.getString("image1") != null)
-                                    {
-                                        urls.add(document.getString("image1"));
-                                    }
-                                    else
-                                    {
-                                        urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                                    }
-                                    String name = document.getString("name");
-                                    Double price = document.getDouble("price");
-                                    names.add(name);
-                                    prices.add(price);
-                                    id.add(document.getId());
+    private void getImage()
+    {
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        db.collection("item")
+                .whereEqualTo("sold", uid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getString("name"));
+                                if(document.getString("image1") != null)
+                                {
+                                    urls.add(document.getString("image1"));
                                 }
-                                initRecyclerView();
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                else
+                                {
+                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                }
+                                String name = document.getString("name");
+                                Double price = document.getDouble("price");
+                                names.add(name);
+                                prices.add(price);
+                                id.add(document.getId());
                             }
+                            initRecyclerView();
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-                    });
-        }
+                    }
+                });
+    }
+
+    private void getImageTest()
+    {
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        Query query = db.collection("item")
+                .whereEqualTo("sold", uid);
+        listenToDB= query.addSnapshotListener(this,new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        names.clear();
+                        urls.clear();
+                        prices.clear();
+                        id.clear();
+
+                        for (QueryDocumentSnapshot document : value) {
+                            if(document.getString("image1") != null)
+                            {
+                                urls.add(document.getString("image1"));
+                            }
+                            else
+                            {
+                                urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                            }
+                            String name = document.getString("name");
+                            Double price = document.getDouble("price");
+                            names.add(name);
+                            prices.add(price);
+                            id.add(document.getId());
+                        }
+                        initRecyclerView();
+                        Log.d(TAG, "Added documents: " + names);
+                    }
+                });
+
+    }
 
     private void initRecyclerView()
     {
@@ -250,6 +311,7 @@ public class ProfilePageActivity extends DefaultActionbar
         recyclerView.setLayoutManager(layoutManager);
         RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices,id);
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private void uploadProfilePicture(String u)
@@ -268,6 +330,11 @@ public class ProfilePageActivity extends DefaultActionbar
                 .load(user.getPhotoUrl())
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
                 .into(userPic);
+    }
+
+    public void listItem(View v)
+    {
+        startActivity(new Intent(this, ListItemActivity.class));
     }
 
 }

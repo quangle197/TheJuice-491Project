@@ -107,6 +107,7 @@ public class ListItemActivity extends AppCompatActivity {
                         {
                             updateImages(images.get(i),id,names[i]);
                         }
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

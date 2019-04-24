@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageViewOther"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:clickable="true"

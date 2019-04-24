@@ -93,6 +93,23 @@ public class ItemScreenActivity extends DefaultActionbar {
         }
     }
 
+    public void deleteItemInDB()
+    {
+        db.collection("item").document(sessionId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
     public void deleteItem(View v)
     {
         //mCartQuery = database.getReference("cart");
@@ -103,8 +120,10 @@ public class ItemScreenActivity extends DefaultActionbar {
                 // whenever data at this location is updated.
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    ds.child(sessionId).getRef().removeValue();
+                    if(ds.exists())
+                        ds.child(sessionId).getRef().removeValue();
                 }
+                deleteItemInDB();
 
                 Log.d(TAG, "Value is: " + sessionId);
             }
@@ -175,13 +194,13 @@ public class ItemScreenActivity extends DefaultActionbar {
         mPendingDatabase= database.getReference(pendingRef);
         //generate random key
         String key = mPendingDatabase.push().getKey();
-        PendingItemClass item = new PendingItemClass(itemName, uid,itemSellerID);
+        PendingItemClass item = new PendingItemClass(sessionId, uid,itemSellerID);
         //make pending list which has buyer id, item id, and seller id
-        mPendingDatabase.child(key).child(uid).child(sessionId).setValue(item);
+        mPendingDatabase.child(key).setValue(item);
     }
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

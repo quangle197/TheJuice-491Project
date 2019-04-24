@@ -17,9 +17,17 @@
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="Order" />
         <item
+            android:id="@+id/nav_listAnItem"
+            android:icon="@drawable/ic_view_module_black_24dp"
+            android:title="List an item" />
+        <item
             android:id="@+id/nav_selling"
             android:icon="@drawable/ic_view_module_black_24dp"
-            android:title="Selling" />
+            android:title="Offers" />
+        <item
+            android:id="@+id/nav_buying"
+            android:icon="@drawable/ic_view_module_black_24dp"
+            android:title="Buying" />
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_manage"

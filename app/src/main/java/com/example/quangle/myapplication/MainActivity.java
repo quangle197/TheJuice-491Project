@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity
     private boolean timerStatus;
     private CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("users");
     private GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
+    private GeoQuery geoQuery;
 
     MenuItem locationItem;
     @Override
@@ -210,10 +211,19 @@ public class MainActivity extends AppCompatActivity
                             return;
                         }
 
-                        getSellers();
+                        else if(geoQuery== null)
+                        {
+                            getSellersTest();
+                        }
+                        else
+                        {
+                            geoQuery.removeAllListeners();
+                            getSellersTest();
+                        }
                         Log.d(TAG, "Updated sellers ");
                     }
                 });
+
         listenPermission();
     }
 
@@ -238,6 +248,9 @@ public class MainActivity extends AppCompatActivity
             t.cancel();
             t = null;
         }
+        if(geoQuery!= null) {
+            geoQuery.removeAllListeners();
+        }
     }
 
     @Override
@@ -256,6 +269,7 @@ public class MainActivity extends AppCompatActivity
         {
             t.cancel();
         }
+
     }
 
     //back button
@@ -311,8 +325,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, MessageActivity.class));
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
-        } else if (id == R.id.nav_selling) {
+        } else if (id == R.id.nav_listAnItem) {
             startActivity(new Intent(this, ListItemActivity.class));
+        } else if (id == R.id.nav_selling) {
+            openPending("selling");
+        } else if (id == R.id.nav_buying) {
+            openPending("buying");
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();
@@ -354,6 +372,7 @@ public class MainActivity extends AppCompatActivity
         mMap.setOnMarkerClickListener(this);
         updateLocationUI();
         getDeviceLocation();
+
 
     }
 
@@ -434,55 +453,59 @@ public class MainActivity extends AppCompatActivity
 
     private void getSellersTest()
     {
-        mMap.clear();
+        //mMap.clear();
         if(mLastKnownLocation!=null)
         {
-            GeoQuery geoQuery = geoFirestore.queryAtLocation(new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), 1);
-            geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
-                @Override
-                public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-                    if(documentSnapshot.getId() != uid) {
+            if(geoQuery== null) {
+                geoQuery = geoFirestore.queryAtLocation(new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), 1);
+            }
+                mMap.clear();
+
+                geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+                    @Override
+                    public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                        if (!documentSnapshot.getId().equals(uid)  && documentSnapshot.getBoolean("Permission")) {
+                            LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
+                                    geoPoint.getLongitude());
+                            Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
+                            Marker seller = mMap.addMarker(new MarkerOptions()
+                                    .position(anotherPerson)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+                            seller.setTag(documentSnapshot.getId());
+                        }
+                    }
+
+                    @Override
+                    public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                        mMap.clear();
                         LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
                                 geoPoint.getLongitude());
                         Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
-                        Marker seller = mMap.addMarker(new MarkerOptions()
-                                .position(anotherPerson)
+                        mMap.addMarker(new MarkerOptions().position(anotherPerson)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
-                        seller.setTag(documentSnapshot.getId());
+
                     }
-                }
 
-                @Override
-                public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+                    @Override
+                    public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
 
-                }
+                    }
 
-                @Override
-                public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-                    mMap.clear();
-                    LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
-                            geoPoint.getLongitude());
-                    Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
-                    mMap.addMarker(new MarkerOptions().position(anotherPerson)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+                    @Override
+                    public void onGeoQueryReady() {
 
-                }
+                    }
 
-                @Override
-                public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                    @Override
+                    public void onGeoQueryError(Exception e) {
 
-                }
-
-                @Override
-                public void onGeoQueryReady() {
-
-                }
-
-                @Override
-                public void onGeoQueryError(Exception e) {
-
-                }
-            });
+                    }
+                });
 
         }
     }
@@ -538,6 +561,7 @@ public class MainActivity extends AppCompatActivity
                                 location.put("location", devLoc);
                                 db.collection("users").document(user.getUid())
                                         .set(location, SetOptions.merge());*/
+
                                 geoFirestore.setLocation(uid,
                                         new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), new GeoFirestore.CompletionListener() {
                                             @Override
@@ -608,7 +632,7 @@ public class MainActivity extends AppCompatActivity
         if (mLocationPermissionGranted) {
             // Get the likely places - that is, the businesses and other points of interest that
             // are the best match for the device's current location.
-            @SuppressWarnings("MissingPermission") final
+            @SuppressWarnings("MissingPermission") //final
             Task<PlaceLikelihoodBufferResponse> placeResult =
                     mPlaceDetectionClient.getCurrentPlace(null);
             placeResult.addOnCompleteListener
@@ -947,6 +971,14 @@ public class MainActivity extends AppCompatActivity
     public void openIntent(String s)
     {
         Intent intent = new Intent(this, OtherProfileActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        this.startActivity(intent);
+
+    }
+
+    public void openPending(String s)
+    {
+        Intent intent = new Intent(this, PendingItemActivity.class);
         intent.putExtra("EXTRA_SESSION_ID", s);
         this.startActivity(intent);
 

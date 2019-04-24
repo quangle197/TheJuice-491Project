@@ -116,6 +116,8 @@
         android:layout_marginRight="10dp"
         android:text="See All Items"
         android:textColor="@color/WeSellGreen"
+        android:clickable="true"
+        android:onClick="showAllItems"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/itemsSale"/>
 
@@ -129,5 +131,15 @@
 
     </android.support.v7.widget.RecyclerView>
 
+    <Button
+        android:id="@+id/addItemButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="listItem"
+        android:text="List an item"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/recycleHView" />
 
 </android.support.constraint.ConstraintLayout>

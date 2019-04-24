@@ -171,7 +171,7 @@ public class OtherProfileActivity extends DefaultActionbar
 
     private void changePicture(String s)
     {
-        ImageView userPic = (ImageView)findViewById(R.id.imageView);
+        ImageView userPic = (ImageView)findViewById(R.id.imageViewOther);
 
         Glide.with(this)
                 .asBitmap()
