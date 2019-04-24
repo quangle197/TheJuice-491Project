@@ -39,6 +39,7 @@ public class UserInventoryActivity extends DefaultActionbar {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
+    private String sessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,10 @@ public class UserInventoryActivity extends DefaultActionbar {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.user_inventory, null, false);
         drawer.addView(contentView, 0);
-        getResults();
+
+            getResults(sessionId);
+
+
 
     }
 
@@ -58,11 +62,11 @@ public class UserInventoryActivity extends DefaultActionbar {
     }
 
 
-    private void getResults()
+    private void getResults(final String userquery)
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         db.collection("item")
-                .whereEqualTo("sold", uid)
+                .whereEqualTo("sold", userquery)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -83,7 +87,15 @@ public class UserInventoryActivity extends DefaultActionbar {
                                 prices.add(document.getDouble("price"));
                                 id.add(document.getId());
                             }
-                            showItems();
+                            if(userquery.equals(uid))
+                            {
+                                showItems();
+                            }
+                            else
+                            {
+                                showItemsOther();
+                            }
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
