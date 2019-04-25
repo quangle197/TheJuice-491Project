@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +50,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -68,9 +70,14 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -79,6 +86,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import org.imperiumlabs.geofirestore.GeoFirestore;
+import org.imperiumlabs.geofirestore.GeoQuery;
+import org.imperiumlabs.geofirestore.GeoQueryDataEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -91,12 +101,13 @@ import static android.content.ContentValues.TAG;
 import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener {
 
     //arrays for items
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
 
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
@@ -133,8 +144,16 @@ public class MainActivity extends AppCompatActivity
     private String path;
     private DocumentReference docRef ;
     private Map<String, Object> coordinates = new HashMap<>();
+    private Map<String, Object> location = new HashMap<>();
     private boolean sharing=false;
+    private double minLat, maxLat, minLong, maxLong;
+    private Timer t;
+    private boolean timerStatus;
+    private CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("users");
+    private GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
+    private GeoQuery geoQuery;
 
+    MenuItem locationItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,26 +188,91 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+       // t = new Timer();
+        Menu navMenu = navigationView.getMenu();
+        locationItem = navMenu.findItem(R.id.nav_location);
         showCurrentPlace();
         getImage();
         getUserProfile();
 
-        /*Timer t = new Timer();
-        //Set the schedule function and rate
-        t.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                //Called each time when 1000 milliseconds (1 second) (the period parameter)
-                getDeviceLocation();
-            }
-
-            },
-        //Set how long before to start calling the TimerTask (in milliseconds)
-                0,
-        //Set the amount of time between each execution (in milliseconds)
-                5000);*/
     }
 
+    //call these function when activity is started
+    @Override
+    protected void onStart() {
+        super.onStart();
+        db.collection("users")
+                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        else if(geoQuery== null)
+                        {
+                            getSellersTest();
+                        }
+                        else
+                        {
+                            geoQuery.removeAllListeners();
+                            getSellersTest();
+                        }
+                        Log.d(TAG, "Updated sellers ");
+                    }
+                });
+
+        listenPermission();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        if(t!= null)
+        {
+            t.cancel();
+            t = null;
+        }
+    }
+
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if(t!= null)
+        {
+            t.cancel();
+            t = null;
+        }
+        if(geoQuery!= null) {
+            geoQuery.removeAllListeners();
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        listenPermission();
+    }
+
+    //do these functions when activity stop
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        if(t != null)
+        {
+            t.cancel();
+        }
+
+    }
+
+    //back button
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -198,6 +282,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -240,13 +325,17 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, MessageActivity.class));
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
-        } else if (id == R.id.nav_selling) {
+        } else if (id == R.id.nav_listAnItem) {
             startActivity(new Intent(this, ListItemActivity.class));
+        } else if (id == R.id.nav_selling) {
+            openPending("selling");
+        } else if (id == R.id.nav_buying) {
+            openPending("buying");
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();
         } else if (id == R.id.nav_location) {
-            locationSharing(item);
+            locationSharing(!sharing);
         } else if(id == R.id.nav_venmo){
             Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.venmo");
             if (launchIntent != null) {
@@ -280,9 +369,10 @@ public class MainActivity extends AppCompatActivity
 
         getLocationPermission();
         mMap.setOnMyLocationButtonClickListener(this);
-        getSellers();
+        mMap.setOnMarkerClickListener(this);
         updateLocationUI();
         getDeviceLocation();
+
 
     }
 
@@ -320,29 +410,104 @@ public class MainActivity extends AppCompatActivity
 
     private void getSellers()
     {
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                if((document.getBoolean("locationPerm")!=null) &&
-                                        document.getBoolean("locationPerm"))
-                                {
-                                    LatLng anotherPerson = new LatLng(document.getDouble("Lat"),
-                                            document.getDouble("Lon"));
+        mMap.clear();
+        //getDeviceLocation();
+        if(mLastKnownLocation !=null) {
+            calculateMinMax(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+            GeoPoint minLoc = new GeoPoint(minLat, minLong);
+            GeoPoint maxLoc = new GeoPoint(maxLat, maxLong);
+            Log.i(TAG, "Location: " + minLoc);
+            db.collection("users")
+                    .whereEqualTo("locationPerm", true)
+                    .whereGreaterThanOrEqualTo("location", minLoc)
+                    .whereLessThanOrEqualTo("location", maxLoc)
+                    .limit(10)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    GeoPoint seller = document.getGeoPoint("location");
+                                    LatLng anotherPerson = new LatLng(seller.getLatitude(),
+                                            seller.getLongitude());
+                                    Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
                                     mMap.addMarker(new MarkerOptions().position(anotherPerson)
-                                            //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
                                 }
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
                             }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker)
+    {
+        openIntent((String) marker.getTag());
+        return true;
+    }
+
+    private void getSellersTest()
+    {
+        //mMap.clear();
+        if(mLastKnownLocation!=null)
+        {
+            if(geoQuery== null) {
+                geoQuery = geoFirestore.queryAtLocation(new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), 1);
+            }
+                mMap.clear();
+
+                geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+                    @Override
+                    public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                        if (!documentSnapshot.getId().equals(uid)  && documentSnapshot.getBoolean("Permission")) {
+                            LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
+                                    geoPoint.getLongitude());
+                            Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
+                            Marker seller = mMap.addMarker(new MarkerOptions()
+                                    .position(anotherPerson)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+                            seller.setTag(documentSnapshot.getId());
                         }
                     }
+
+                    @Override
+                    public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                        mMap.clear();
+                        LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
+                                geoPoint.getLongitude());
+                        Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
+                        mMap.addMarker(new MarkerOptions().position(anotherPerson)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+
+                    }
+
+                    @Override
+                    public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryError(Exception e) {
+
+                    }
                 });
+
+        }
     }
     private void updateLocationUI() {
 
@@ -377,7 +542,50 @@ public class MainActivity extends AppCompatActivity
         getDeviceLocation();
         return false;
     }
-    //get device current location
+
+    //update device current location
+    private void updateLocation()
+    {
+
+        try {
+            if (mLocationPermissionGranted) {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            // Set the map's camera position to the current location of the device.
+                            mLastKnownLocation = task.getResult();
+                            if(mLastKnownLocation!=null) {
+                                /*GeoPoint devLoc = new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                                location.put("location", devLoc);
+                                db.collection("users").document(user.getUid())
+                                        .set(location, SetOptions.merge());*/
+
+                                geoFirestore.setLocation(uid,
+                                        new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), new GeoFirestore.CompletionListener() {
+                                            @Override
+                                            public void onComplete(Exception exception) {
+                                                if (exception == null){
+                                                    Log.d(TAG, "cannot save location");
+                                                }
+                                            }
+                                        });
+                            }
+
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    //get current device's location and update it to firestore
     private void getDeviceLocation() {
         /*
           Get the best and most recent location of the device, which may be null in rare
@@ -395,15 +603,14 @@ public class MainActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            coordinates.put("Lat",mLastKnownLocation.getLatitude());
-                            coordinates.put("Lon",mLastKnownLocation.getLongitude());
-
-                            db.collection("users").document(user.getUid())
-                                    .set(coordinates,SetOptions.merge());
-
+                            if(mLastKnownLocation!=null) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(mLastKnownLocation.getLatitude(),
+                                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                                updateLocation();
+                                //getSellers();
+                                getSellersTest();
+                            }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -427,7 +634,7 @@ public class MainActivity extends AppCompatActivity
         if (mLocationPermissionGranted) {
             // Get the likely places - that is, the businesses and other points of interest that
             // are the best match for the device's current location.
-            @SuppressWarnings("MissingPermission") final
+            @SuppressWarnings("MissingPermission") //final
             Task<PlaceLikelihoodBufferResponse> placeResult =
                     mPlaceDetectionClient.getCurrentPlace(null);
             placeResult.addOnCompleteListener
@@ -516,6 +723,7 @@ public class MainActivity extends AppCompatActivity
                                 Double price = document.getDouble("price");
                                 names.add(name);
                                 prices.add(price);
+                                id.add(document.getId());
                             }
                             initRecyclerView();
                         } else {
@@ -532,7 +740,7 @@ public class MainActivity extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleHView  );
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices);
+        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices,id);
         recyclerView.setAdapter(adapter);
     }
 
@@ -546,7 +754,6 @@ public class MainActivity extends AppCompatActivity
         if(imageURL!=null)
         {
             final StorageReference imagesRef = storageRef.child("userImages").child(uid);
-            //url = https://cdn.frankerfacez.com/emoticon/145947/4;
             uploadTask = imagesRef.putFile(imageURL);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,Task<Uri>>() {
                 @Override
@@ -669,27 +876,113 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void locationSharing(MenuItem item)
+    private void locationSharing(boolean perm)
     {
         Map<String, Object> permission = new HashMap<>();
-        SpannableString s = new SpannableString(item.getTitle());
-        if(!sharing)
+        SpannableString s = new SpannableString(locationItem.getTitle());
+        if(perm)
         {
-            sharing = true;
             permission.put("Permission",true);
             db.collection("users").document(user.getUid())
                     .set(permission,SetOptions.merge());
             s.setSpan(new ForegroundColorSpan(Color.BLUE), 0, s.length(), 0);
-            item.setTitle(s);
+            locationItem.setTitle(s);
+            startTimer();
         }
         else
         {
-            sharing = false;
+
             permission.put("Permission",false);
             db.collection("users").document(user.getUid())
                     .set(permission,SetOptions.merge());
             s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
-            item.setTitle(s);
+            locationItem.setTitle(s);
+            stopTimer();
+
         }
+    }
+
+
+    private void listenPermission()
+    {
+        final DocumentReference docRef = db.collection("users").document(user.getUid());
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    sharing = snapshot.getBoolean("Permission");
+                    locationSharing(sharing);
+
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
+    }
+
+
+    //start updating device location
+    private void startTimer()
+    {
+        if(t==null)
+        {
+            t = new Timer();
+            t.scheduleAtFixedRate
+                    (new TimerTask()
+                     {
+                         @Override
+                         public void run()
+                         {
+
+                             updateLocation();
+                         }
+
+                     },
+                            0,
+                            10000);
+        }
+    }
+
+    //stop updating device location
+    private void stopTimer()
+    {
+        if(t != null)
+        {
+            t.cancel();
+            t.purge();
+        }
+    }
+
+    public void calculateMinMax(double latCenter, double longCenter)
+    {
+        //about 1 mile radius
+        double d = 0.0090;
+        minLat = latCenter - d;
+        maxLat = latCenter + d;
+        minLong = longCenter - (d / Math.cos(latCenter*Math.PI/180));
+        maxLong = longCenter + (d / Math.cos(latCenter*Math.PI/180));
+    }
+
+    public void openIntent(String s)
+    {
+        Intent intent = new Intent(this, OtherProfileActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        this.startActivity(intent);
+
+    }
+
+    public void openPending(String s)
+    {
+        Intent intent = new Intent(this, PendingItemActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        this.startActivity(intent);
+
     }
 }

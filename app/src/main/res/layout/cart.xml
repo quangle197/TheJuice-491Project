@@ -5,193 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CartActivity">
+        <include
+            android:id="@+id/include2"
+            layout="@layout/app_bar_default" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/itemPic1"
-            android:layout_width="60dp"
-            android:layout_height="64dp"
-            android:layout_marginLeft="5sp"
-            android:layout_marginTop="130sp"
-            app:srcCompat="@drawable/ic_menu_gallery" />
-
-        <TextView
-            android:id="@+id/productName1"
+        <Space
+            android:id="@+id/space"
             android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintBottom_toTopOf="@+id/recycleVView"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleVView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:layout_marginTop="-65sp"
-            android:text="Product name" />
+            android:layout_below="@+id/space"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/space">
 
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="360sp"
-            android:layout_marginTop="-20sp"
-            android:src="@drawable/add_circle" />
 
-        <TextView
-            android:id="@+id/quantity1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="345sp"
-            android:layout_marginTop="-24sp"
-            android:text="#" />
+        </android.support.v7.widget.RecyclerView>
 
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="300sp"
-            android:layout_marginTop="-20sp"
-            android:src="@drawable/subtract_circle" />
-
-        <TextView
-            android:id="@+id/sellerName1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:layout_marginTop="-5sp"
-            android:text="Seller name" />
-
-        <TextView
-            android:id="@+id/productDesc1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:text="Product description" />
-
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="330sp"
-            android:layout_marginTop="-15sp"
-            android:src="@drawable/remove_item" />
-
-        <TextView
-            android:id="@+id/price1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:layout_marginTop="-10sp"
-            android:text="Price" />
-
-        <View
-            android:layout_width="375sp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15sp"
-            android:background="@android:color/darker_gray" />
-
-        <ImageView
-            android:id="@+id/itemPic2"
-            android:layout_width="60dp"
-            android:layout_height="64dp"
-            android:layout_marginLeft="5sp"
-            android:layout_marginTop="20sp"
-            app:srcCompat="@drawable/ic_menu_gallery" />
-
-        <TextView
-            android:id="@+id/productName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:layout_marginTop="-65sp"
-            android:text="Product name" />
-
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="360sp"
-            android:layout_marginTop="-20sp"
-            android:src="@drawable/add_circle" />
-
-        <TextView
-            android:id="@+id/quantity2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="345sp"
-            android:layout_marginTop="-24sp"
-            android:text="#" />
-
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="300sp"
-            android:layout_marginTop="-20sp"
-            android:src="@drawable/subtract_circle" />
-
-        <TextView
-            android:id="@+id/sellerName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:layout_marginTop="-5sp"
-            android:text="Seller name" />
-
-        <TextView
-            android:id="@+id/productDesc2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:text="Product description" />
-
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="330sp"
-            android:layout_marginTop="-15sp"
-            android:src="@drawable/remove_item" />
-
-        <TextView
-            android:id="@+id/price2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="68sp"
-            android:layout_marginTop="-10sp"
-            android:text="Price" />
-
-        <View
-            android:layout_width="375sp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15sp"
-            android:background="@android:color/darker_gray" />
-
-        <TextView
-            android:id="@+id/totalNumOfItems"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginLeft="10sp"
-            android:layout_marginTop="300sp"
-            android:text="Items: #" />
-
-        <TextView
-            android:id="@+id/totalPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginLeft="350sp"
-            android:layout_marginTop="-25sp"
-            android:text="Total: #" />
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="276dp"
-            android:layout_height="51dp"
-            android:layout_marginStart="64dp"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_button"
-            android:text="Checkout"
-            android:textColor="@color/AliceBlue"
-            android:typeface="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_passwordEditText" />
-
-    </LinearLayout>
 
 </RelativeLayout>

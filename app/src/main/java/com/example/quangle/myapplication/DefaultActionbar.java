@@ -66,6 +66,8 @@ public class DefaultActionbar extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -84,7 +86,7 @@ public class DefaultActionbar extends AppCompatActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.cart:
-                startActivity(new Intent(this, MessageActivity.class));
+                startActivity(new Intent(this, CartActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -96,7 +98,9 @@ public class DefaultActionbar extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         } else if (id == R.id.nav_message) {
             startActivity(new Intent(this, MessageActivity.class));
         } else if (id == R.id.nav_order) {
