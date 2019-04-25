@@ -8,8 +8,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -34,7 +37,7 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
-public class ListItemActivity extends AppCompatActivity {
+public class ListItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String name, sold, condition, description;
     private int distance, quantity;
@@ -43,6 +46,7 @@ public class ListItemActivity extends AppCompatActivity {
     private ArrayList<Uri> images= new ArrayList<>();
     private static int IMAGE_REQUEST=1;
     private String []names = {"image1", "image2", "image3", "image4", "image5"};
+    String text;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     @Override
@@ -59,19 +63,25 @@ public class ListItemActivity extends AppCompatActivity {
         final EditText distanceInput = (EditText) findViewById(R.id.category);
         final EditText quantityInput = (EditText) findViewById(R.id.quantity);
 
+        Spinner spinner = findViewById(R.id.conditionSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.conditions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         Button addItem = (Button) findViewById(R.id.button);
         addItem.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 name = nameInput.getText().toString();
                 sold = user.getUid();
-                condition = conditionInput.getText().toString();
+                //condition = conditionInput.getText().toString();
                 description = descInput.getText().toString();
                 price =  Double.parseDouble(priceInput.getText().toString());
                 distance = Integer.parseInt(distanceInput.getText().toString());
                 quantity = Integer.parseInt(quantityInput.getText().toString());
 
-                listItem(name, sold, condition, description, price, distance, quantity);
+                listItem(name, sold, text, description, price, distance, quantity);
             }
         });
 
@@ -83,6 +93,8 @@ public class ListItemActivity extends AppCompatActivity {
         });
     }
 
+
+
     public void listItem(String name, String sold, String condition, String description, double price, int distance, int quantity)
     {
 
@@ -90,7 +102,7 @@ public class ListItemActivity extends AppCompatActivity {
         user.put("name", name);
         user.put("price", price);
         user.put("distance", distance);
-        user.put("sold", sold);
+        user.put("sellerID", sold);
         user.put("condition", condition);
         user.put("quantity", quantity);
         user.put("description", description);
@@ -205,5 +217,15 @@ public class ListItemActivity extends AppCompatActivity {
         {
             Toast.makeText(getApplicationContext(),"No image selected", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        text = adapterView.getItemAtPosition(i).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        text = "New";
     }
 }

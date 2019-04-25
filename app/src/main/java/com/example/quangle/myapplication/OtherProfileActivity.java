@@ -104,7 +104,7 @@ public class OtherProfileActivity extends DefaultActionbar
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         db.collection("item")
-                .whereEqualTo("sold", uid)
+                .whereEqualTo("sellerID", uid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -178,6 +178,13 @@ public class OtherProfileActivity extends DefaultActionbar
                 .load(s)
                 .into(userPic);
 
+    }
+
+    public void listOtherItem(View v)
+    {
+            Intent intent = new Intent(this, UserInventoryActivity.class);
+            intent.putExtra("EXTRA_SESSION_ID", uid);
+            this.startActivity(intent);
     }
 
     public void setSeller()

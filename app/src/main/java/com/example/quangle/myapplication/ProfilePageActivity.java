@@ -106,7 +106,9 @@ public class ProfilePageActivity extends DefaultActionbar
 
     public void showAllItems(View v)
     {
-        startActivity(new Intent(this, UserInventoryActivity.class));
+        Intent intent = new Intent(this, UserInventoryActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", uid);
+        this.startActivity(intent);
         finish();
     }
     @Override
@@ -232,7 +234,7 @@ public class ProfilePageActivity extends DefaultActionbar
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         db.collection("item")
-                .whereEqualTo("sold", uid)
+                .whereEqualTo("sellerID", uid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -266,7 +268,7 @@ public class ProfilePageActivity extends DefaultActionbar
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         Query query = db.collection("item")
-                .whereEqualTo("sold", uid);
+                .whereEqualTo("sellerID", uid);
         listenToDB= query.addSnapshotListener(this,new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -335,6 +337,7 @@ public class ProfilePageActivity extends DefaultActionbar
     public void listItem(View v)
     {
         startActivity(new Intent(this, ListItemActivity.class));
+        finish();
     }
 
 }

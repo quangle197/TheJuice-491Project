@@ -49,10 +49,21 @@ public class UserInventoryActivity extends DefaultActionbar {
         View contentView = inflater.inflate(R.layout.user_inventory, null, false);
         drawer.addView(contentView, 0);
 
-            getResults(sessionId);
+        Bundle extras = getIntent().getExtras();
+        if(extras!= null)
+        {
+            String id = extras.getString("EXTRA_SESSION_ID");
+            getResults(id);
+        }
 
 
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
     }
 
     public void listItem(View v)
@@ -66,7 +77,7 @@ public class UserInventoryActivity extends DefaultActionbar {
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         db.collection("item")
-                .whereEqualTo("sold", userquery)
+                .whereEqualTo("sellerID", userquery)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

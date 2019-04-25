@@ -105,7 +105,7 @@
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
                 android:onClick="addToCart"
-                android:text="ADD TO CART"
+                android:text="Add to cart"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@+id/contactSellerButton" />
 
@@ -116,7 +116,7 @@
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
                 android:onClick="offerPrice"
-                android:text="Offer"
+                android:text="Offer to buy"
                 android:textColor="@color/AliceBlue"
                 app:layout_constraintTop_toBottomOf="@+id/addToCartButton" />
 

@@ -3,6 +3,7 @@ package com.example.quangle.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -26,11 +27,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
+
+import org.imperiumlabs.geofirestore.GeoFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +49,7 @@ public class ItemScreenActivity extends DefaultActionbar {
     private DatabaseReference mCartQuery = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference mCartDatabase;
     private DatabaseReference mPendingDatabase;
+    private CollectionReference geoFirestoreRef = db.collection("users");
     ArrayList<String> images = new ArrayList<>();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
@@ -73,7 +79,6 @@ public class ItemScreenActivity extends DefaultActionbar {
         if (extras != null) {
             sessionId = extras.getString("EXTRA_SESSION_ID");
             //The key argument here must match that used in the other activity
-
             getImages();
         }
 
@@ -90,6 +95,14 @@ public class ItemScreenActivity extends DefaultActionbar {
 
             deleteButton.setVisibility(View.VISIBLE);
             soldButton.setVisibility(View.VISIBLE);
+
+            Button contact = (Button) findViewById(R.id.contactSellerButton);
+            Button add = (Button) findViewById(R.id.addToCartButton);
+            Button offer = (Button) findViewById(R.id.offerUpButton);
+
+            contact.setVisibility(View.GONE);
+            add.setVisibility(View.GONE);
+            offer.setVisibility(View.GONE);
         }
     }
 
@@ -187,6 +200,38 @@ public class ItemScreenActivity extends DefaultActionbar {
 
     }
 
+    public void getCurrentLoc()
+    {
+        GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
+        geoFirestore.getLocation(uid, new GeoFirestore.LocationCallback() {
+            @Override
+            public void onComplete(final GeoPoint location, Exception exception) {
+                if (exception == null && location != null){
+                    Location seller = new Location("seller");
+                    seller.setLatitude(location.getLatitude());
+                    seller.setLongitude(location.getLongitude());
+                    getItemLoc(seller);
+                }
+            }
+        });
+    }
+
+    public void getItemLoc(final Location seller)
+    {
+        GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
+        geoFirestore.getLocation(itemSellerID, new GeoFirestore.LocationCallback() {
+            @Override
+            public void onComplete(final GeoPoint location, Exception exception) {
+                if (exception == null && location != null){
+                    Location seller1 = new Location("seller");
+                    seller1.setLatitude(location.getLatitude());
+                    seller1.setLongitude(location.getLongitude());
+
+                    getItemInfo(seller.distanceTo(seller1));
+                }
+            }
+        });
+    }
     public void offerPrice(View v)
     {
 
@@ -234,7 +279,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                         itemCondition=document.getString("condition");
                         itemQuantity=document.getLong("quantity").intValue();
                         itemDesc=document.getString("description");
-                        itemSellerID=document.getString("sold");
+                        itemSellerID=document.getString("sellerID");
                         setVisibility(itemSellerID);
                         getSellerInfo(itemSellerID);
 
@@ -268,7 +313,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                         sellerName=document.getString("username");
 
                         initView();
-                        getItemInfo();
+                        getCurrentLoc();
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -278,7 +323,7 @@ public class ItemScreenActivity extends DefaultActionbar {
             }
         });
     }
-    public void getItemInfo()
+    public void getItemInfo(double dis)
     {
         TextView itemName = findViewById(R.id.itemNameEditText);
         TextView itemPrice = findViewById(R.id.itemPriceEditText);
@@ -291,9 +336,18 @@ public class ItemScreenActivity extends DefaultActionbar {
         Spannable spannable = new SpannableString(sellerName);
         spannable.setSpan(new ForegroundColorSpan(Color.BLUE),0,sellerName.length(), 0);
 
+        if(dis > 100)
+        {
+            dis = dis/1609.34;
+            itemDistance.append(String.format("%.2f", dis) + " miles");
+        }
+        else
+        {
+            itemDistance.append( String.format("%.2f", dis) + " meters");
+        }
         itemName.setText(this.itemName);
-        itemPrice.setText(Double.toString(this.itemPrice));
-        itemDistance.append(Double.toString(this.itemDistance));
+        itemPrice.setText("$" +String.format("%.2f", this.itemPrice));
+        //itemDistance.append( Double.toString(dis));
         itemCondition.append(this.itemCondition);
         itemQuantity.append(Integer.toString(this.itemQuantity));
         itemDesc.append(this.itemDesc);
