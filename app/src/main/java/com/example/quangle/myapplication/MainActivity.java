@@ -330,7 +330,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_selling) {
             openPending("selling");
         } else if (id == R.id.nav_buying) {
-            openPending("buying");
+            //openPending("buying");
+            startActivity(new Intent(this, BoughtItemActivity.class));
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();

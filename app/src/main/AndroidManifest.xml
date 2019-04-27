@@ -59,6 +59,7 @@
         </activity>
         <activity android:name=".OtherProfileActivity"/>
         <activity android:name=".PendingItemActivity"/>
+        <activity android:name=".BoughtItemActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>
