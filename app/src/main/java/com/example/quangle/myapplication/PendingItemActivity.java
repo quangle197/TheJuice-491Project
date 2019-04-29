@@ -262,6 +262,7 @@ public class PendingItemActivity extends DefaultActionbar {
         Map<String, Object> sold = new HashMap<>();
         sold.put("soldStatus", true);
         sold.put("buyerID", buyerID);
+        sold.put("rating", false);
         db.collection("item").document(id)
                 .set(sold, SetOptions.merge());
     }

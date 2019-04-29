@@ -65,12 +65,10 @@ public class RecycleViewAdapterRating extends RecyclerView.Adapter<RecycleViewAd
         if(rate.get(position) == false)
         {
             holder.rateSeller.setVisibility(View.VISIBLE);
-            notifyDataSetChanged();
         }
         else
         {
             holder.rateSeller.setVisibility(View.INVISIBLE);
-            notifyDataSetChanged();
         }
         Glide.with(mContext)
                 .asBitmap()
@@ -135,6 +133,13 @@ public class RecycleViewAdapterRating extends RecyclerView.Adapter<RecycleViewAd
     public void rated(int position)
     {
         notifyItemChanged(position);
+        //notifyDataSetChanged();
+       /* names.clear();
+        urls.clear();
+        prices.clear();
+        conditions.clear();
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(0,names.size());*/
     }
 
 

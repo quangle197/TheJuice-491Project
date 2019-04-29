@@ -49,6 +49,8 @@ public class OtherProfileActivity extends DefaultActionbar
     private ArrayList<String> id = new ArrayList<>();
     private static final String TAG = "OtherProfileActivity";
     private String sellerName;
+    private double sellerRating;
+    private int totalRating;
     String sessionId;
 
     @Override
@@ -146,6 +148,8 @@ public class OtherProfileActivity extends DefaultActionbar
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         sellerName=document.getString("username");
+                        sellerRating=document.getDouble("rating");
+                        totalRating= document.getLong("total rating").intValue();
                         changePicture(document.getString("profilePicture"));
                         Log.d(TAG, "DocumentSnapshot data: " + document.getString("profilePicture"));
                         setSeller();
@@ -191,9 +195,12 @@ public class OtherProfileActivity extends DefaultActionbar
     {
         TextView sellerName = findViewById(R.id.userName);
         RatingBar sellerRating = findViewById(R.id.userReview);
+        TextView totalRating = findViewById(R.id.totalRatings);
 
         sellerName.setText(this.sellerName);
-        sellerRating.setRating(2);
+        sellerRating.setRating((float)this.sellerRating);
+        totalRating.setText(String.valueOf(this.totalRating));
+
 
     }
 

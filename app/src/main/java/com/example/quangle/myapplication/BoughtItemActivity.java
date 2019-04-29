@@ -55,6 +55,7 @@ public class BoughtItemActivity extends DefaultActionbar {
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> id = new ArrayList<>();
+    private ArrayList<String> sellerID = new ArrayList<>();
     private ArrayList<String> conditions = new ArrayList<>();
     private ArrayList<Boolean> rate = new ArrayList<>();
     private static final String TAG = "RecycleViewAdapter";
@@ -63,7 +64,7 @@ public class BoughtItemActivity extends DefaultActionbar {
     private String uid = user.getUid();
     private DatabaseReference mCartDatabase;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-
+    private RecycleViewAdapterRating adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -145,11 +146,13 @@ public class BoughtItemActivity extends DefaultActionbar {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
-                        /*names.clear();
+                        names.clear();
                         urls.clear();
                         prices.clear();
                         conditions.clear();
-                        id.clear();*/
+                        id.clear();
+                        rate.clear();
+                        sellerID.clear();
                         for (QueryDocumentSnapshot doc : value) {
                             if(doc.getString("image1") != null)
                             {
@@ -163,16 +166,15 @@ public class BoughtItemActivity extends DefaultActionbar {
                             prices.add(doc.getDouble("price"));
                             id.add(doc.getId());
                             conditions.add(doc.getString("condition"));
-                            if (doc.get("rating") == null) {
-                                rate.add(false);
+                            sellerID.add(doc.getString("sellerID"));
+                            if (doc.get("rating") != null) {
+                                rate.add(doc.getBoolean("rating"));
                             }
-                            else
-                            {
-                                rate.add(true);
-                            }
+
                         }
                         if(names!=null) {
                             showItems();
+
                         }
                         Log.d(TAG, "rating: " );
                     }
@@ -191,7 +193,7 @@ public class BoughtItemActivity extends DefaultActionbar {
                 .set(data, SetOptions.merge());
     }
 
-    public void rateItem(final String itemID)
+    public void rateItem(final String sID, final String itemID)
     {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
 
@@ -234,8 +236,13 @@ public class BoughtItemActivity extends DefaultActionbar {
         popDialog.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Map<String, Object> data = new HashMap<>();
+                        /*Map<String, Object> data = new HashMap<>();
                         data.put("rating", rating.getProgress());
+                        db.collection("item").document(itemID)
+                                .set(data, SetOptions.merge());*/
+                        avgRating(sID, rating.getProgress());
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("rating", true);
                         db.collection("item").document(itemID)
                                 .set(data, SetOptions.merge());
                         dialog.dismiss();
@@ -254,6 +261,36 @@ public class BoughtItemActivity extends DefaultActionbar {
         popDialog.create();
         popDialog.show();
     }
+
+    private void avgRating(final String id, final double r)
+    {
+        DocumentReference docRef = db.collection("users").document(id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        int totalRating = document.getLong("total rating").intValue();
+                        int newTotal = totalRating +1;
+                        double oldRating = document.getDouble("rating")*totalRating;
+                        double newRating = (oldRating +r) / newTotal;
+
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("rating", newRating);
+                        data.put("total rating", newTotal);
+                        db.collection("users").document(id)
+                                .set(data, SetOptions.merge());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
@@ -262,11 +299,12 @@ public class BoughtItemActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleRView );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterRating adapter = new RecycleViewAdapterRating(this, names, urls, prices, conditions, rate, new RecycleViewAdapterRating.AdapterListener() {
+        adapter = new RecycleViewAdapterRating(this, names, urls, prices, conditions, rate, new RecycleViewAdapterRating.AdapterListener() {
             @Override
             public void rateButtonOnClick(View v, int position)
             {
-                rateItem(id.get(position));
+                //rateItem(id.get(position));
+                rateItem(sellerID.get(position),id.get(position));
             }
 
         });
