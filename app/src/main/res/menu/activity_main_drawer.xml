@@ -15,27 +15,34 @@
         <item
             android:id="@+id/nav_order"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
-            android:title="Order" />
+            android:title="Cart" />
+    </group>
+
+    <group android:id="@+id/menu_sell"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nav_listAnItem"
             android:icon="@drawable/ic_view_module_black_24dp"
             android:title="List an item" />
         <item
-            android:id="@+id/nav_selling"
-            android:icon="@drawable/ic_view_module_black_24dp"
+            android:id="@+id/nav_offers"
+            android:icon="@drawable/ic_gavel_black_24dp"
             android:title="Offers" />
         <item
             android:id="@+id/nav_buying"
-            android:icon="@drawable/ic_view_module_black_24dp"
+            android:icon="@drawable/ic_buying_24dp"
             android:title="Buying" />
         <item
-            android:id="@+id/nav_setting"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
+            android:id="@+id/nav_selling"
+            android:icon="@drawable/ic_local_offer_black_24dp"
+            android:title="Selling" />
         <item
-            android:id="@+id/nav_contact"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Support" />
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_history_black_24dp"
+            android:title="Transaction history"/>
+    </group>
+
+    <group android:id="@+id/menu_other">
         <item
             android:id="@+id/nav_location"
             android:icon="@drawable/ic_action_location"
@@ -44,6 +51,14 @@
             android:id="@+id/nav_venmo"
             android:icon="@drawable/ic_action_money"
             android:title="Open Venmo"/>
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_help_outline_black_24dp"
+            android:title="Support" />
         <item
             android:id="@+id/nav_signout"
             android:title="Signout" />

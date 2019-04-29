@@ -98,7 +98,23 @@
         android:layout_marginLeft="5dp"
         app:layout_constraintLeft_toRightOf="@+id/profilePic"
         app:layout_constraintBottom_toBottomOf="@+id/profilePic" />
-
+    <RatingBar
+        android:id="@+id/userReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:layout_margin="5dp"
+        style="?android:attr/ratingBarStyleSmall"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintStart_toEndOf="@id/profilePic" />
+    <TextView
+        android:id="@+id/totalRatings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/userReview"
+        app:layout_constraintBottom_toBottomOf="@+id/userReview"
+        android:text="0"/>
 
     <TextView
         android:id="@+id/itemsSale"

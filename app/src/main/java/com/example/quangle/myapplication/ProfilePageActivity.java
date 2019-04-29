@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -67,6 +69,9 @@ public class ProfilePageActivity extends DefaultActionbar
     private ArrayList<String> id = new ArrayList<>();
     private static final String TAG = "ProfilePageActivity";
     private ListenerRegistration listenToDB;
+    private double sellerRating;
+    private int totalRating;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -338,6 +343,17 @@ public class ProfilePageActivity extends DefaultActionbar
     {
         startActivity(new Intent(this, ListItemActivity.class));
         finish();
+    }
+
+    public void setRating()
+    {
+        RatingBar sellerRating = findViewById(R.id.userReview);
+        TextView totalRating = findViewById(R.id.totalRatings);
+
+        sellerRating.setRating((float)this.sellerRating);
+        totalRating.setText(String.valueOf(this.totalRating));
+
+
     }
 
 }
