@@ -251,9 +251,18 @@ public class ItemScreenActivity extends DefaultActionbar {
 
     public void goToSeller(View v)
     {
-        Intent intent = new Intent(this, OtherProfileActivity.class);
-        intent.putExtra("EXTRA_SESSION_ID", itemSellerID);
-        startActivity(intent);
+        if(itemSellerID.equals(uid))
+        {
+            startActivity(new Intent(this, ProfilePageActivity.class));
+            finish();
+        }
+        else
+        {
+            Intent intent = new Intent(this, OtherProfileActivity.class);
+            intent.putExtra("EXTRA_SESSION_ID", itemSellerID);
+            startActivity(intent);
+        }
+
     }
     public void getImages()
     {

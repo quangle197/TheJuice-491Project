@@ -327,10 +327,14 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, Payment.class));
         } else if (id == R.id.nav_listAnItem) {
             startActivity(new Intent(this, ListItemActivity.class));
-        } else if (id == R.id.nav_selling) {
+        } else if (id == R.id.nav_offers) {
             openPending("selling");
         } else if (id == R.id.nav_buying) {
             openPending("buying");
+        } else if (id == R.id.nav_history) {
+            startActivity(new Intent(this, BoughtItemActivity.class));
+        } else if (id == R.id.nav_selling) {
+            openSelling();
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();
@@ -983,6 +987,12 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, PendingItemActivity.class);
         intent.putExtra("EXTRA_SESSION_ID", s);
         this.startActivity(intent);
+    }
 
+    public void openSelling()
+    {
+        Intent intent = new Intent(this, UserInventoryActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", uid);
+        this.startActivity(intent);
     }
 }

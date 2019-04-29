@@ -54,6 +54,7 @@ public class UserInventoryActivity extends DefaultActionbar {
         {
             String id = extras.getString("EXTRA_SESSION_ID");
             getResults(id);
+            getSupportActionBar().setTitle("Selling Items");
         }
 
 

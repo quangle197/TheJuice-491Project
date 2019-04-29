@@ -59,8 +59,8 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
         final EditText nameInput = (EditText) findViewById(R.id.title);
         final EditText descInput = (EditText) findViewById(R.id.description);
         final EditText priceInput = (EditText) findViewById(R.id.price);
-        final EditText conditionInput = (EditText) findViewById(R.id.condition);
-        final EditText distanceInput = (EditText) findViewById(R.id.category);
+        //final EditText conditionInput = (EditText) findViewById(R.id.condition);
+        //final EditText distanceInput = (EditText) findViewById(R.id.category);
         final EditText quantityInput = (EditText) findViewById(R.id.quantity);
 
         Spinner spinner = findViewById(R.id.conditionSpinner);
@@ -78,7 +78,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
                 //condition = conditionInput.getText().toString();
                 description = descInput.getText().toString();
                 price =  Double.parseDouble(priceInput.getText().toString());
-                distance = Integer.parseInt(distanceInput.getText().toString());
+                //distance = Integer.parseInt(distanceInput.getText().toString());
                 quantity = Integer.parseInt(quantityInput.getText().toString());
 
                 listItem(name, sold, text, description, price, distance, quantity);
@@ -101,7 +101,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
         user.put("price", price);
-        user.put("distance", distance);
+        //user.put("distance", distance);
         user.put("sellerID", sold);
         user.put("condition", condition);
         user.put("quantity", quantity);

@@ -62,6 +62,14 @@ public class PendingItemActivity extends DefaultActionbar {
         if (extras != null) {
             sessionId = extras.getString("EXTRA_SESSION_ID");
             //The key argument here must match that used in the other activity
+            if(sessionId.equals("selling"))
+            {
+                getSupportActionBar().setTitle("Offers");
+            }
+            else if(sessionId.equals("buying"))
+            {
+                getSupportActionBar().setTitle("Buying");
+            }
             getIDs();
         }
 
@@ -262,6 +270,7 @@ public class PendingItemActivity extends DefaultActionbar {
         Map<String, Object> sold = new HashMap<>();
         sold.put("soldStatus", true);
         sold.put("buyerID", buyerID);
+        sold.put("rating", false);
         db.collection("item").document(id)
                 .set(sold, SetOptions.merge());
     }

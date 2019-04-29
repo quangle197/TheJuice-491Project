@@ -97,6 +97,19 @@
                 app:layout_constraintEnd_toStartOf="@id/removeButton"
                 app:layout_constraintTop_toTopOf="@id/removeButton"
                 app:layout_constraintBottom_toBottomOf="@id/removeButton"/>
+            <Button
+                android:id="@+id/rateSeller"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:visibility="invisible"
+                android:text="rate seller"
+                android:textSize="10dp"
+                android:textColor="@color/AliceBlue"
+                android:background="@drawable/rounded_button_marksold"
+                app:layout_constraintEnd_toStartOf="@id/removeButton"
+                app:layout_constraintTop_toTopOf="@id/removeButton"
+                app:layout_constraintBottom_toBottomOf="@id/removeButton"/>
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
