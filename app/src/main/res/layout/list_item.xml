@@ -31,48 +31,85 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/itemImg"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_margin="10dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars[0]" />
+            <ImageView
+                android:id="@+id/itemImg"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="10dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars[0]" />
 
-        <TextView
-            android:id="@+id/itemTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Item Title"
-            app:layout_constraintLeft_toRightOf="@+id/itemImg"
-            app:layout_constraintTop_toTopOf="@+id/itemImg" />
+            <TextView
+                android:id="@+id/itemTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Item Title"
+                app:layout_constraintLeft_toRightOf="@+id/itemImg"
+                app:layout_constraintTop_toTopOf="@+id/itemImg" />
 
-        <TextView
-            android:id="@+id/itemPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Item Price"
-            app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
-            app:layout_constraintLeft_toRightOf="@+id/itemImg"
-            app:layout_constraintStart_toStartOf="@+id/itemTitle"
-            app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+            <TextView
+                android:id="@+id/itemPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Item Price"
+                app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
+                app:layout_constraintLeft_toRightOf="@+id/itemImg"
+                app:layout_constraintStart_toStartOf="@+id/itemTitle"
+                app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
 
-        <TextView
-            android:id="@+id/itemCondition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Condition"
-            app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
-            app:layout_constraintLeft_toRightOf="@+id/itemImg"
-            app:layout_constraintStart_toStartOf="@+id/itemTitle"
-            app:layout_constraintTop_toBottomOf="@+id/itemPrice" />
+            <TextView
+                android:id="@+id/itemCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Condition"
+                app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
+                app:layout_constraintLeft_toRightOf="@+id/itemImg"
+                app:layout_constraintStart_toStartOf="@+id/itemTitle"
+                app:layout_constraintTop_toBottomOf="@+id/itemPrice" />
+
+            <ImageButton
+                android:id="@+id/removeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="invisible"
+                android:src="@drawable/remove_item"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <Button
+                android:id="@+id/soldButton"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:visibility="invisible"
+                android:text="MARK AS SOLD"
+                android:textSize="10dp"
+                android:textColor="@color/AliceBlue"
+                android:background="@drawable/rounded_button_marksold"
+                app:layout_constraintEnd_toStartOf="@id/removeButton"
+                app:layout_constraintTop_toTopOf="@id/removeButton"
+                app:layout_constraintBottom_toBottomOf="@id/removeButton"/>
+            <Button
+                android:id="@+id/rateSeller"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:visibility="invisible"
+                android:text="rate seller"
+                android:textSize="10dp"
+                android:textColor="@color/AliceBlue"
+                android:background="@drawable/rounded_button_marksold"
+                app:layout_constraintEnd_toStartOf="@id/removeButton"
+                app:layout_constraintTop_toTopOf="@id/removeButton"
+                app:layout_constraintBottom_toBottomOf="@id/removeButton"/>
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

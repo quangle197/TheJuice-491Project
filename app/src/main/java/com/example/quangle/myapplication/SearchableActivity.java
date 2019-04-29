@@ -23,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 
-public class SearchableActivity extends DefaultActionbar implements NavigationView.OnNavigationItemSelectedListener {
+public class SearchableActivity extends DefaultActionbar  {
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
@@ -38,7 +38,6 @@ public class SearchableActivity extends DefaultActionbar implements NavigationVi
     {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.search_page);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.search_page, null, false);
@@ -50,13 +49,14 @@ public class SearchableActivity extends DefaultActionbar implements NavigationVi
     @Override
     public void onBackPressed()
     {
-        startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, MainActivity.class));
         finish();
     }
     @Override
     protected void onNewIntent(Intent intent)
     {
-        handleIntent(intent);
+        //setIntent(intent);
+        //handleIntent(intent);
     }
 
     private void handleIntent(Intent intent)

@@ -4,5 +4,6 @@
         android:drawable="@color/white"/>
     <item android:state_focused="true"
         android:drawable="@color/white"/>
+    //Default
     <item android:drawable="@android:color/transparent"/>
 </selector>
