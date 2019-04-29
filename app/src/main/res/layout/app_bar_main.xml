@@ -4,21 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.quangle.myapplication.MainActivity">
+    tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="641dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <ImageButton
+        <SearchView
+            android:id="@+id/menu_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@color/white"
+            android:layout_below="@id/toolbar"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:backgroundTint="@color/white" />
+
+
+        <!--<ImageButton
             android:id="@+id/cart"
             android:layout_width="46dp"
             android:layout_height="34dp"
@@ -57,11 +69,17 @@
                 android:textColor="@android:color/black"
                 android:textCursorDrawable="@null"></EditText>
 
-        </LinearLayout>
+        </LinearLayout>-->
+
+
 
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        layout="@layout/content_main"
+        android:layout_below="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
 
 </RelativeLayout>

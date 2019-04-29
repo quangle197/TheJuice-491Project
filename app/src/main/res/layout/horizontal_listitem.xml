@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/profileItemView"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/pItemImage"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"/>
+
+            <TextView
+                android:id="@+id/pItemName"
+                android:layout_weight="1"
+
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                android:lines="2"
+                android:singleLine="false"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pItemImage"
+                android:gravity="left"
+                android:layout_centerHorizontal="true"
+                android:text="itemName"
+                android:textColor="#000"
+                android:layout_marginBottom="5dp"
+                android:autoSizeTextType="uniform"
+                android:textSize="15sp"
+                android:autoSizeMaxTextSize="15sp"/>
+                <!--
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="15sp"-->
+
+
+            <TextView
+                android:id="@+id/pItemPrice"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pItemName"
+                android:gravity="center|left"
+                android:layout_centerHorizontal="true"
+                android:text="itemName"
+                android:textColor="#000"
+                android:layout_marginBottom="5dp"
+                android:autoSizeTextType="uniform"
+                android:textSize="17sp"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

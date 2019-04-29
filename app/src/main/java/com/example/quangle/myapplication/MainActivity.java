@@ -1,17 +1,27 @@
 package com.example.quangle.myapplication;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,8 +34,19 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.location.Location;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -33,7 +54,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.location.places.PlaceLikelihood;
@@ -42,9 +66,38 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static android.content.ContentValues.TAG;
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
+
+    //arrays for items
+    private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> urls = new ArrayList<>();
+    private ArrayList<Double> prices = new ArrayList<>();
+
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -58,6 +111,8 @@ public class MainActivity extends AppCompatActivity
 
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
+    private FusedLocationProviderClient fusedLocationClient;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -68,6 +123,17 @@ public class MainActivity extends AppCompatActivity
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private StorageTask uploadTask;
+    private Uri imageURL;
+    private static int IMAGE_REQUEST=1;
+    private String path;
+    private DocumentReference docRef ;
+    private Map<String, Object> coordinates = new HashMap<>();
+    private boolean sharing=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +156,10 @@ public class MainActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,16 +169,24 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //set up cart button
-        ImageButton cart = (ImageButton) findViewById(R.id.cart);
-        cart.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), CartActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
         showCurrentPlace();
+        getImage();
+        getUserProfile();
+
+        /*Timer t = new Timer();
+        //Set the schedule function and rate
+        t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //Called each time when 1000 milliseconds (1 second) (the period parameter)
+                getDeviceLocation();
+            }
+
+            },
+        //Set how long before to start calling the TimerTask (in milliseconds)
+                0,
+        //Set the amount of time between each execution (in milliseconds)
+                5000);*/
     }
 
     @Override
@@ -125,8 +201,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.cart, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) findViewById(R.id.menu_search);
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        //set up cart button
         return true;
     }
 
@@ -135,24 +217,25 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.cart:
+                startActivity(new Intent(this, CartActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         } else if (id == R.id.nav_message) {
             startActivity(new Intent(this, MessageActivity.class));
         } else if (id == R.id.nav_order) {
@@ -161,10 +244,22 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, ListItemActivity.class));
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(this, ContactPageActivity.class));
-        } else if (id == R.id.nav_signout) {
+            //openImg();
+        } else if (id == R.id.nav_location) {
+            locationSharing(item);
+        } else if(id == R.id.nav_venmo){
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.venmo");
+            if (launchIntent != null) {
+                startActivity(launchIntent);//null pointer check in case package name was not found
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(),"You need to install Venmo",Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (id == R.id.nav_signout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, Login.class));
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -182,10 +277,11 @@ public class MainActivity extends AppCompatActivity
         mMap.addMarker(new MarkerOptions().position(sydney).title("Test"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         */
+
         getLocationPermission();
-
+        mMap.setOnMyLocationButtonClickListener(this);
+        getSellers();
         updateLocationUI();
-
         getDeviceLocation();
 
     }
@@ -197,6 +293,7 @@ public class MainActivity extends AppCompatActivity
                 Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
         {
             mLocationPermissionGranted = true;
+
         }
         else
         {
@@ -221,7 +318,34 @@ public class MainActivity extends AppCompatActivity
         updateLocationUI();
     }
 
+    private void getSellers()
+    {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if((document.getBoolean("locationPerm")!=null) &&
+                                        document.getBoolean("locationPerm"))
+                                {
+                                    LatLng anotherPerson = new LatLng(document.getDouble("Lat"),
+                                            document.getDouble("Lon"));
+                                    mMap.addMarker(new MarkerOptions().position(anotherPerson)
+                                            //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
     private void updateLocationUI() {
+
         if (mMap == null) {
             return;
         }
@@ -229,6 +353,9 @@ public class MainActivity extends AppCompatActivity
             if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mMap.getUiSettings().setZoomGesturesEnabled(true);
+                mMap.getUiSettings().setZoomControlsEnabled(true);
+
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -240,12 +367,25 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //get device currect location
+
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "Location updated", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        getDeviceLocation();
+        return false;
+    }
+    //get device current location
     private void getDeviceLocation() {
         /*
           Get the best and most recent location of the device, which may be null in rare
           cases when a location is not available.
          */
+        //get the user data
+
+
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -258,6 +398,12 @@ public class MainActivity extends AppCompatActivity
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            coordinates.put("Lat",mLastKnownLocation.getLatitude());
+                            coordinates.put("Lon",mLastKnownLocation.getLongitude());
+
+                            db.collection("users").document(user.getUid())
+                                    .set(coordinates,SetOptions.merge());
+
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -344,6 +490,206 @@ public class MainActivity extends AppCompatActivity
 
             // Prompt the user for permission.
             getLocationPermission();
+        }
+    }
+
+    private void getImage()
+    {
+        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+        db.collection("item")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getString("name"));
+                                if(document.getString("image1") != null)
+                                {
+                                    urls.add(document.getString("image1"));
+                                }
+                                else
+                                    {
+                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                }
+                                String name = document.getString("name");
+                                Double price = document.getDouble("price");
+                                names.add(name);
+                                prices.add(price);
+                            }
+                            initRecyclerView();
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void initRecyclerView()
+    {
+        Log.d(TAG, "initRecyclerView: init recyclerview");
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = findViewById(R.id.recycleHView  );
+        recyclerView.setLayoutManager(layoutManager);
+        RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void updateUserProfile()
+    {
+        //initialize storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+
+        if(imageURL!=null)
+        {
+            final StorageReference imagesRef = storageRef.child("userImages").child(uid);
+            //url = https://cdn.frankerfacez.com/emoticon/145947/4;
+            uploadTask = imagesRef.putFile(imageURL);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful())
+                    {
+                        throw task.getException();
+                    }
+                    return imagesRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task)
+                {
+                    if(task.isSuccessful())
+                    {
+                        Uri downloadUrl =task.getResult();
+                        path = downloadUrl.toString();
+
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName("Quang Le")
+                                .setPhotoUri(Uri.parse(path))
+                                .build();
+
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User profile updated.");
+                                        }
+                                    }
+                                });
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Failed",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"No image selected", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == IMAGE_REQUEST && resultCode== RESULT_OK && data !=null && data.getData() != null)
+        {
+            imageURL=data.getData();
+            if(uploadTask != null && uploadTask.isInProgress())
+            {
+                Toast.makeText(getApplicationContext(),"Upload in progress", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                updateUserProfile();
+            }
+        }
+    }
+
+
+
+    public void getUserProfile()
+    {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        String uid = user.getUid();
+        StorageReference storageReference = storageRef.child("userImages").child(uid);
+        NavigationView navMain = (NavigationView) findViewById(R.id.nav_view);
+        View header = (View) navMain.getHeaderView(0);
+        TextView userName = (TextView) header.findViewById(R.id.drawerUser);
+        TextView userEmail = (TextView) header.findViewById(R.id.drawerEmail);
+        ImageView userPic = (ImageView) header.findViewById(R.id.imageView);
+
+        if (user != null)
+        {
+            final Uri[] pathImg = new Uri[1];
+
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Uri f = uri;
+                    pathImg[0] = uri;
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+                userName.setText(user.getDisplayName());
+                userEmail.setText(user.getEmail());
+                Glide.with(this)
+                        .load(user.getPhotoUrl())
+                        .into(userPic);
+        }
+
+        userPic.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v)
+            {
+                startActivity(new Intent(v.getContext(), ProfilePageActivity.class));
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
+    }
+
+    private void locationSharing(MenuItem item)
+    {
+        Map<String, Object> permission = new HashMap<>();
+        SpannableString s = new SpannableString(item.getTitle());
+        if(!sharing)
+        {
+            sharing = true;
+            permission.put("Permission",true);
+            db.collection("users").document(user.getUid())
+                    .set(permission,SetOptions.merge());
+            s.setSpan(new ForegroundColorSpan(Color.BLUE), 0, s.length(), 0);
+            item.setTitle(s);
+        }
+        else
+        {
+            sharing = false;
+            permission.put("Permission",false);
+            db.collection("users").document(user.getUid())
+                    .set(permission,SetOptions.merge());
+            s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
+            item.setTitle(s);
         }
     }
 }
