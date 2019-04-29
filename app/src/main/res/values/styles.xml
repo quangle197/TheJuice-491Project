@@ -20,5 +20,18 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ItemScreenTheme" parent="@style/AppTheme">
+        <item name="android:textViewStyle">@style/ItemText</item>
+    </style>
+    <style name="ItemText" parent="android:Widget.TextView">
+        <item name="android:textSize">20dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/Gold</item>
+        <item name="colorControlActivated">@color/LightGrey</item>
+    </style>
 </resources>

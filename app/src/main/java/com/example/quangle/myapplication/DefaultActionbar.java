@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 //import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +35,8 @@ public class DefaultActionbar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     protected DrawerLayout drawer;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    private String uid = user.getUid();
+    NavigationView navigationView;
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,6 @@ public class DefaultActionbar extends AppCompatActivity
         setSupportActionBar(toolbar);
         //ActionBar actionbar = getSupportActionBar();
 
-
         this.drawer = (DrawerLayout) findViewById(R.id.drawer_layout_default);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -53,6 +54,7 @@ public class DefaultActionbar extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_default);
         navigationView.setNavigationItemSelectedListener(this);
         getUserProfile();
+        hideButton();
 
     }
 
@@ -65,6 +67,8 @@ public class DefaultActionbar extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,7 +88,7 @@ public class DefaultActionbar extends AppCompatActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.cart:
-                startActivity(new Intent(this, MessageActivity.class));
+                startActivity(new Intent(this, CartActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -96,20 +100,39 @@ public class DefaultActionbar extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         } else if (id == R.id.nav_message) {
             startActivity(new Intent(this, MessageActivity.class));
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
-        } else if (id == R.id.nav_selling) {
+        } else if (id == R.id.nav_listAnItem) {
             startActivity(new Intent(this, ListItemActivity.class));
+        } else if (id == R.id.nav_offers) {
+            openPending("selling");
+        } else if (id == R.id.nav_buying) {
+            openPending("buying");
+        } else if (id == R.id.nav_history) {
+            startActivity(new Intent(this, BoughtItemActivity.class));
+        } else if (id == R.id.nav_selling) {
+            openSelling();
         } else if (id == R.id.nav_contact) {
-            startActivity(new Intent(this, ProfilePageActivity.class));
+            startActivity(new Intent(this, ContactPageActivity.class));
             //openImg();
-        } else if (id == R.id.nav_signout) {
+        }  else if(id == R.id.nav_venmo){
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.venmo");
+            if (launchIntent != null) {
+                startActivity(launchIntent);//null pointer check in case package name was not found
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(),"You need to install Venmo",Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (id == R.id.nav_signout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, Login.class));
-
         }
 
         this.drawer.closeDrawer(GravityCompat.START);
@@ -164,6 +187,34 @@ public class DefaultActionbar extends AppCompatActivity
             }
         });
 
+    }
+    public void openIntent(String s)
+    {
+        Intent intent = new Intent(this, OtherProfileActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        this.startActivity(intent);
+
+    }
+
+    public void openPending(String s)
+    {
+        Intent intent = new Intent(this, PendingItemActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        this.startActivity(intent);
+    }
+
+    public void openSelling()
+    {
+        Intent intent = new Intent(this, UserInventoryActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", uid);
+        this.startActivity(intent);
+    }
+
+    public void hideButton()
+    {
+        navigationView =    (NavigationView) findViewById(R.id.nav_view_default);
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_location).setVisible(false);
     }
 
 }
