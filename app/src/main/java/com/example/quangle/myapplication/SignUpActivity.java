@@ -66,6 +66,9 @@ public class SignUpActivity extends AppCompatActivity {
                                     //user.put("password", fields[1]);
                                     user.put("email", fields[3]);
                                     user.put("verified", false);
+                                    user.put("Permission", false);
+                                    user.put("rating",0);
+                                    user.put("total rating",0);
                                     db.collection("users").document(firebaseAuth.getCurrentUser().getUid())
                                             .set(user)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
