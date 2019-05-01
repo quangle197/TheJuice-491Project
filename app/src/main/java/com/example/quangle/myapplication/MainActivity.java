@@ -303,8 +303,10 @@ public class MainActivity extends AppCompatActivity
             openPending("selling");
         } else if (id == R.id.nav_buying) {
             openPending("buying");
-        } else if (id == R.id.nav_history) {
+        } else if (id == R.id.nav_bought) {
             startActivity(new Intent(this, BoughtItemActivity.class));
+        } else if (id == R.id.nav_sold) {
+            startActivity(new Intent(this,SoldItemActivity.class));
         } else if (id == R.id.nav_selling) {
             openSelling();
         } else if (id == R.id.nav_contact) {

@@ -60,6 +60,7 @@
         </activity>
         <activity android:name=".OtherProfileActivity"/>
         <activity android:name=".PendingItemActivity"/>
+        <activity android:name=".SoldItemActivity"/>
         <activity android:name=".BoughtItemActivity"
             android:label="History"/>
         <meta-data

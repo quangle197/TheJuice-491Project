@@ -111,7 +111,6 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
                 Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -153,8 +152,6 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
                     removeItem(getAdapterPosition());
                 }
             });
-
-
         }
     }
     public interface AdapterListener
@@ -176,6 +173,4 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         notifyItemRemoved(position);
         notifyItemRangeChanged(0,names.size());
     }
-
-
 }
