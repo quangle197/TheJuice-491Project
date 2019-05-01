@@ -50,7 +50,8 @@
         <activity android:name=".ReceiptActivity"/>
         <activity android:name=".ReviewActivity"/>
         <activity android:name=".DefaultActionbar"/>
-        <activity android:name=".SearchableActivity">
+        <activity android:name=".SearchableActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>

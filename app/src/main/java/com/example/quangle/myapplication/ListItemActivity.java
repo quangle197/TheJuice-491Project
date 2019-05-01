@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +21,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -39,8 +37,8 @@ import static android.content.ContentValues.TAG;
 
 public class ListItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String name, sold, condition, description;
-    private int distance, quantity;
+    private String name, sold, description;
+    private int quantity;
     private StorageTask uploadTask;
     private double price;
     private ArrayList<Uri> images= new ArrayList<>();
@@ -75,13 +73,11 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
             public void onClick(View v){
                 name = nameInput.getText().toString();
                 sold = user.getUid();
-                //condition = conditionInput.getText().toString();
                 description = descInput.getText().toString();
                 price =  Double.parseDouble(priceInput.getText().toString());
-                //distance = Integer.parseInt(distanceInput.getText().toString());
                 quantity = Integer.parseInt(quantityInput.getText().toString());
 
-                listItem(name, sold, text, description, price, distance, quantity);
+                listItem(name, sold, text, description, price, quantity);
             }
         });
 
@@ -95,13 +91,13 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
 
 
 
-    public void listItem(String name, String sold, String condition, String description, double price, int distance, int quantity)
+    public void listItem(String name, String sold, String condition, String description, double price, int quantity)
     {
 
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
         user.put("price", price);
-        //user.put("distance", distance);
+        user.put("rating", false);
         user.put("sellerID", sold);
         user.put("condition", condition);
         user.put("quantity", quantity);
