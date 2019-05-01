@@ -748,7 +748,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
     }
 
-    public void updateUserProfile()
+    /*public void updateUserProfile()
     {
         //initialize storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -809,9 +809,9 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(getApplicationContext(),"No image selected", Toast.LENGTH_SHORT).show();
         }
 
-    }
+    }*/
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    /*public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == IMAGE_REQUEST && resultCode== RESULT_OK && data !=null && data.getData() != null)
         {
@@ -825,7 +825,7 @@ public class MainActivity extends AppCompatActivity
                 updateUserProfile();
             }
         }
-    }
+    }*/
 
 
 
