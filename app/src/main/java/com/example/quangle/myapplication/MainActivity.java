@@ -910,6 +910,9 @@ public class MainActivity extends AppCompatActivity
     private void listenPermission()
     {
         final DocumentReference docRef = db.collection("users").document(user.getUid());
+        if(docRef == null){
+            System.out.println("Here");
+        }
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot,

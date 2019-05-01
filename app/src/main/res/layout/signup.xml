@@ -115,7 +115,7 @@
                 android:layout_centerInParent="true" />
 
             <ImageButton
-                android:id="@+id/googleButton"
+                android:id="@+id/googleButton_signUpPage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_toLeftOf="@+id/signup_Space"

@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:focusableInTouchMode="true"
+    tools:context="com.example.quangle.myapplication.MessageActivity">
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/messageView"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/sendMessage"/>
+        android:id="@+id/messages_view"
+        android:layout_weight="2"
+        android:divider="#fff"
+        android:layout_height="wrap_content"
+        />
 
-    <LinearLayout
-        android:id="@+id/sendMessage"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true">
+        android:background="#fff"
+        android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/charBar"
-            android:layout_width="wrap_content"
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:ems="10"
-            android:layout_weight="0.9"
-            android:hint="Enter your message" />
+            android:hint="Write a message"
+            android:inputType="text"
+            android:paddingHorizontal="10dp"
+            android:text="" />
 
         <ImageButton
-            android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            app:srcCompat="@drawable/ic_menu_send" />
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:padding="20dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/ic_menu_send"
+            android:onClick="sendMessage"/>
     </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
