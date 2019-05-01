@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        final GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        //final GoogleSignInClient mGoogleSignInClient;// = GoogleSignIn.getClient(this, gso);
         final Intent intent = new Intent(getApplicationContext(), MainActivity.class);;
         final String[] fields = new String[2];
 
@@ -92,13 +92,13 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        googleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, 1);
-            }
-        });
+//        googleButton.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+////                startActivityForResult(signInIntent, 1);
+////            }
+////        });
     }
 
     @Override
