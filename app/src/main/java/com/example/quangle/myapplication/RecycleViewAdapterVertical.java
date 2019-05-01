@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleViewAdapterVertical.ViewHolder>{
@@ -26,8 +28,9 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> conditions = new ArrayList<>();
+    private ArrayList<String> uName = new ArrayList<>();
     private Context mContext;
-    private int mode;
+    private int mode = -1;
     public AdapterListener onClickListener;
 
     public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions) {
@@ -37,6 +40,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         this.prices = prices;
         this.conditions=conditions;
     }
+
     public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, int visible,AdapterListener listener ) {
         this.names = names;
         this.urls = urls;
@@ -47,6 +51,16 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         this.onClickListener = listener;
     }
 
+    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> uName, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, int visible,AdapterListener listener ) {
+        this.names = names;
+        this.uName = uName;
+        this.urls = urls;
+        this.mContext = mContext;
+        this.prices = prices;
+        this.conditions=conditions;
+        this.mode = visible;
+        this.onClickListener = listener;
+    }
     @Override
     public RecycleViewAdapterVertical.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: called.");
@@ -82,6 +96,11 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         holder.itemName.setText(names.get(position));
         holder.itemPrice.setText(String.format("$%.2f" , prices.get(position)));
         holder.itemCondition.setText(conditions.get(position));
+        if(!uName.isEmpty() && uName.get(position) != null)
+        {
+            holder.userName.setVisibility(View.VISIBLE);
+            holder.userName.append(uName.get(position));
+        }
 
         holder.itemImg.setOnClickListener(new View.OnClickListener()
         {
@@ -92,7 +111,6 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
                 Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -108,6 +126,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         TextView itemPrice;
         TextView itemCondition;
         ImageView itemImg;
+        TextView userName;
         public ViewHolder(View itemView)
         {
             super(itemView);
@@ -115,6 +134,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
             itemPrice = (TextView) itemView.findViewById(R.id.itemPrice);
             itemCondition = (TextView) itemView.findViewById(R.id.itemCondition);
             itemImg= itemView.findViewById(R.id.itemImg);
+            userName=itemView.findViewById(R.id.uName);
             removeItem = (ImageButton) itemView.findViewById(R.id.removeButton);
             removeItem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,8 +152,6 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
                     removeItem(getAdapterPosition());
                 }
             });
-
-
         }
     }
     public interface AdapterListener
@@ -148,9 +166,11 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         urls.remove(position);
         prices.remove(position);
         conditions.remove(position);
+        if(position < uName.size())
+        {
+            uName.remove(position);
+        }
         notifyItemRemoved(position);
         notifyItemRangeChanged(0,names.size());
     }
-
-
 }

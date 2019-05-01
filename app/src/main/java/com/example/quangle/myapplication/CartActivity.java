@@ -2,20 +2,17 @@ package com.example.quangle.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,10 +26,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class CartActivity extends DefaultActionbar {
@@ -158,11 +154,14 @@ public class CartActivity extends DefaultActionbar {
         final String cartRef = "cart/" + uid + "/" + id;
         mCartDatabase= database.getReference(cartRef);
         mCartDatabase.removeValue();
+
     }
 
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
+        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );

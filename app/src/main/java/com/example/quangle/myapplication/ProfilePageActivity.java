@@ -303,6 +303,7 @@ public class ProfilePageActivity extends DefaultActionbar
                             id.add(document.getId());
                         }
                         initRecyclerView();
+                        setRating();
                         Log.d(TAG, "Added documents: " + names);
                     }
                 });
@@ -352,8 +353,6 @@ public class ProfilePageActivity extends DefaultActionbar
 
         sellerRating.setRating((float)this.sellerRating);
         totalRating.setText(String.valueOf(this.totalRating));
-
-
     }
 
 }

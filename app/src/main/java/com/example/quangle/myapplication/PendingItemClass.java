@@ -1,9 +1,9 @@
 package com.example.quangle.myapplication;
 
 public class PendingItemClass {
-    String itemID;
-    String buyerID;
-    String sellerID;
+    private String itemID;
+    private String buyerID;
+    private String sellerID;
 
     public PendingItemClass(){}
 

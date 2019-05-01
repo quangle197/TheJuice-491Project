@@ -50,13 +50,14 @@ public class SearchableActivity extends DefaultActionbar  {
     public void onBackPressed()
     {
         //startActivity(new Intent(this, MainActivity.class));
-        finish();
+        //super.onBackPressed();
+        this.finish();
     }
     @Override
     protected void onNewIntent(Intent intent)
     {
-        //setIntent(intent);
-        //handleIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
     }
 
     private void handleIntent(Intent intent)
@@ -80,6 +81,10 @@ public class SearchableActivity extends DefaultActionbar  {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            names.clear();
+                            urls.clear();
+                            prices.clear();
+                            conditions.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if(document.getString("name").contains(search))
                                 {
@@ -87,7 +92,14 @@ public class SearchableActivity extends DefaultActionbar  {
                                     names.add(document.getString("name"));
                                     conditions.add(document.getString("condition"));
                                     prices.add(document.getDouble("price"));
-                                    urls.add("https://cdn.shopify.com/s/files/1/1499/3122/products/RC_3205_M_Black_Zip_Hoodie_Front_1553_2_d8dfd745-0683-42de-9ab0-daa07894d1de_1024x1024.JPG?v=1549500312");
+                                    if(document.getString("image1") != null)
+                                    {
+                                        urls.add(document.getString("image1"));
+                                    }
+                                    else
+                                    {
+                                        urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                    }
                                 }
                             }
                             firebaseUserSearch();
@@ -96,9 +108,8 @@ public class SearchableActivity extends DefaultActionbar  {
                         }
                     }
                 });
-
-
     }
+
     private void firebaseUserSearch()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");

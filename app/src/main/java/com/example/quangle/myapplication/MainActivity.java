@@ -4,25 +4,20 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,7 +27,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.location.Location;
 import android.widget.SearchView;
@@ -40,13 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,7 +44,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -69,8 +56,6 @@ import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -83,13 +68,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
 import org.imperiumlabs.geofirestore.GeoQueryDataEventListener;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,11 +79,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.content.ContentValues.TAG;
-import static java.security.AccessController.getContext;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener, ActivityCompat.OnRequestPermissionsResultCallback{
 
     //arrays for items
     private ArrayList<String> names = new ArrayList<>();
@@ -122,8 +101,6 @@ public class MainActivity extends AppCompatActivity
 
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
-    private FusedLocationProviderClient fusedLocationClient;
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -138,17 +115,12 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private StorageTask uploadTask;
-    private Uri imageURL;
-    private static int IMAGE_REQUEST=1;
-    private String path;
     private DocumentReference docRef ;
     private Map<String, Object> coordinates = new HashMap<>();
     private Map<String, Object> location = new HashMap<>();
     private boolean sharing=false;
     private double minLat, maxLat, minLong, maxLong;
     private Timer t;
-    private boolean timerStatus;
     private CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("users");
     private GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
     private GeoQuery geoQuery;
@@ -192,7 +164,7 @@ public class MainActivity extends AppCompatActivity
         Menu navMenu = navigationView.getMenu();
         locationItem = navMenu.findItem(R.id.nav_location);
         showCurrentPlace();
-        getImage();
+        //getImage();
         getUserProfile();
 
     }
@@ -257,6 +229,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+        getUserProfile();
         listenPermission();
     }
 
@@ -331,8 +304,10 @@ public class MainActivity extends AppCompatActivity
             openPending("selling");
         } else if (id == R.id.nav_buying) {
             openPending("buying");
-        } else if (id == R.id.nav_history) {
+        } else if (id == R.id.nav_bought) {
             startActivity(new Intent(this, BoughtItemActivity.class));
+        } else if (id == R.id.nav_sold) {
+            startActivity(new Intent(this,SoldItemActivity.class));
         } else if (id == R.id.nav_selling) {
             openSelling();
         } else if (id == R.id.nav_contact) {
@@ -396,8 +371,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //@Override
-    public void onRequestPermissionResult(int requestCode, @NonNull String permission[], @NonNull int [] grantResults)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int [] grantResults)
     {
         mLocationPermissionGranted = false;
         switch(requestCode) {
@@ -431,6 +406,7 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
+
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                     GeoPoint seller = document.getGeoPoint("location");
@@ -468,15 +444,22 @@ public class MainActivity extends AppCompatActivity
                 geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                     @Override
                     public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                        names.clear();
+                        urls.clear();
+                        id.clear();
+                        prices.clear();
                         if (!documentSnapshot.getId().equals(uid)  && documentSnapshot.getBoolean("Permission")) {
                             LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
                                     geoPoint.getLongitude());
+                            getImage(documentSnapshot.getId());
                             Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
                             Marker seller = mMap.addMarker(new MarkerOptions()
                                     .position(anotherPerson)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
                             seller.setTag(documentSnapshot.getId());
+                            Log.d(TAG, "getting sellers: ");
                         }
+                        Log.d(TAG, "added listener sellers: " +documentSnapshot.getId());
                     }
 
                     @Override
@@ -704,10 +687,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void getImage()
+    private void getImage(String sellerId)
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
         db.collection("item")
+                .whereEqualTo("sellerID", sellerId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -747,87 +731,6 @@ public class MainActivity extends AppCompatActivity
         RecycleViewAdapterProfile adapter = new RecycleViewAdapterProfile(this, names, urls,prices,id);
         recyclerView.setAdapter(adapter);
     }
-
-    /*public void updateUserProfile()
-    {
-        //initialize storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-
-
-        if(imageURL!=null)
-        {
-            final StorageReference imagesRef = storageRef.child("userImages").child(uid);
-            uploadTask = imagesRef.putFile(imageURL);
-            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if(!task.isSuccessful())
-                    {
-                        throw task.getException();
-                    }
-                    return imagesRef.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task)
-                {
-                    if(task.isSuccessful())
-                    {
-                        Uri downloadUrl =task.getResult();
-                        path = downloadUrl.toString();
-
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName("Quang Le")
-                                .setPhotoUri(Uri.parse(path))
-                                .build();
-
-                        user.updateProfile(profileUpdates)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "User profile updated.");
-                                        }
-                                    }
-                                });
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(),"Failed",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),"No image selected", Toast.LENGTH_SHORT).show();
-        }
-
-    }*/
-
-    /*public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(requestCode == IMAGE_REQUEST && resultCode== RESULT_OK && data !=null && data.getData() != null)
-        {
-            imageURL=data.getData();
-            if(uploadTask != null && uploadTask.isInProgress())
-            {
-                Toast.makeText(getApplicationContext(),"Upload in progress", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                updateUserProfile();
-            }
-        }
-    }*/
-
-
 
     public void getUserProfile()
     {
@@ -905,7 +808,6 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
-
 
     private void listenPermission()
     {

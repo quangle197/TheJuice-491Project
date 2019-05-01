@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:text="Item Title"
                 app:layout_constraintLeft_toRightOf="@+id/itemImg"
                 app:layout_constraintTop_toTopOf="@+id/itemImg" />
@@ -56,7 +55,7 @@
                 android:id="@+id/itemPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
                 android:text="Item Price"
                 app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
                 app:layout_constraintLeft_toRightOf="@+id/itemImg"
@@ -67,12 +66,22 @@
                 android:id="@+id/itemCondition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
                 android:text="Condition"
                 app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
                 app:layout_constraintLeft_toRightOf="@+id/itemImg"
                 app:layout_constraintStart_toStartOf="@+id/itemTitle"
                 app:layout_constraintTop_toBottomOf="@+id/itemPrice" />
+            <TextView
+                android:id="@+id/uName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By: "
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@+id/itemTitle"
+                app:layout_constraintLeft_toRightOf="@+id/itemImg"
+                app:layout_constraintTop_toBottomOf="@+id/itemCondition" />
 
             <ImageButton
                 android:id="@+id/removeButton"

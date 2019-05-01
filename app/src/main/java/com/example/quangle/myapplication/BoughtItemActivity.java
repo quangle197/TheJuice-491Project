@@ -1,40 +1,34 @@
 package com.example.quangle.myapplication;
 
-import android.app.Dialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -44,7 +38,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,37 +96,6 @@ public class BoughtItemActivity extends DefaultActionbar {
         }
     }
 
-    public void getIDs()
-    {
-        final String cartRef = "cart/" + uid;
-        mCartDatabase= database.getReference(cartRef);
-        mCartDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                names.clear();
-                urls.clear();
-                prices.clear();
-                conditions.clear();
-                id.clear();
-                for(DataSnapshot ds: dataSnapshot.getChildren())
-                {
-                    String id = ds.getKey();
-                    getResults();
-                }
-
-                Log.d(TAG, "Value is: " + cartRef);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
-
     private void getResults()
     {
         db.collection("item")
@@ -182,17 +144,6 @@ public class BoughtItemActivity extends DefaultActionbar {
 
     }
 
-    public void rateItemAt(int rate)
-    {
-
-        Dialog dialog = new Dialog(this);
-        Map<String, Object> data = new HashMap<>();
-        data.put("rating", rate);
-
-        db.collection("item").document("BJ")
-                .set(data, SetOptions.merge());
-    }
-
     public void rateItem(final String sID, final String itemID)
     {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
@@ -209,13 +160,10 @@ public class BoughtItemActivity extends DefaultActionbar {
         rating.setStepSize(1);
         LayerDrawable stars = (LayerDrawable) rating.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
-        //stars.getDrawable(0).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
-        //stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+
         //add ratingBar to linearLayout
         linearLayout.addView(rating);
 
-
-        //popDialog.setIcon(android.R.drawable.btn_star_big_on);
         popDialog.setTitle("Add Rating: ");
 
         //add linearLayout to dailog
@@ -236,10 +184,6 @@ public class BoughtItemActivity extends DefaultActionbar {
         popDialog.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        /*Map<String, Object> data = new HashMap<>();
-                        data.put("rating", rating.getProgress());
-                        db.collection("item").document(itemID)
-                                .set(data, SetOptions.merge());*/
                         avgRating(sID, rating.getProgress());
                         Map<String, Object> data = new HashMap<>();
                         data.put("rating", true);
@@ -294,6 +238,8 @@ public class BoughtItemActivity extends DefaultActionbar {
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
+        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleRView );
@@ -310,7 +256,5 @@ public class BoughtItemActivity extends DefaultActionbar {
         });
 
         recyclerView.setAdapter(adapter);
-
     }
-
 }

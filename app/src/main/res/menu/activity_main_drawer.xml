@@ -37,9 +37,13 @@
             android:icon="@drawable/ic_local_offer_black_24dp"
             android:title="Selling" />
         <item
-            android:id="@+id/nav_history"
+            android:id="@+id/nav_bought"
             android:icon="@drawable/ic_history_black_24dp"
-            android:title="Transaction history"/>
+            android:title="Items bought"/>
+        <item
+            android:id="@+id/nav_sold"
+            android:icon="@drawable/ic_history_black_24dp"
+            android:title="Items sold"/>
     </group>
 
     <group android:id="@+id/menu_other">

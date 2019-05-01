@@ -3,7 +3,6 @@ package com.example.quangle.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,6 +49,7 @@ public class PendingItemActivity extends DefaultActionbar {
     private DatabaseReference mCartDatabase;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private String sessionId;
+    private ArrayList<String> uName = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -156,6 +157,7 @@ public class PendingItemActivity extends DefaultActionbar {
                         conditions.add(document.getString("condition"));
                         prices.add(document.getDouble("price"));
                         id.add(document.getId());
+                        getName(document .getString("sellerID"));
                         if(document.getString("image1") != null)
                         {
                             urls.add(document.getString("image1"));
@@ -165,7 +167,7 @@ public class PendingItemActivity extends DefaultActionbar {
                             urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
                         }
 
-                        showBuyingItems();
+                        //showBuyingItems();
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -304,12 +306,14 @@ public class PendingItemActivity extends DefaultActionbar {
     private void showBuyingItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
+        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 0, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names,uName, urls, prices, conditions, 0, new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
@@ -326,5 +330,26 @@ public class PendingItemActivity extends DefaultActionbar {
         recyclerView.setAdapter(adapter);
     }
 
+    private void getName(String id)
+    {
+        DocumentReference docRef = db.collection("users").document(id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        uName.add(document.getString("username"));
+                        showBuyingItems();
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
 
 }
