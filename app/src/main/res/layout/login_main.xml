@@ -13,18 +13,18 @@
 
         <ImageView
             android:id="@+id/logoImageView"
-            android:layout_width="159dp"
-            android:layout_height="113dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/wesell" />
+            app:srcCompat="@drawable/ic_new_logo" />
 
         <Space
             android:id="@+id/logoSpace"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_height="50dp"
             android:layout_below="@id/logoImageView"/>
 
         <EditText
@@ -96,7 +96,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:text="Or login with"
-            android:paddingTop="100dp"
+            android:paddingTop="50dp"
             android:paddingBottom="10dp"
             android:layout_below="@+id/loginButton"
             />
