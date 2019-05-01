@@ -169,7 +169,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         urls.remove(position);
         prices.remove(position);
         conditions.remove(position);
-        if(position > uName.size())
+        if(position < uName.size())
         {
             uName.remove(position);
         }
