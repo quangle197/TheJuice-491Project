@@ -145,8 +145,6 @@ public class CartActivity extends DefaultActionbar {
                 }
             }
         });
-
-
     }
 
     public void removeItemAt(String id)

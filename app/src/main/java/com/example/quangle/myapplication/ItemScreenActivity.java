@@ -49,6 +49,7 @@ public class ItemScreenActivity extends DefaultActionbar {
     private DatabaseReference mCartQuery = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference mCartDatabase;
     private DatabaseReference mPendingDatabase;
+    private DatabaseReference mChat = FirebaseDatabase.getInstance().getReference("chatRoom");
     private CollectionReference geoFirestoreRef = db.collection("users");
     ArrayList<String> images = new ArrayList<>();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -81,8 +82,6 @@ public class ItemScreenActivity extends DefaultActionbar {
             //The key argument here must match that used in the other activity
             getImages();
         }
-
-
 
     }
 
@@ -123,6 +122,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                     }
                 });
     }
+
     public void deleteItem(View v)
     {
         //mCartQuery = database.getReference("cart");
@@ -231,6 +231,11 @@ public class ItemScreenActivity extends DefaultActionbar {
                 }
             }
         });
+    }
+
+    public void contactSeller(View v)
+    {
+        checkRoomExist(sessionId);
     }
     public void offerPrice(View v)
     {
@@ -363,5 +368,53 @@ public class ItemScreenActivity extends DefaultActionbar {
         itemSeller.append(spannable);
     }
 
+    public void checkRoomExist(final String id)
+    {
+        final String cartRef = "chatRoom";
+        mChat= database.getReference(cartRef);
+        mChat.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    if(ds.child("sender1").getKey().equals(id))
+                    {
+                        goToChat(ds.getKey());
+                    }
+                    else if(ds.child("sender2").getKey().equals(id))
+                    {
+                        goToChat(ds.getKey());
+                    }
+                }
+                String key = mChat.push().getKey();
+                makeRoom(key);
+                Log.d(TAG, "Value is: " + cartRef);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    protected void makeRoom(String roomID)
+    {
+        mChat.child(roomID).child("sender1").setValue(uid);
+        mChat.child(roomID).child("sender2").setValue(sessionId);
+        goToChat(roomID);
+    }
+
+    protected void goToChat(String recID)
+    {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", recID);
+        this.startActivity(intent);
+        this.finish();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.quangle.myapplication;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +30,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> conditions = new ArrayList<>();
     private ArrayList<String> uName = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
     private Context mContext;
     private int mode = -1;
     public AdapterListener onClickListener;
@@ -109,6 +111,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
             {
                 Log.d(TAG, "onClick: clicked on an image" + names.get(position));
                 Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
+                openIntent(id.get(position));
             }
         });
     }
@@ -172,5 +175,13 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         }
         notifyItemRemoved(position);
         notifyItemRangeChanged(0,names.size());
+    }
+
+    public void openIntent(String s)
+    {
+        Intent intent = new Intent(mContext, ItemScreenActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        mContext.startActivity(intent);
+
     }
 }
