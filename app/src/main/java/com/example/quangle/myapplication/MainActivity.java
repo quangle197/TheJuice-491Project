@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        getUserProfile();
+        getSellersTest();
         listenPermission();
     }
 
@@ -252,7 +252,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            finish();
         }
     }
 
@@ -292,12 +293,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_message) {
-            startActivity(new Intent(this, MessageActivity.class));
+            startActivity(new Intent(this, ChatActivity.class));
         } else if (id == R.id.nav_order) {
-            startActivity(new Intent(this, Payment.class));
+            startActivity(new Intent(this, CartActivity.class));
         } else if (id == R.id.nav_listAnItem) {
             startActivity(new Intent(this, ListItemActivity.class));
         } else if (id == R.id.nav_offers) {
@@ -699,19 +701,18 @@ public class MainActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                if(document.getString("image1") != null)
-                                {
-                                    urls.add(document.getString("image1"));
+                                if (!document.getBoolean("soldStatus")) {
+                                    if (document.getString("image1") != null) {
+                                        urls.add(document.getString("image1"));
+                                    } else {
+                                        urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                    }
+                                    String name = document.getString("name");
+                                    Double price = document.getDouble("price");
+                                    names.add(name);
+                                    prices.add(price);
+                                    id.add(document.getId());
                                 }
-                                else
-                                    {
-                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                                }
-                                String name = document.getString("name");
-                                Double price = document.getDouble("price");
-                                names.add(name);
-                                prices.add(price);
-                                id.add(document.getId());
                             }
                             initRecyclerView();
                         } else {

@@ -50,11 +50,16 @@ public class ChatActivity extends DefaultActionbar {
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+    }
     public void getRooms()
     {
         final String cartRef = "chatRoom";
         mChat= database.getReference(cartRef);
-        mChat.addValueEventListener(new ValueEventListener() {
+        mChat.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -62,15 +67,17 @@ public class ChatActivity extends DefaultActionbar {
 
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    if(ds.child("sender1").getKey().equals(uid))
+                    if(ds.child("sender1").getValue().equals(uid))
                     {
                         ids.add(ds.getKey());
-                        getResults(ds.child("sender2").getKey());
+                        getResults(ds.child("sender2").getValue(String.class));
+                        return;
                     }
-                    else if(ds.child("sender2").getKey().equals(uid))
+                    else if(ds.child("sender2").getValue().equals(uid))
                     {
                         ids.add(ds.getKey());
-                        getResults(ds.child("sender1").getKey());
+                        getResults(ds.child("sender1").getValue(String.class));
+                        return;
                     }
                 }
                 Log.d(TAG, "Value is: " + cartRef);
@@ -95,7 +102,7 @@ public class ChatActivity extends DefaultActionbar {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         names.add(document.getString("username"));
-                        ids.add(document.getId());
+                        //ids.add(document.getId());
                         if(document.getString("profilePicture") != null)
                         {
                             urls.add(document.getString("profilePicture"));

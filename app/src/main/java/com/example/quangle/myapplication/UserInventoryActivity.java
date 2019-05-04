@@ -75,18 +75,17 @@ public class UserInventoryActivity extends DefaultActionbar {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                if(document.getString("image1") != null)
-                                {
-                                    urls.add(document.getString("image1"));
+                                if(!document.getBoolean("soldStatus")) {
+                                    if (document.getString("image1") != null) {
+                                        urls.add(document.getString("image1"));
+                                    } else {
+                                        urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                    }
+                                    names.add(document.getString("name"));
+                                    conditions.add(document.getString("condition"));
+                                    prices.add(document.getDouble("price"));
+                                    id.add(document.getId());
                                 }
-                                else
-                                {
-                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                                }
-                                names.add(document.getString("name"));
-                                conditions.add(document.getString("condition"));
-                                prices.add(document.getDouble("price"));
-                                id.add(document.getId());
                             }
                             if(userquery.equals(uid))
                             {
@@ -131,7 +130,7 @@ public class UserInventoryActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 0, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 0,id, new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
@@ -156,7 +155,7 @@ public class UserInventoryActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions);
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions,id);
         recyclerView.setAdapter(adapter);
     }
 }

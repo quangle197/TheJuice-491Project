@@ -48,7 +48,7 @@ public class ChatProfileAdapter extends RecyclerView.Adapter<ChatProfileAdapter.
                 .load(urls.get(position))
                 .into(holder.itemImg);
 
-
+        holder.itemTitle.setText(names.get(position));
         holder.itemImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

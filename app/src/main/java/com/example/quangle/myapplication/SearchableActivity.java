@@ -28,6 +28,7 @@ public class SearchableActivity extends DefaultActionbar  {
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> conditions = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
 
     private RecyclerView resultList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -85,13 +86,15 @@ public class SearchableActivity extends DefaultActionbar  {
                             urls.clear();
                             prices.clear();
                             conditions.clear();
+                            id.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(document.getString("name").contains(search))
+                                if(document.getString("name").contains(search) && !document.getBoolean("soldStatus"))
                                 {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                     names.add(document.getString("name"));
                                     conditions.add(document.getString("condition"));
                                     prices.add(document.getDouble("price"));
+                                    id.add(document.getId());
                                     if(document.getString("image1") != null)
                                     {
                                         urls.add(document.getString("image1"));
@@ -117,9 +120,8 @@ public class SearchableActivity extends DefaultActionbar  {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls,prices,conditions);
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls,prices,conditions,id);
         recyclerView.setAdapter(adapter);
-
     }
 
 }

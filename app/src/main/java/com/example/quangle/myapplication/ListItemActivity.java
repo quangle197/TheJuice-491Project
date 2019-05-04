@@ -103,6 +103,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
         user.put("quantity", quantity);
         user.put("description", description);
         user.put("lowercasename",name.toLowerCase());
+        user.put("soldStatus", false);
 
         db.collection("item")
                 .add(user)

@@ -30,7 +30,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/noResult"
+        android:id="@+id/noResultHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="You don't have anything here"

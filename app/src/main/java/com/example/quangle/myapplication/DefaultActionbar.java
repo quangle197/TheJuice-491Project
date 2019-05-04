@@ -44,7 +44,6 @@ public class DefaultActionbar extends AppCompatActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //ActionBar actionbar = getSupportActionBar();
 
         this.drawer = (DrawerLayout) findViewById(R.id.drawer_layout_default);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -55,7 +54,6 @@ public class DefaultActionbar extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         getUserProfile();
         hideButton();
-
     }
 
     @Override
@@ -104,7 +102,7 @@ public class DefaultActionbar extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         } else if (id == R.id.nav_message) {
-            startActivity(new Intent(this, MessageActivity.class));
+            startActivity(new Intent(this, ChatActivity.class));
         } else if (id == R.id.nav_order) {
             startActivity(new Intent(this, Payment.class));
         } else if (id == R.id.nav_listAnItem) {

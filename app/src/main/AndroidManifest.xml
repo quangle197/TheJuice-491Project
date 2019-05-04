@@ -63,6 +63,7 @@
         <activity android:name=".SoldItemActivity"/>
         <activity android:name=".BoughtItemActivity"
             android:label="History"/>
+        <activity android:name=".ChatActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBgPUuKnvTCG-nGAvLFvNY5Vypkp1IXDUg"/>

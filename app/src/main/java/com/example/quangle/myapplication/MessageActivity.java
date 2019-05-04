@@ -1,6 +1,5 @@
 package com.example.quangle.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,10 +41,10 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
             messageAdapter = new MessageAdapter(this);
             messagesView = (ListView) findViewById(R.id.messages_view);
             messagesView.setAdapter(messageAdapter);
-            User data = new User("test","blue");
+            User data = new User(" ","blue");
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                roomName = extras.getString("EXTRA_SESSION_ID");
+                roomName = "observable-" +extras.getString("EXTRA_SESSION_ID");
                 //The key argument here must match that used in the other activity
 
             }
@@ -95,7 +93,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                             }
                         }
                         // implement the default RoomListener methods here
-                    }, new SubscribeOptions(2)); // ask for 50 messages from the history
+                    }, new SubscribeOptions(5)); // ask for 50 messages from the history
 
                     room.listenToHistoryEvents(new HistoryRoomListener() {
                         @Override
@@ -108,7 +106,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                                 System.out.println(m);
                                 String []receive = m.split(":");
                                 System.out.println(receive.length);
-                                final User data = new User("test", "grey");
+                                final User data = new User(" ", "grey");
                                 // if the clientID of the message sender is the same as our's it was sent by us
                                 boolean belongsToCurrentUser = receive[0].equals(uid);
                                 // since the message body is a simple string in our case we can use json.asText() to parse it as such

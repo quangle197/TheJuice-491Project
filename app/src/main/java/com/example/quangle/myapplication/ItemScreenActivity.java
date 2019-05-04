@@ -63,6 +63,7 @@ public class ItemScreenActivity extends DefaultActionbar {
     String itemSellerID;
     String sellerName;
     String cartRef;
+    private boolean roomexist = false;
 
     private static final String TAG = ItemScreenActivity.class.getSimpleName();
     private String []names = {"image1", "image2", "image3", "image4", "image5"};
@@ -235,7 +236,7 @@ public class ItemScreenActivity extends DefaultActionbar {
 
     public void contactSeller(View v)
     {
-        checkRoomExist(sessionId);
+        checkRoomExist(uid);
     }
     public void offerPrice(View v)
     {
@@ -380,17 +381,24 @@ public class ItemScreenActivity extends DefaultActionbar {
 
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
-                    if(ds.child("sender1").getKey().equals(id))
+                    if(ds.child("sender1").getValue().equals(id) && ds.child("sender2").getValue().equals(itemSellerID))
                     {
+                        roomexist=true;
                         goToChat(ds.getKey());
+                        return;
                     }
-                    else if(ds.child("sender2").getKey().equals(id))
+                    else if(ds.child("sender2").getValue().equals(id)&& ds.child("sender1").getValue().equals(itemSellerID))
                     {
+                        roomexist=true;
                         goToChat(ds.getKey());
+                        return;
                     }
                 }
-                String key = mChat.push().getKey();
-                makeRoom(key);
+                if(!roomexist)
+                {
+                    String key = mChat.push().getKey();
+                    makeRoom(key);
+                }
                 Log.d(TAG, "Value is: " + cartRef);
             }
 
@@ -405,7 +413,7 @@ public class ItemScreenActivity extends DefaultActionbar {
     protected void makeRoom(String roomID)
     {
         mChat.child(roomID).child("sender1").setValue(uid);
-        mChat.child(roomID).child("sender2").setValue(sessionId);
+        mChat.child(roomID).child("sender2").setValue(itemSellerID);
         goToChat(roomID);
     }
 

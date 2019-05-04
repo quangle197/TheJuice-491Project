@@ -119,14 +119,14 @@ public class SoldItemActivity extends DefaultActionbar {
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
-        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        final TextView noShow = (TextView) findViewById(R.id.noResultHistory);
         noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleRView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, -1, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, -1,id, new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position){
             }
