@@ -55,8 +55,6 @@ public class BoughtItemActivity extends DefaultActionbar {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
-    private DatabaseReference mCartDatabase;
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private RecycleViewAdapterRating adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -116,28 +114,25 @@ public class BoughtItemActivity extends DefaultActionbar {
                         rate.clear();
                         sellerID.clear();
                         for (QueryDocumentSnapshot doc : value) {
-                            if(doc.getString("image1") != null)
-                            {
-                                urls.add(doc.getString("image1"));
-                            }
-                            else
-                            {
-                                urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                            }
-                            names.add(doc.getString("name"));
-                            prices.add(doc.getDouble("price"));
-                            id.add(doc.getId());
-                            conditions.add(doc.getString("condition"));
-                            sellerID.add(doc.getString("sellerID"));
-                            if (doc.get("rating") != null) {
-                                rate.add(doc.getBoolean("rating"));
-                            }
+                                if (doc.getString("image1") != null) {
+                                    urls.add(doc.getString("image1"));
+                                } else {
+                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                }
+                                names.add(doc.getString("name"));
+                                prices.add(doc.getDouble("price"));
+                                id.add(doc.getId());
+                                conditions.add(doc.getString("condition"));
+                                sellerID.add(doc.getString("sellerID"));
+                                if (doc.get("rating") != null) {
+                                    rate.add(doc.getBoolean("rating"));
+                                }
 
                         }
                         if(names!=null) {
                             showItems();
-
                         }
+
                         Log.d(TAG, "rating: " );
                     }
                 });
@@ -238,7 +233,7 @@ public class BoughtItemActivity extends DefaultActionbar {
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
-        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        final TextView noShow = (TextView) findViewById(R.id.noResultHistory);
         noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);

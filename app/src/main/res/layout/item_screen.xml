@@ -93,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
+                android:onClick="contactSeller"
                 android:inputType="textPersonName"
                 android:text="CONTACT SELLER"
                 android:textColor="@color/white"

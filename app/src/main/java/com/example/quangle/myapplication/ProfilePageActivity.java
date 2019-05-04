@@ -133,7 +133,7 @@ public class ProfilePageActivity extends DefaultActionbar
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.message:
-                startActivity(new Intent(this, MessageActivity.class));
+                startActivity(new Intent(this, ChatActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -288,22 +288,20 @@ public class ProfilePageActivity extends DefaultActionbar
                         id.clear();
 
                         for (QueryDocumentSnapshot document : value) {
-                            if(document.getString("image1") != null)
-                            {
-                                urls.add(document.getString("image1"));
+                            if (!document.getBoolean("soldStatus")) {
+                                if (document.getString("image1") != null) {
+                                    urls.add(document.getString("image1"));
+                                } else {
+                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                }
+                                String name = document.getString("name");
+                                Double price = document.getDouble("price");
+                                names.add(name);
+                                prices.add(price);
+                                id.add(document.getId());
                             }
-                            else
-                            {
-                                urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                            }
-                            String name = document.getString("name");
-                            Double price = document.getDouble("price");
-                            names.add(name);
-                            prices.add(price);
-                            id.add(document.getId());
                         }
                         initRecyclerView();
-                        setRating();
                         Log.d(TAG, "Added documents: " + names);
                     }
                 });
@@ -338,6 +336,24 @@ public class ProfilePageActivity extends DefaultActionbar
                 .load(user.getPhotoUrl())
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
                 .into(userPic);
+
+        DocumentReference docRef = db.collection("users").document(uid);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        setRating(document.getDouble("rating"),document.getLong("total rating").intValue());
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     public void listItem(View v)
@@ -346,13 +362,13 @@ public class ProfilePageActivity extends DefaultActionbar
         finish();
     }
 
-    public void setRating()
+    public void setRating(double sellerRate,int totalRate)
     {
         RatingBar sellerRating = findViewById(R.id.userReview);
         TextView totalRating = findViewById(R.id.totalRatings);
 
-        sellerRating.setRating((float)this.sellerRating);
-        totalRating.setText(String.valueOf(this.totalRating));
+        sellerRating.setRating((float)sellerRate);
+        totalRating.setText(String.valueOf(totalRate));
     }
 
 }

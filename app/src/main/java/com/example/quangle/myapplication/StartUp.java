@@ -26,6 +26,7 @@ public class StartUp extends AppCompatActivity {
        if(mAuthListener!=null)
        {
            startActivity(new Intent(this, MainActivity.class));
+           finish();
        }
 
        Button login = (Button) findViewById(R.id.login);

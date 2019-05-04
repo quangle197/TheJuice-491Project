@@ -20,6 +20,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +38,7 @@ import java.util.ArrayList;
 public class OtherProfileActivity extends DefaultActionbar
         implements NavigationView.OnNavigationItemSelectedListener{
     private String uid;
+    private String uid1 = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private ArrayList<String> names = new ArrayList<>();
@@ -43,6 +50,9 @@ public class OtherProfileActivity extends DefaultActionbar
     private double sellerRating;
     private int totalRating;
     String sessionId;
+    private boolean roomexist = false;
+    private DatabaseReference mChat = FirebaseDatabase.getInstance().getReference("chatRoom");
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -83,11 +93,16 @@ public class OtherProfileActivity extends DefaultActionbar
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.message:
-                startActivity(new Intent(this, MessageActivity.class));
+                startActivity(new Intent(this, ChatActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void contactSeller(View v)
+    {
+        checkRoomExist(uid1);
     }
 
     private void getImage()
@@ -102,20 +117,18 @@ public class OtherProfileActivity extends DefaultActionbar
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                if(document.getString("image1") != null)
-                                {
-                                    urls.add(document.getString("image1"));
+                                if (!document.getBoolean("soldStatus")) {
+                                    if (document.getString("image1") != null) {
+                                        urls.add(document.getString("image1"));
+                                    } else {
+                                        urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                                    }
+                                    String name = document.getString("name");
+                                    Double price = document.getDouble("price");
+                                    names.add(name);
+                                    prices.add(price);
+                                    id.add(document.getId());
                                 }
-                                else
-                                {
-                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                                }
-                                String name = document.getString("name");
-                                Double price = document.getDouble("price");
-                                names.add(name);
-                                prices.add(price);
-                                id.add(document.getId());
-
                             }
                             initRecyclerView();
                         } else {
@@ -190,6 +203,62 @@ public class OtherProfileActivity extends DefaultActionbar
         totalRating.setText(String.valueOf(this.totalRating));
 
 
+    }
+
+    public void checkRoomExist(final String id)
+    {
+        final String cartRef = "chatRoom";
+        mChat= database.getReference(cartRef);
+        mChat.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    if(ds.child("sender1").getValue().equals(id)&& ds.child("sender2").getValue().equals(uid))
+                    {
+                        roomexist=true;
+                        goToChat(ds.getKey());
+                        return;
+                    }
+                    else if(ds.child("sender2").getValue().equals(id)&& ds.child("sender1").getValue().equals(uid))
+                    {
+                        roomexist=true;
+                        goToChat(ds.getKey());
+                        return;
+                    }
+                }
+                if(!roomexist)
+                {
+                    String key = mChat.push().getKey();
+                    makeRoom(key);
+                }
+                Log.d(TAG, "Value is: " + cartRef);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    protected void makeRoom(String roomID)
+    {
+        mChat.child(roomID).child("sender1").setValue(uid1);
+        mChat.child(roomID).child("sender2").setValue(uid);
+        goToChat(roomID);
+    }
+
+    protected void goToChat(String recID)
+    {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", recID);
+        this.startActivity(intent);
+        this.finish();
     }
 
 }

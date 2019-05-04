@@ -1,5 +1,6 @@
 package com.example.quangle.myapplication;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,29 +30,32 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
     private ArrayList<Double> prices = new ArrayList<>();
     private ArrayList<String> conditions = new ArrayList<>();
     private ArrayList<String> uName = new ArrayList<>();
+    private ArrayList<String> id = new ArrayList<>();
     private Context mContext;
     private int mode = -1;
     public AdapterListener onClickListener;
 
-    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions) {
+    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions,ArrayList<String> id) {
         this.names = names;
         this.urls = urls;
         this.mContext = mContext;
         this.prices = prices;
         this.conditions=conditions;
+        this.id=id;
     }
 
-    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, int visible,AdapterListener listener ) {
+    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, int visible,ArrayList<String> id,AdapterListener listener) {
         this.names = names;
         this.urls = urls;
         this.mContext = mContext;
         this.prices = prices;
         this.conditions=conditions;
         this.mode = visible;
+        this.id=id;
         this.onClickListener = listener;
     }
 
-    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> uName, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, int visible,AdapterListener listener ) {
+    public RecycleViewAdapterVertical(Context mContext,ArrayList<String> names, ArrayList<String> uName, ArrayList<String> urls, ArrayList<Double> prices, ArrayList<String> conditions, int visible,ArrayList<String> id,AdapterListener listener ) {
         this.names = names;
         this.uName = uName;
         this.urls = urls;
@@ -59,6 +63,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         this.prices = prices;
         this.conditions=conditions;
         this.mode = visible;
+        this.id=id;
         this.onClickListener = listener;
     }
     @Override
@@ -109,6 +114,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
             {
                 Log.d(TAG, "onClick: clicked on an image" + names.get(position));
                 Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
+                openIntent(id.get(position));
             }
         });
     }
@@ -166,11 +172,24 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         urls.remove(position);
         prices.remove(position);
         conditions.remove(position);
+        if(position < id.size())
+        {
+            id.remove(position);
+        }
+
         if(position < uName.size())
         {
             uName.remove(position);
         }
         notifyItemRemoved(position);
         notifyItemRangeChanged(0,names.size());
+    }
+
+    public void openIntent(String s)
+    {
+        Intent intent = new Intent(mContext, ItemScreenActivity.class);
+        intent.putExtra("EXTRA_SESSION_ID", s);
+        mContext.startActivity(intent);
+
     }
 }

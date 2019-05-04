@@ -27,8 +27,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class CartActivity extends DefaultActionbar {
@@ -76,7 +74,7 @@ public class CartActivity extends DefaultActionbar {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.message:
-                startActivity(new Intent(this, MessageActivity.class));
+                startActivity(new Intent(this, ChatActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -145,8 +143,6 @@ public class CartActivity extends DefaultActionbar {
                 }
             }
         });
-
-
     }
 
     public void removeItemAt(String id)
@@ -167,7 +163,7 @@ public class CartActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 0, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 0,id, new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {

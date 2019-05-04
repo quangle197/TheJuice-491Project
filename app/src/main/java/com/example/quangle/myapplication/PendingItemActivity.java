@@ -280,12 +280,14 @@ public class PendingItemActivity extends DefaultActionbar {
     private void showSellingItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
+        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 1, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 1, id,new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
@@ -313,7 +315,7 @@ public class PendingItemActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names,uName, urls, prices, conditions, 0, new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names,uName, urls, prices, conditions, 0,id, new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
