@@ -47,6 +47,7 @@ public class CartActivity extends DefaultActionbar {
     protected void onCreate(Bundle savedInstanceState)
     {
 
+        //set up the screen
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,7 +59,6 @@ public class CartActivity extends DefaultActionbar {
 
     @Override
     public void onBackPressed() {
-        //startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
@@ -81,8 +81,10 @@ public class CartActivity extends DefaultActionbar {
         }
     }
 
+    //get the id of the items
     public void getIDs()
     {
+        //get database path
         final String cartRef = "cart/" + uid;
         mCartDatabase= database.getReference(cartRef);
         mCartDatabase.addValueEventListener(new ValueEventListener() {
@@ -95,6 +97,8 @@ public class CartActivity extends DefaultActionbar {
                 prices.clear();
                 conditions.clear();
                 id.clear();
+
+                //get each item's info and display them
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     String id = ds.getKey();
@@ -111,6 +115,8 @@ public class CartActivity extends DefaultActionbar {
             }
         });
     }
+
+    //function to get item's info
     private void getResults( String search)
     {
         DocumentReference docRef = db.collection("item").document(search);
@@ -145,6 +151,7 @@ public class CartActivity extends DefaultActionbar {
         });
     }
 
+    //function to remove item in cart
     public void removeItemAt(String id)
     {
         final String cartRef = "cart/" + uid + "/" + id;
@@ -153,6 +160,7 @@ public class CartActivity extends DefaultActionbar {
 
     }
 
+    //function to create recycler adapter to hold items
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");

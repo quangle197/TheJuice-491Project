@@ -42,9 +42,11 @@ public class DefaultActionbar extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_default);
 
+        //set the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //set the drawer navigation
         this.drawer = (DrawerLayout) findViewById(R.id.drawer_layout_default);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -52,6 +54,8 @@ public class DefaultActionbar extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_default);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //update the user's information and hide location button
         getUserProfile();
         hideButton();
     }
@@ -65,8 +69,6 @@ public class DefaultActionbar extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,6 +94,7 @@ public class DefaultActionbar extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -139,6 +142,7 @@ public class DefaultActionbar extends AppCompatActivity
         return false;
     }
 
+    //function to get user's info
     public void getUserProfile()
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -186,13 +190,6 @@ public class DefaultActionbar extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
-
-    }
-    public void openIntent(String s)
-    {
-        Intent intent = new Intent(this, OtherProfileActivity.class);
-        intent.putExtra("EXTRA_SESSION_ID", s);
-        this.startActivity(intent);
 
     }
 

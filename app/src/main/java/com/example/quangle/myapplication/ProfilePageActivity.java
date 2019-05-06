@@ -69,8 +69,6 @@ public class ProfilePageActivity extends DefaultActionbar
     private ArrayList<String> id = new ArrayList<>();
     private static final String TAG = "ProfilePageActivity";
     private ListenerRegistration listenToDB;
-    private double sellerRating;
-    private int totalRating;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -109,6 +107,7 @@ public class ProfilePageActivity extends DefaultActionbar
         listenToDB.remove();
     }
 
+    //show all items button
     public void showAllItems(View v)
     {
         Intent intent = new Intent(this, UserInventoryActivity.class);
@@ -116,11 +115,13 @@ public class ProfilePageActivity extends DefaultActionbar
         this.startActivity(intent);
         finish();
     }
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -139,6 +140,7 @@ public class ProfilePageActivity extends DefaultActionbar
                 return super.onOptionsItemSelected(item);
         }
     }
+
     //get image file
     public void openImg()
     {
@@ -147,12 +149,13 @@ public class ProfilePageActivity extends DefaultActionbar
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent,IMAGE_REQUEST);
     }
+
+    //update user's profile information
     public void updateUserProfile()
     {
         //initialize storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-
 
         if(imageURL!=null)
         {
@@ -218,6 +221,7 @@ public class ProfilePageActivity extends DefaultActionbar
 
     }
 
+    //after upload image
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == IMAGE_REQUEST && resultCode== RESULT_OK && data !=null && data.getData() != null)
@@ -235,40 +239,7 @@ public class ProfilePageActivity extends DefaultActionbar
         }
     }
 
-    private void getImage()
-    {
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-        db.collection("item")
-                .whereEqualTo("sellerID", uid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                if(document.getString("image1") != null)
-                                {
-                                    urls.add(document.getString("image1"));
-                                }
-                                else
-                                {
-                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                                }
-                                String name = document.getString("name");
-                                Double price = document.getDouble("price");
-                                names.add(name);
-                                prices.add(price);
-                                id.add(document.getId());
-                            }
-                            initRecyclerView();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
-
+    //get user's item
     private void getImageTest()
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
@@ -305,7 +276,6 @@ public class ProfilePageActivity extends DefaultActionbar
                         Log.d(TAG, "Added documents: " + names);
                     }
                 });
-
     }
 
     private void initRecyclerView()
@@ -320,6 +290,7 @@ public class ProfilePageActivity extends DefaultActionbar
         adapter.notifyDataSetChanged();
     }
 
+    //update profile picture link
     private void uploadProfilePicture(String u)
     {
         HashMap<String, Object> url = new HashMap<>();
@@ -327,6 +298,8 @@ public class ProfilePageActivity extends DefaultActionbar
         db.collection("users").document(user.getUid())
                 .set(url, SetOptions.merge());
     }
+
+    //update profile picture
     private void changePicture()
     {
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -356,12 +329,14 @@ public class ProfilePageActivity extends DefaultActionbar
         });
     }
 
+    //list item button
     public void listItem(View v)
     {
         startActivity(new Intent(this, ListItemActivity.class));
         finish();
     }
 
+    //display rating
     public void setRating(double sellerRate,int totalRate)
     {
         RatingBar sellerRating = findViewById(R.id.userReview);

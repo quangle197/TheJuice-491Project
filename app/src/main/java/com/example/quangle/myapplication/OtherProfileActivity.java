@@ -65,6 +65,7 @@ public class OtherProfileActivity extends DefaultActionbar
         View contentView = inflater.inflate(R.layout.other_profile, null, false);
         drawer.addView(contentView, 0);
 
+        //get the seller's id passed from previous activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sessionId = extras.getString("EXTRA_SESSION_ID");
@@ -75,12 +76,12 @@ public class OtherProfileActivity extends DefaultActionbar
         }
     }
 
-
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -100,11 +101,13 @@ public class OtherProfileActivity extends DefaultActionbar
         }
     }
 
+    //contact button
     public void contactSeller(View v)
     {
         checkRoomExist(uid1);
     }
 
+    //get items of the seller and display
     private void getImage()
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
@@ -138,6 +141,7 @@ public class OtherProfileActivity extends DefaultActionbar
                 });
     }
 
+    //get seller's information
     public void getSellerInfo(String id)
     {
         DocumentReference docRef = db.collection("users").document(id);
@@ -163,6 +167,8 @@ public class OtherProfileActivity extends DefaultActionbar
             }
         });
     }
+
+    //make recycler adapter
     private void initRecyclerView()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
@@ -174,6 +180,7 @@ public class OtherProfileActivity extends DefaultActionbar
         recyclerView.setAdapter(adapter);
     }
 
+    //display seller's profile picture
     private void changePicture(String s)
     {
         ImageView userPic = (ImageView)findViewById(R.id.imageViewOther);
@@ -182,9 +189,9 @@ public class OtherProfileActivity extends DefaultActionbar
                 .asBitmap()
                 .load(s)
                 .into(userPic);
-
     }
 
+    //list all item button
     public void listOtherItem(View v)
     {
             Intent intent = new Intent(this, UserInventoryActivity.class);
@@ -192,6 +199,7 @@ public class OtherProfileActivity extends DefaultActionbar
             this.startActivity(intent);
     }
 
+    //display seller's info
     public void setSeller()
     {
         TextView sellerName = findViewById(R.id.userName);
@@ -201,10 +209,9 @@ public class OtherProfileActivity extends DefaultActionbar
         sellerName.setText(this.sellerName);
         sellerRating.setRating((float)this.sellerRating);
         totalRating.setText(String.valueOf(this.totalRating));
-
-
     }
 
+    //check if a chat already exist
     public void checkRoomExist(final String id)
     {
         final String cartRef = "chatRoom";
@@ -246,6 +253,7 @@ public class OtherProfileActivity extends DefaultActionbar
         });
     }
 
+    //make a chat room
     protected void makeRoom(String roomID)
     {
         mChat.child(roomID).child("sender1").setValue(uid1);
@@ -253,6 +261,7 @@ public class OtherProfileActivity extends DefaultActionbar
         goToChat(roomID);
     }
 
+    //go to chat room
     protected void goToChat(String recID)
     {
         Intent intent = new Intent(this, MessageActivity.class);

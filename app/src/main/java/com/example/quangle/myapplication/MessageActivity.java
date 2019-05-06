@@ -41,7 +41,7 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
             messageAdapter = new MessageAdapter(this);
             messagesView = (ListView) findViewById(R.id.messages_view);
             messagesView.setAdapter(messageAdapter);
-            User data = new User(" ","blue");
+            User data = new User(" ","grey");
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 roomName = "observable-" +extras.getString("EXTRA_SESSION_ID");
@@ -67,9 +67,10 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                         @Override
                         public void onMessage(Room room, com.scaledrone.lib.Message receivedMessage) {
                             final ObjectMapper mapper = new ObjectMapper();
-                            try {
+//                            try {
                                 // member.clientData is a MemberData object, let's parse it as such
-                                final User data = mapper.treeToValue(receivedMessage.getMember().getClientData(), User.class);
+//                                final User data = mapper.treeToValue(receivedMessage.getMember().getClientData(), User.class);
+                                final User data = new User(" ", "grey");
                                 String m = receivedMessage.getData().asText();
                                 String []receive = m.split(":");
                                 // if the clientID of the message sender is the same as our's it was sent by us
@@ -88,9 +89,9 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                                         messagesView.setSelection(messagesView.getCount() - 1);
                                     }
                                 });
-                            } catch (JsonProcessingException e) {
+                            /*} catch (JsonProcessingException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                         }
                         // implement the default RoomListener methods here
                     }, new SubscribeOptions(5)); // ask for 50 messages from the history
@@ -182,25 +183,6 @@ public class MessageActivity extends AppCompatActivity implements RoomListener {
                 e.printStackTrace();
             }
         }
-
-        private String getRandomName() {
-            String[] adjs = {"autumn", "hidden", "bitter", "misty", "silent", "empty", "dry", "dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring", "winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered", "blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green", "long", "late", "lingering", "bold", "little", "morning", "muddy", "old", "red", "rough", "still", "small", "sparkling", "throbbing", "shy", "wandering", "withered", "wild", "black", "young", "holy", "solitary", "fragrant", "aged", "snowy", "proud", "floral", "restless", "divine", "polished", "ancient", "purple", "lively", "nameless"};
-            String[] nouns = {"waterfall", "river", "breeze", "moon", "rain", "wind", "sea", "morning", "snow", "lake", "sunset", "pine", "shadow", "leaf", "dawn", "glitter", "forest", "hill", "cloud", "meadow", "sun", "glade", "bird", "brook", "butterfly", "bush", "dew", "dust", "field", "fire", "flower", "firefly", "feather", "grass", "haze", "mountain", "night", "pond", "darkness", "snowflake", "silence", "sound", "sky", "shape", "surf", "thunder", "violet", "water", "wildflower", "wave", "water", "resonance", "sun", "wood", "dream", "cherry", "tree", "fog", "frost", "voice", "paper", "frog", "smoke", "star"};
-            return (
-                    adjs[(int) Math.floor(Math.random() * adjs.length)] +
-                            "_" +
-                            nouns[(int) Math.floor(Math.random() * nouns.length)]
-            );
-        }
-
-        private String getRandomColor() {
-            Random r = new Random();
-            StringBuffer sb = new StringBuffer("#");
-            while(sb.length() < 7){
-                sb.append(Integer.toHexString(r.nextInt()));
-            }
-            return sb.toString().substring(0, 7);
-            }
 
         public void sendMessage(View view) {
             String message = editText.getText().toString();

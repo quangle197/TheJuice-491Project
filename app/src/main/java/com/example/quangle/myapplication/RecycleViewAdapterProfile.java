@@ -25,6 +25,7 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
     private ArrayList<String> id = new ArrayList<>();
     private Context mContext;
 
+    //constructor
     public RecycleViewAdapterProfile(Context mContext,ArrayList<String> names, ArrayList<String> urls,
                                      ArrayList<Double> prices,ArrayList<String> id)
     {
@@ -42,6 +43,7 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
         return new ViewHolder(view);
     }
 
+    //display item
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
@@ -59,9 +61,19 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
             @Override
             public void onClick(View view)
             {
-                Log.d(TAG, "onClick: clicked on an image" + names.get(position));
-                Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
-                openIntent(id.get(position));
+
+
+                if(position < id.size())
+                {
+                    Log.d(TAG, "onClick: clicked on an image" + names.get(position));
+                    Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
+                    openIntent(id.get(position));
+                }
+                else
+                {
+                    Toast.makeText(mContext, "Item does not exist",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -86,6 +98,7 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
         }
     }
 
+    //go to item screen
     public void openIntent(String s)
     {
         Intent intent = new Intent(mContext, ItemScreenActivity.class);

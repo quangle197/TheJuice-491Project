@@ -170,7 +170,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-
+        //check if uri is empty
         if(uri!=null)
         {
             final StorageReference imagesRef = storageRef.child("itemImages").child(id).child(n);

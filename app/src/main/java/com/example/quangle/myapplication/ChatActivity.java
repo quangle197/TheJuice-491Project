@@ -42,6 +42,7 @@ public class ChatActivity extends DefaultActionbar {
     {
         super.onCreate(savedInstanceState);
 
+        //set up the screen
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.chat_room, null, false);
@@ -55,8 +56,11 @@ public class ChatActivity extends DefaultActionbar {
     {
         finish();
     }
+
+    //function to show all the users to chat
     public void getRooms()
     {
+        //get database path
         final String cartRef = "chatRoom";
         mChat= database.getReference(cartRef);
         mChat.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -65,19 +69,21 @@ public class ChatActivity extends DefaultActionbar {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
 
+                //if it finds the user in a chat room
+                //show it on screen
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     if(ds.child("sender1").getValue().equals(uid))
                     {
-                        ids.add(ds.getKey());
-                        getResults(ds.child("sender2").getValue(String.class));
-                        return;
+                        //ids.add(ds.getKey());
+                        getResults(ds.child("sender2").getValue(String.class),ds.getKey());
+
                     }
                     else if(ds.child("sender2").getValue().equals(uid))
                     {
-                        ids.add(ds.getKey());
-                        getResults(ds.child("sender1").getValue(String.class));
-                        return;
+                        //ids.add(ds.getKey());
+                        getResults(ds.child("sender1").getValue(String.class),ds.getKey());
+
                     }
                 }
                 Log.d(TAG, "Value is: " + cartRef);
@@ -91,7 +97,8 @@ public class ChatActivity extends DefaultActionbar {
         });
     }
 
-    private void getResults( String search)
+    //get the other person's info and display them
+    private void getResults( String search, final String chatID)
     {
         DocumentReference docRef = db.collection("users").document(search);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -102,7 +109,7 @@ public class ChatActivity extends DefaultActionbar {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         names.add(document.getString("username"));
-                        //ids.add(document.getId());
+                        ids.add(chatID);
                         if(document.getString("profilePicture") != null)
                         {
                             urls.add(document.getString("profilePicture"));
@@ -123,6 +130,7 @@ public class ChatActivity extends DefaultActionbar {
         });
     }
 
+    //create a recycler adapter to hold the information
     private void showUsers()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");

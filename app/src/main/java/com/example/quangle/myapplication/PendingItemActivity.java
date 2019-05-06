@@ -35,6 +35,7 @@ import java.util.Map;
 
 public class PendingItemActivity extends DefaultActionbar {
 
+    //arrays for item and user information
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> urls = new ArrayList<>();
     private ArrayList<Double> prices = new ArrayList<>();
@@ -43,6 +44,8 @@ public class PendingItemActivity extends DefaultActionbar {
     private ArrayList<String> buyerID = new ArrayList<>();
     private ArrayList<String> sellerID = new ArrayList<>();
     private static final String TAG = "PendingItemActivity";
+
+    //variable for database related
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
@@ -50,6 +53,7 @@ public class PendingItemActivity extends DefaultActionbar {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private String sessionId;
     private ArrayList<String> uName = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -59,6 +63,7 @@ public class PendingItemActivity extends DefaultActionbar {
         View contentView = inflater.inflate(R.layout.cart, null, false);
         drawer.addView(contentView, 0);
 
+        //get id from previous activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sessionId = extras.getString("EXTRA_SESSION_ID");
@@ -73,7 +78,6 @@ public class PendingItemActivity extends DefaultActionbar {
             }
             getIDs();
         }
-
     }
 
     @Override
@@ -81,6 +85,7 @@ public class PendingItemActivity extends DefaultActionbar {
     {
         finish();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -100,7 +105,7 @@ public class PendingItemActivity extends DefaultActionbar {
         }
     }
 
-
+    //get ids depending on if selling or buying requested
     public void getIDs()
     {
         final String cartRef = "pending";
@@ -131,7 +136,6 @@ public class PendingItemActivity extends DefaultActionbar {
                         getSellings(item.getItemID());
                     }
                 }
-
                 Log.d(TAG, "Value is: " + cartRef);
             }
 
@@ -143,6 +147,7 @@ public class PendingItemActivity extends DefaultActionbar {
         });
     }
 
+    //get items the user is buying
     private void getBuyings( String search)
     {
         DocumentReference docRef = db.collection("item").document(search);
@@ -180,7 +185,7 @@ public class PendingItemActivity extends DefaultActionbar {
 
     }
 
-
+    //get items the user is selling
     private void getSellings(String search)
     {DocumentReference docRef = db.collection("item").document(search);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -214,7 +219,7 @@ public class PendingItemActivity extends DefaultActionbar {
         });
     }
 
-
+    //remove item function for seller
     public void sellerRemove( String id, final String buyerID)
     {
         Query query = database.getReference().child("pending").orderByChild("itemID").equalTo(id);
@@ -231,15 +236,14 @@ public class PendingItemActivity extends DefaultActionbar {
                     }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
     }
 
+    //remove function for buyer
     public void buyerRemove(final String id)
     {
         DatabaseReference getPending = database.getReference("pending");
@@ -257,7 +261,6 @@ public class PendingItemActivity extends DefaultActionbar {
                     }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

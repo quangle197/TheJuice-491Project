@@ -15,11 +15,6 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleViewAdapterVertical.ViewHolder>{
