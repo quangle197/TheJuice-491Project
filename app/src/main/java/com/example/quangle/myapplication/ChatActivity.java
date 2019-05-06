@@ -69,15 +69,15 @@ public class ChatActivity extends DefaultActionbar {
                 {
                     if(ds.child("sender1").getValue().equals(uid))
                     {
-                        ids.add(ds.getKey());
-                        getResults(ds.child("sender2").getValue(String.class));
-                        return;
+                        //ids.add(ds.getKey());
+                        getResults(ds.child("sender2").getValue(String.class),ds.getKey());
+
                     }
                     else if(ds.child("sender2").getValue().equals(uid))
                     {
-                        ids.add(ds.getKey());
-                        getResults(ds.child("sender1").getValue(String.class));
-                        return;
+                        //ids.add(ds.getKey());
+                        getResults(ds.child("sender1").getValue(String.class),ds.getKey());
+
                     }
                 }
                 Log.d(TAG, "Value is: " + cartRef);
@@ -91,7 +91,7 @@ public class ChatActivity extends DefaultActionbar {
         });
     }
 
-    private void getResults( String search)
+    private void getResults( String search, final String chatID)
     {
         DocumentReference docRef = db.collection("users").document(search);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -102,7 +102,7 @@ public class ChatActivity extends DefaultActionbar {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         names.add(document.getString("username"));
-                        //ids.add(document.getId());
+                        ids.add(chatID);
                         if(document.getString("profilePicture") != null)
                         {
                             urls.add(document.getString("profilePicture"));

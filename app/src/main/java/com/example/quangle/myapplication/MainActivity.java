@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity
         showCurrentPlace();
         //getImage();
         getUserProfile();
+        listenPermission();
 
     }
 
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        listenPermission();
+        //listenPermission();
     }
 
     @Override
@@ -229,7 +230,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        getSellersTest();
         listenPermission();
     }
 
@@ -373,6 +373,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //refresh after location permission is granted
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int [] grantResults)
     {
@@ -383,49 +384,17 @@ public class MainActivity extends AppCompatActivity
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     mLocationPermissionGranted=true;
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         }
-        updateLocationUI();
+        /*updateLocationUI();
+        getDeviceLocation();*/
     }
 
-    private void getSellers()
-    {
-        mMap.clear();
-        //getDeviceLocation();
-        if(mLastKnownLocation !=null) {
-            calculateMinMax(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-            GeoPoint minLoc = new GeoPoint(minLat, minLong);
-            GeoPoint maxLoc = new GeoPoint(maxLat, maxLong);
-            Log.i(TAG, "Location: " + minLoc);
-            db.collection("users")
-                    .whereEqualTo("locationPerm", true)
-                    .whereGreaterThanOrEqualTo("location", minLoc)
-                    .whereLessThanOrEqualTo("location", maxLoc)
-                    .limit(10)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    GeoPoint seller = document.getGeoPoint("location");
-                                    LatLng anotherPerson = new LatLng(seller.getLatitude(),
-                                            seller.getLongitude());
-                                    Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
-                                    mMap.addMarker(new MarkerOptions().position(anotherPerson)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
-                                }
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-        }
-    }
-
+    //go to seller profile when click on marker
     @Override
     public boolean onMarkerClick(final Marker marker)
     {
@@ -433,6 +402,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //get sellers around you
     private void getSellersTest()
     {
         //mMap.clear();
@@ -443,6 +413,7 @@ public class MainActivity extends AppCompatActivity
             }
                 mMap.clear();
 
+                //add listener for location changes
                 geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                     @Override
                     public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
@@ -450,6 +421,8 @@ public class MainActivity extends AppCompatActivity
                         urls.clear();
                         id.clear();
                         prices.clear();
+
+                        //only get other sellers but not your self
                         if (!documentSnapshot.getId().equals(uid)  && documentSnapshot.getBoolean("Permission")) {
                             LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
                                     geoPoint.getLongitude());
@@ -471,12 +444,22 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-                        mMap.clear();
-                        LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
-                                geoPoint.getLongitude());
-                        Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
-                        mMap.addMarker(new MarkerOptions().position(anotherPerson)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+                        names.clear();
+                        urls.clear();
+                        id.clear();
+                        prices.clear();
+                        if (!documentSnapshot.getId().equals(uid)  && documentSnapshot.getBoolean("Permission")) {
+                            LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
+                                    geoPoint.getLongitude());
+                            getImage(documentSnapshot.getId());
+                            Toast.makeText(getApplicationContext(), "update map", Toast.LENGTH_SHORT).show();
+                            Marker seller = mMap.addMarker(new MarkerOptions()
+                                    .position(anotherPerson)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_face)));
+                            seller.setTag(documentSnapshot.getId());
+                            Log.d(TAG, "getting sellers: ");
+                        }
+                        Log.d(TAG, "added listener sellers: " +documentSnapshot.getId());
 
                     }
 
@@ -597,7 +580,6 @@ public class MainActivity extends AppCompatActivity
                                         new LatLng(mLastKnownLocation.getLatitude(),
                                                 mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                                 updateLocation();
-                                //getSellers();
                                 getSellersTest();
                             }
                         } else {
@@ -615,6 +597,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //show places around your location
     private void showCurrentPlace() {
         if (mMap == null) {
             return;
@@ -689,6 +672,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //get the items of the sellers
     private void getImage(String sellerId)
     {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
@@ -722,6 +706,7 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
+    //make recyclerview for items
     private void initRecyclerView()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
@@ -733,6 +718,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
     }
 
+    //update user's info in the navigation bar
     public void getUserProfile()
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -812,7 +798,7 @@ public class MainActivity extends AppCompatActivity
 
     private void listenPermission()
     {
-        final DocumentReference docRef = db.collection("users").document(user.getUid());
+        final DocumentReference docRef = db.collection("users").document(uid);
         if(docRef == null){
             System.out.println("Here");
         }
@@ -856,7 +842,7 @@ public class MainActivity extends AppCompatActivity
 
                      },
                             0,
-                            10000);
+                            30000);
         }
     }
 
@@ -870,15 +856,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void calculateMinMax(double latCenter, double longCenter)
-    {
-        //about 1 mile radius
-        double d = 0.0090;
-        minLat = latCenter - d;
-        maxLat = latCenter + d;
-        minLong = longCenter - (d / Math.cos(latCenter*Math.PI/180));
-        maxLong = longCenter + (d / Math.cos(latCenter*Math.PI/180));
-    }
 
     public void openIntent(String s)
     {

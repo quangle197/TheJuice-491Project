@@ -59,9 +59,19 @@ public class RecycleViewAdapterProfile extends RecyclerView.Adapter<RecycleViewA
             @Override
             public void onClick(View view)
             {
-                Log.d(TAG, "onClick: clicked on an image" + names.get(position));
-                Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
-                openIntent(id.get(position));
+
+
+                if(position < id.size())
+                {
+                    Log.d(TAG, "onClick: clicked on an image" + names.get(position));
+                    Toast.makeText(mContext, names.get(position),Toast.LENGTH_SHORT).show();
+                    openIntent(id.get(position));
+                }
+                else
+                {
+                    Toast.makeText(mContext, "Item does not exist",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

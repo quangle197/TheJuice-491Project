@@ -50,7 +50,7 @@ public class Login extends AppCompatActivity {
                 .requestEmail()
                 .build();*/
         //final GoogleSignInClient mGoogleSignInClient;// = GoogleSignIn.getClient(this, gso);
-        final Intent intent = new Intent(getApplicationContext(), MainActivity.class);;
+        final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         final String[] fields = new String[2];
 
         // check if email and password matches users
