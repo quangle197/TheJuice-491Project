@@ -40,6 +40,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
     private String name, sold, description;
     private int quantity;
     private StorageTask uploadTask;
+    private boolean fieldsChecked;
     private double price;
     private ArrayList<Uri> images= new ArrayList<>();
     private static int IMAGE_REQUEST=1;
@@ -60,6 +61,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
         //final EditText conditionInput = (EditText) findViewById(R.id.condition);
         //final EditText distanceInput = (EditText) findViewById(R.id.category);
         final EditText quantityInput = (EditText) findViewById(R.id.quantity);
+        fieldsChecked = true;
 
         Spinner spinner = findViewById(R.id.conditionSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -71,13 +73,41 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
         Button addItem = (Button) findViewById(R.id.button);
         addItem.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                name = nameInput.getText().toString();
-                sold = user.getUid();
-                description = descInput.getText().toString();
-                price =  Double.parseDouble(priceInput.getText().toString());
-                quantity = Integer.parseInt(quantityInput.getText().toString());
+                fieldsChecked = true;
 
-                listItem(name, sold, text, description, price, quantity);
+                // validate name
+                name = nameInput.getText().toString();
+                if(!validateNameAndDescription((name))) {
+                    display("Please enter a valid name");
+                    fieldsChecked = false;
+                }
+                sold = user.getUid();
+
+                // validate description
+                description = descInput.getText().toString();
+                if(!validateNameAndDescription(description)){
+                    fieldsChecked = false;
+                    display("Please enter a valid description");
+                }
+
+                // validate price
+                try{
+                    price =  Double.parseDouble(priceInput.getText().toString());
+                } catch (NumberFormatException e) {
+                    display("Please enter a valid price");
+                    fieldsChecked = false;
+                }
+
+                // validate quantity
+                try {
+                    quantity = Integer.parseInt(quantityInput.getText().toString());
+                }catch (NumberFormatException e) {
+                    display("Please enter a valid quantity");
+                    fieldsChecked = false;
+                }
+
+                if(fieldsChecked)
+                    listItem(name, sold, text, description, price, quantity);
             }
         });
 
@@ -224,5 +254,16 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         text = "New";
+    }
+
+    public boolean validateNameAndDescription(String word){
+        if(word.matches("[0-9]+") || word.length() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public void display(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }
