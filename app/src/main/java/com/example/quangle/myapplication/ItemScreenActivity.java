@@ -44,6 +44,8 @@ import java.util.Map;
 public class ItemScreenActivity extends DefaultActionbar {
 
     String sessionId;
+
+    //variables for database related
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mCartQuery = FirebaseDatabase.getInstance().getReference();
@@ -54,6 +56,8 @@ public class ItemScreenActivity extends DefaultActionbar {
     ArrayList<String> images = new ArrayList<>();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid = user.getUid();
+
+    //variables for item attribute
     String itemName;
     Double itemPrice;
     Double itemDistance;
@@ -63,6 +67,8 @@ public class ItemScreenActivity extends DefaultActionbar {
     String itemSellerID;
     String sellerName;
     String cartRef;
+
+    //check if a chat already exist
     private boolean roomexist = false;
 
     private static final String TAG = ItemScreenActivity.class.getSimpleName();
@@ -86,6 +92,7 @@ public class ItemScreenActivity extends DefaultActionbar {
 
     }
 
+    //set delete and mark as sold button if the user is the owner
     public void setVisibility(String id)
     {
         if(uid.equals(id))
@@ -106,6 +113,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         }
     }
 
+    //function to delete item in database
     public void deleteItemInDB()
     {
         db.collection("item").document(sessionId)
@@ -124,6 +132,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                 });
     }
 
+    //button to delete item
     public void deleteItem(View v)
     {
         //mCartQuery = database.getReference("cart");
@@ -151,6 +160,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         finish();
     }
 
+    //mark sold button
     public void markSold(View v)
     {
 
@@ -161,46 +171,15 @@ public class ItemScreenActivity extends DefaultActionbar {
         deleteItem(v);
     }
 
+    //add to cart button
     public void addToCart(View v)
     {
         cartRef = "cart/" + uid +"/"+sessionId;
         mCartDatabase= database.getReference(cartRef);
         mCartDatabase.setValue(itemName);
-
-        //final DatabaseReference myRef = database.getReference(itemCountRef);
-        //mCartDatabase = database.getReference(cartRef);
-
-        /*myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                int counter = 1;
-                if(dataSnapshot.exists())
-                {
-                    int value = dataSnapshot.getValue(Integer.class);
-                    counter = value;
-                   myRef.setValue(value + 1);
-                   String itemCount = "item" + Integer.toString(value+1);
-                   mCartDatabase.child(itemCount).setValue(sessionId);
-                }
-                else
-                {
-                    myRef.setValue(1);
-                    mCartDatabase.child("item1").setValue(sessionId);
-                }
-                Log.d(TAG, "Value is: " + counter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });*/
-
     }
 
+    //get user's location
     public void getCurrentLoc()
     {
         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
@@ -211,12 +190,15 @@ public class ItemScreenActivity extends DefaultActionbar {
                     Location seller = new Location("seller");
                     seller.setLatitude(location.getLatitude());
                     seller.setLongitude(location.getLongitude());
+
+                    //after that go to get seller location
                     getItemLoc(seller);
                 }
             }
         });
     }
 
+    //get seller location
     public void getItemLoc(final Location seller)
     {
         GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
@@ -228,16 +210,20 @@ public class ItemScreenActivity extends DefaultActionbar {
                     seller1.setLatitude(location.getLatitude());
                     seller1.setLongitude(location.getLongitude());
 
+                    //after that, pass the distance to display on screen
                     getItemInfo(seller.distanceTo(seller1));
                 }
             }
         });
     }
 
+    //contact seller button
     public void contactSeller(View v)
     {
         checkRoomExist(uid);
     }
+
+    //offer to buy button
     public void offerPrice(View v)
     {
 
@@ -249,12 +235,14 @@ public class ItemScreenActivity extends DefaultActionbar {
         //make pending list which has buyer id, item id, and seller id
         mPendingDatabase.child(key).setValue(item);
     }
+
     @Override
     public void onBackPressed() {
         //startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
+    //view seller's profile
     public void goToSeller(View v)
     {
         if(itemSellerID.equals(uid))
@@ -270,6 +258,8 @@ public class ItemScreenActivity extends DefaultActionbar {
         }
 
     }
+
+    //get item's information
     public void getImages()
     {
         DocumentReference docRef = db.collection("item").document(sessionId);
@@ -308,6 +298,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         });
 
     }
+
     public void initView()
     {
         ViewPager viewPager = findViewById(R.id.itemPictureItemScreen);
@@ -315,6 +306,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         viewPager.setAdapter(adapter);
     }
 
+    //get seller name
     public void getSellerInfo(String id)
     {
         DocumentReference docRef = db.collection("users").document(id);
@@ -327,6 +319,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         sellerName=document.getString("username");
 
+                        //display item's picture
                         initView();
                         getCurrentLoc();
                     } else {
@@ -338,6 +331,8 @@ public class ItemScreenActivity extends DefaultActionbar {
             }
         });
     }
+
+    //display item's information
     public void getItemInfo(double dis)
     {
         TextView itemName = findViewById(R.id.itemNameEditText);
@@ -369,6 +364,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         itemSeller.append(spannable);
     }
 
+    //function to check if a chat already exist between user and seller
     public void checkRoomExist(final String id)
     {
         final String cartRef = "chatRoom";
@@ -379,6 +375,7 @@ public class ItemScreenActivity extends DefaultActionbar {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
 
+                //for loop to find the chat
                 for(DataSnapshot ds: dataSnapshot.getChildren())
                 {
                     if(ds.child("sender1").getValue().equals(id) && ds.child("sender2").getValue().equals(itemSellerID))
@@ -394,6 +391,8 @@ public class ItemScreenActivity extends DefaultActionbar {
                         return;
                     }
                 }
+
+                //if not, create a new one
                 if(!roomexist)
                 {
                     String key = mChat.push().getKey();
@@ -410,6 +409,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         });
     }
 
+    //function to create a room
     protected void makeRoom(String roomID)
     {
         mChat.child(roomID).child("sender1").setValue(uid);
@@ -417,6 +417,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         goToChat(roomID);
     }
 
+    //go to chat room
     protected void goToChat(String recID)
     {
         Intent intent = new Intent(this, MessageActivity.class);

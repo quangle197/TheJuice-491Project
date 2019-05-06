@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //set up tool bar and drawer navigation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -160,11 +161,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-       // t = new Timer();
         Menu navMenu = navigationView.getMenu();
         locationItem = navMenu.findItem(R.id.nav_location);
+
+        //set up map and user profile
         showCurrentPlace();
-        //getImage();
         getUserProfile();
         listenPermission();
 
@@ -211,7 +212,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     protected void onDestroy()
     {
@@ -242,7 +242,6 @@ public class MainActivity extends AppCompatActivity
         {
             t.cancel();
         }
-
     }
 
     //back button
@@ -257,7 +256,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    //set up search bar and app bar icons
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cart, menu);
@@ -286,6 +285,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //action when an item on drawer navigation is clicked
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -337,16 +337,10 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    //set up map
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney, Australia, and move the camera.
-        /*
-        LatLng sydney = new LatLng(33.783535, -118.110226);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Test"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        */
 
         getLocationPermission();
         mMap.setOnMyLocationButtonClickListener(this);
@@ -364,7 +358,6 @@ public class MainActivity extends AppCompatActivity
                 Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
         {
             mLocationPermissionGranted = true;
-
         }
         else
         {
@@ -384,6 +377,8 @@ public class MainActivity extends AppCompatActivity
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     mLocationPermissionGranted=true;
+
+                    //refresh screen
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -448,6 +443,8 @@ public class MainActivity extends AppCompatActivity
                         urls.clear();
                         id.clear();
                         prices.clear();
+
+                        //when seller move, update
                         if (!documentSnapshot.getId().equals(uid)  && documentSnapshot.getBoolean("Permission")) {
                             LatLng anotherPerson = new LatLng(geoPoint.getLatitude(),
                                     geoPoint.getLongitude());
@@ -481,6 +478,7 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
     private void updateLocationUI() {
 
         if (mMap == null) {
@@ -503,8 +501,6 @@ public class MainActivity extends AppCompatActivity
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
-
 
     @Override
     public boolean onMyLocationButtonClick() {
@@ -529,11 +525,6 @@ public class MainActivity extends AppCompatActivity
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
                             if(mLastKnownLocation!=null) {
-                                /*GeoPoint devLoc = new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                                location.put("location", devLoc);
-                                db.collection("users").document(user.getUid())
-                                        .set(location, SetOptions.merge());*/
-
                                 geoFirestore.setLocation(uid,
                                         new GeoPoint(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), new GeoFirestore.CompletionListener() {
                                             @Override
@@ -576,6 +567,7 @@ public class MainActivity extends AppCompatActivity
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
                             if(mLastKnownLocation!=null) {
+                                //move camera to current location and get nearby sellers
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(mLastKnownLocation.getLatitude(),
                                                 mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
@@ -602,7 +594,6 @@ public class MainActivity extends AppCompatActivity
         if (mMap == null) {
             return;
         }
-
         if (mLocationPermissionGranted) {
             // Get the likely places - that is, the businesses and other points of interest that
             // are the best match for the device's current location.
@@ -683,9 +674,10 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            //get each item's information
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getString("name"));
-                                if (!document.getBoolean("soldStatus")) {
+                                if (!document.getBoolean("soldStatus") && !id.contains(document.getId())) {
                                     if (document.getString("image1") != null) {
                                         urls.add(document.getString("image1"));
                                     } else {
@@ -796,6 +788,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //listener for permission change
     private void listenPermission()
     {
         final DocumentReference docRef = db.collection("users").document(uid);

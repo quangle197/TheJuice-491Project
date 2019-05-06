@@ -24,6 +24,7 @@ public class ChatProfileAdapter extends RecyclerView.Adapter<ChatProfileAdapter.
     private ArrayList<String> ids = new ArrayList<>();
     private Context mContext;
 
+    //constructor for adapter
     public ChatProfileAdapter(Context mContext, ArrayList<String> names, ArrayList<String> urls, ArrayList<String> ids)
     {
         this.names = names;
@@ -43,6 +44,7 @@ public class ChatProfileAdapter extends RecyclerView.Adapter<ChatProfileAdapter.
     public void onBindViewHolder(ChatProfileAdapter.ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
+        //display image
         Glide.with(mContext)
                 .asBitmap()
                 .load(urls.get(position))
@@ -59,10 +61,12 @@ public class ChatProfileAdapter extends RecyclerView.Adapter<ChatProfileAdapter.
         });
     }
 
-        @Override
-        public int getItemCount() {
-            return names.size();
-        }
+    @Override
+    public int getItemCount() {
+        return names.size();
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView itemTitle;
@@ -75,6 +79,7 @@ public class ChatProfileAdapter extends RecyclerView.Adapter<ChatProfileAdapter.
         }
     }
 
+    //function to go to chat screen
     protected void goToChat(String recID)
     {
         Intent intent = new Intent(mContext, MessageActivity.class);

@@ -25,7 +25,7 @@ public class ForgotPassword extends AppCompatActivity{
         final Button enter = (Button) findViewById(R.id.enter);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-
+        //send reset email when button is clicked
         enter.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -47,7 +47,6 @@ public class ForgotPassword extends AppCompatActivity{
                         });
             }
         });
-
 
     }
 

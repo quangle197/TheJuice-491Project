@@ -127,19 +127,12 @@ public class RecycleViewAdapterRating extends RecyclerView.Adapter<RecycleViewAd
     public interface AdapterListener
     {
         void rateButtonOnClick( View v, int position);
-
     }
 
+    //update layout
     public void rated(int position)
     {
         notifyItemChanged(position);
-        //notifyDataSetChanged();
-       /* names.clear();
-        urls.clear();
-        prices.clear();
-        conditions.clear();
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(0,names.size());*/
     }
 
 

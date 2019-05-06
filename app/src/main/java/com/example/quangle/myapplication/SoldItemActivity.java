@@ -78,9 +78,9 @@ public class SoldItemActivity extends DefaultActionbar {
         }
     }
 
+    //get item's information
     private void getResults()
     {
-
         db.collection("item")
                 .whereEqualTo("sellerID", uid)
                 .get()
@@ -115,7 +115,7 @@ public class SoldItemActivity extends DefaultActionbar {
                 });
     }
 
-
+    //display items
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");

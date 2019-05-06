@@ -27,8 +27,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -60,12 +58,14 @@ public class BoughtItemActivity extends DefaultActionbar {
     protected void onCreate(Bundle savedInstanceState)
     {
 
+        //set up the screen
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.buy_history, null, false);
         drawer.addView(contentView, 0);
 
+        //get the items
         getResults();
     }
 
@@ -94,6 +94,7 @@ public class BoughtItemActivity extends DefaultActionbar {
         }
     }
 
+    //function to get items
     private void getResults()
     {
         db.collection("item")
@@ -106,6 +107,7 @@ public class BoughtItemActivity extends DefaultActionbar {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
+                        //empty out all arrays
                         names.clear();
                         urls.clear();
                         prices.clear();
@@ -113,22 +115,26 @@ public class BoughtItemActivity extends DefaultActionbar {
                         id.clear();
                         rate.clear();
                         sellerID.clear();
+
+                        //add items' elements into arrays
                         for (QueryDocumentSnapshot doc : value) {
-                                if (doc.getString("image1") != null) {
-                                    urls.add(doc.getString("image1"));
-                                } else {
-                                    urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
-                                }
-                                names.add(doc.getString("name"));
-                                prices.add(doc.getDouble("price"));
-                                id.add(doc.getId());
-                                conditions.add(doc.getString("condition"));
-                                sellerID.add(doc.getString("sellerID"));
-                                if (doc.get("rating") != null) {
-                                    rate.add(doc.getBoolean("rating"));
-                                }
+                            if (doc.getString("image1") != null) {
+                                urls.add(doc.getString("image1"));
+                            } else {
+                                urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
+                            }
+                            names.add(doc.getString("name"));
+                            prices.add(doc.getDouble("price"));
+                            id.add(doc.getId());
+                            conditions.add(doc.getString("condition"));
+                            sellerID.add(doc.getString("sellerID"));
+                            if (doc.get("rating") != null) {
+                                rate.add(doc.getBoolean("rating"));
+                            }
 
                         }
+
+                        //display items
                         if(names!=null) {
                             showItems();
                         }
@@ -139,6 +145,7 @@ public class BoughtItemActivity extends DefaultActionbar {
 
     }
 
+    //function to rate another user
     public void rateItem(final String sID, final String itemID)
     {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
@@ -201,6 +208,7 @@ public class BoughtItemActivity extends DefaultActionbar {
         popDialog.show();
     }
 
+    //function to calculate and add rating to seller
     private void avgRating(final String id, final double r)
     {
         DocumentReference docRef = db.collection("users").document(id);
@@ -230,6 +238,8 @@ public class BoughtItemActivity extends DefaultActionbar {
             }
         });
     }
+
+    //function create recycler adapter to hold items
     private void showItems()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");

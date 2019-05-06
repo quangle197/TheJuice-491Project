@@ -10,10 +10,12 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+//this class is to make the swipe photos function
 public class ImageAdapter extends PagerAdapter {
     private ArrayList<String> images;
     private Context mContext;
 
+    //constructor
     public ImageAdapter(Context mContext,ArrayList<String> images)
     {
         this.mContext = mContext;
@@ -35,6 +37,7 @@ public class ImageAdapter extends PagerAdapter {
         container.removeView((ImageView) object);
     }
 
+    //display image
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView imageView = new ImageView(mContext);
