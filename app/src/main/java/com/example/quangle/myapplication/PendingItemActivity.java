@@ -133,7 +133,7 @@ public class PendingItemActivity extends DefaultActionbar {
                     {
                         sellerID.add(item.getsellerID());
                         buyerID.add(item.getbuyerID());
-                        getSellings(item.getItemID());
+                        getSellings(item.getItemID(),item.getbuyerID());
                     }
                 }
                 Log.d(TAG, "Value is: " + cartRef);
@@ -162,7 +162,7 @@ public class PendingItemActivity extends DefaultActionbar {
                         conditions.add(document.getString("condition"));
                         prices.add(document.getDouble("price"));
                         id.add(document.getId());
-                        getName(document .getString("sellerID"));
+                        getName(document.getString("sellerID"));
                         if(document.getString("image1") != null)
                         {
                             urls.add(document.getString("image1"));
@@ -186,8 +186,9 @@ public class PendingItemActivity extends DefaultActionbar {
     }
 
     //get items the user is selling
-    private void getSellings(String search)
-    {DocumentReference docRef = db.collection("item").document(search);
+    private void getSellings(String search, final String buyerID)
+    {
+        DocumentReference docRef = db.collection("item").document(search);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -199,6 +200,7 @@ public class PendingItemActivity extends DefaultActionbar {
                         conditions.add(document.getString("condition"));
                         prices.add(document.getDouble("price"));
                         id.add(document.getId());
+                        getBuyer(buyerID);
                         if(document.getString("image1") != null)
                         {
                             urls.add(document.getString("image1"));
@@ -208,7 +210,7 @@ public class PendingItemActivity extends DefaultActionbar {
                             urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
                         }
 
-                        showSellingItems();
+                        //showSellingItems();
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -290,7 +292,7 @@ public class PendingItemActivity extends DefaultActionbar {
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(layoutManager);
-        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, urls, prices, conditions, 1, id,new RecycleViewAdapterVertical.AdapterListener() {
+        RecycleViewAdapterVertical adapter = new RecycleViewAdapterVertical(this, names, uName, urls, prices, conditions, 1, id,new RecycleViewAdapterVertical.AdapterListener() {
             @Override
             public void removeButtonOnClick(View v, int position)
             {
@@ -303,7 +305,6 @@ public class PendingItemActivity extends DefaultActionbar {
                 markSold(id.get(position),buyerID.get(position));
             }
         });
-
         recyclerView.setAdapter(adapter);
 
     }
@@ -346,6 +347,28 @@ public class PendingItemActivity extends DefaultActionbar {
                     if (document.exists()) {
                         uName.add(document.getString("username"));
                         showBuyingItems();
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void getBuyer(String id)
+    {
+        DocumentReference docRef = db.collection("users").document(id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        uName.add(document.getString("username"));
+                        showSellingItems();
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");

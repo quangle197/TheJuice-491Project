@@ -225,4 +225,5 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
     public void onNothingSelected(AdapterView<?> adapterView) {
         text = "New";
     }
+
 }

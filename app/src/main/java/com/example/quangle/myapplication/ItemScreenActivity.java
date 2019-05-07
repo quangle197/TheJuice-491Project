@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -155,6 +156,26 @@ public class ItemScreenActivity extends DefaultActionbar {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        Query query = database.getReference().child("pending").orderByChild("itemID").equalTo(sessionId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                        PendingItemClass item = ds.getValue(PendingItemClass.class);
+                        if (item.getsellerID().equals(uid)) {
+                            ds.getRef().removeValue();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
         finish();
