@@ -35,7 +35,7 @@
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".MessageActivity"/>
         <activity android:name=".CartActivity"
-            android:label="Cart"/>
+            android:label="Watch list"/>
         <activity android:name=".UserInventoryActivity"/>
         <activity android:name=".ContactPageActivity"/>
         <activity android:name=".ItemScreenActivity">

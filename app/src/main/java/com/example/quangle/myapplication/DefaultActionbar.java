@@ -107,7 +107,7 @@ public class DefaultActionbar extends AppCompatActivity
         } else if (id == R.id.nav_message) {
             startActivity(new Intent(this, ChatActivity.class));
         } else if (id == R.id.nav_order) {
-            startActivity(new Intent(this, Payment.class));
+            startActivity(new Intent(this, CartActivity.class));
         } else if (id == R.id.nav_listAnItem) {
             startActivity(new Intent(this, ListItemActivity.class));
         } else if (id == R.id.nav_offers) {
