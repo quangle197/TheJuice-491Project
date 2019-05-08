@@ -89,7 +89,7 @@
             android:textColor="@color/WeSellGreen"
             android:typeface="normal" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/loginOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
             android:layout_toRightOf="@+id/signup_Space"
             android:background="@null"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_facebook_logo" />
+            app:srcCompat="@drawable/ic_facebook_logo" />-->
     </RelativeLayout>
 
 

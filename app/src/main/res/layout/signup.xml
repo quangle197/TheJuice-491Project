@@ -91,7 +91,7 @@
             android:text="Sign Up"
             android:textColor="@color/WeSellGreen" />
 
-        <TextView
+        <!--<TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -112,9 +112,9 @@
                 android:id="@+id/signup_Space"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true" />-->
 
-            <ImageButton
+            <!--<ImageButton
                 android:id="@+id/googleButton_signUpPage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -131,8 +131,8 @@
                 android:layout_toRightOf="@+id/signup_Space"
                 android:background="@null"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_facebook_logo" />
-        </RelativeLayout>
+                app:srcCompat="@drawable/ic_facebook_logo" />-->
+        <!--</RelativeLayout>-->
 
     </LinearLayout>
 
