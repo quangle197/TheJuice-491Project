@@ -14,6 +14,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -88,7 +89,7 @@ public class SearchableActivity extends DefaultActionbar  {
                             conditions.clear();
                             id.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(document.getString("name").contains(search) && !document.getBoolean("soldStatus"))
+                                if(document.getString("lowercasename").contains(search) && !document.getBoolean("soldStatus"))
                                 {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                     names.add(document.getString("name"));
@@ -103,9 +104,10 @@ public class SearchableActivity extends DefaultActionbar  {
                                     {
                                         urls.add("https://firebasestorage.googleapis.com/v0/b/we-sell-491.appspot.com/o/itemImages%2Fdefault.png?alt=media&token=d4cb0d3c-7888-42d5-940f-d5586a4e0a4a");
                                     }
+                                    firebaseUserSearch();
                                 }
                             }
-                            firebaseUserSearch();
+                            //firebaseUserSearch();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -116,6 +118,8 @@ public class SearchableActivity extends DefaultActionbar  {
     private void firebaseUserSearch()
     {
         Log.d(TAG, "initRecyclerView: init recyclerview");
+        final TextView noShow = (TextView) findViewById(R.id.noResult);
+        noShow.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.recycleVView  );
