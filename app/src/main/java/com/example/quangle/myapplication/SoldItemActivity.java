@@ -89,7 +89,7 @@ public class SoldItemActivity extends DefaultActionbar {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(document.get("buyerID") != null)
+                                if(document.getBoolean("soldStatus"))
                                 {
                                     if(document.getString("image1") != null)
                                     {
