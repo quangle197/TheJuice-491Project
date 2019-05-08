@@ -146,6 +146,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
                         {
                             updateImages(images.get(i),id,names[i]);
                         }
+                        Toast.makeText(getApplicationContext(),"Listed item",Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 })
@@ -180,7 +181,7 @@ public class ListItemActivity extends AppCompatActivity implements AdapterView.O
                     for (int i = 0; i < totalPictures; i++) {
                         images.add(data.getClipData().getItemAt(i).getUri());
                     }
-                    Toast.makeText(getApplicationContext(),Integer.toString(totalPictures),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Pictures uploaded",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
