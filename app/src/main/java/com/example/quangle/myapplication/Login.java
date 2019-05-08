@@ -57,7 +57,7 @@ public class Login extends AppCompatActivity {
         // check if user has pressed email verification link
         // log them in
         Button login = (Button) findViewById(R.id.loginButton);
-        ImageButton googleButton = findViewById(R.id.googleButton_signUpPage);
+        //ImageButton googleButton = findViewById(R.id.googleButton_signUpPage);
 
 
 

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -245,6 +246,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         cartRef = "cart/" + uid +"/"+sessionId;
         mCartDatabase= database.getReference(cartRef);
         mCartDatabase.setValue(itemName);
+        Toast.makeText(getApplicationContext(),"Added to Watch list",Toast.LENGTH_SHORT).show();
     }
 
     //get user's location
@@ -302,6 +304,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         PendingItemClass item = new PendingItemClass(sessionId, uid,itemSellerID);
         //make pending list which has buyer id, item id, and seller id
         mPendingDatabase.child(key).setValue(item);
+        Toast.makeText(getApplicationContext(),"Added to buying list",Toast.LENGTH_SHORT).show();
     }
 
     @Override

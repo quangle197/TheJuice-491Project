@@ -96,7 +96,7 @@ public class RecycleViewAdapterVertical extends RecyclerView.Adapter<RecycleView
         holder.itemName.setText(names.get(position));
         holder.itemPrice.setText(String.format("$%.2f" , prices.get(position)));
         holder.itemCondition.setText(conditions.get(position));
-        if(!uName.isEmpty() && uName.get(position) != null)
+        if(!uName.isEmpty() && position < uName.size())
         {
             holder.userName.setVisibility(View.VISIBLE);
             holder.userName.append(uName.get(position));
