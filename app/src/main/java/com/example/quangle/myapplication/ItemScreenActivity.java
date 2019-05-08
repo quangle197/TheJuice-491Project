@@ -181,6 +181,53 @@ public class ItemScreenActivity extends DefaultActionbar {
         finish();
     }
 
+    //button to delete item without delete in DB
+    public void deleteItemFromCart()
+    {
+        //mCartQuery = database.getReference("cart");
+        mCartQuery.child("cart").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    if(ds.exists())
+                        ds.child(sessionId).getRef().removeValue();
+                }
+
+                Log.d(TAG, "Value is: " + sessionId);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        Query query = database.getReference().child("pending").orderByChild("itemID").equalTo(sessionId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                        PendingItemClass item = ds.getValue(PendingItemClass.class);
+                        if (item.getsellerID().equals(uid)) {
+                            ds.getRef().removeValue();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        finish();
+    }
+
     //mark sold button
     public void markSold(View v)
     {
@@ -189,7 +236,7 @@ public class ItemScreenActivity extends DefaultActionbar {
         sold.put("soldStatus", true);
         db.collection("item").document(sessionId)
                 .set(sold,SetOptions.merge());
-        deleteItem(v);
+        deleteItemFromCart();
     }
 
     //add to cart button
